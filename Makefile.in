@@ -1,0 +1,40 @@
+
+SOURCE_FILES = 
+SRC_DIR = src
+OBJ_DIR = build
+BUILD_DIR = bin
+
+PROG_SOURCE_FILES = $(SRC_DIR)/main.c $(SRC_DIR)/$(SOURCE_FILES)
+TESTS_SOURCE_FILES = test/tests.c $(SOURCE_FILES)
+TESTS_OBJ_FILES = $(OBJ_DIR)/$(TESTS_SOURCE_FILES:.c=.o)
+PROG_OBJ_FILES = $(OBJ_DIR)/$(PROG_SOURCE_FILES:.c=.o)
+
+CC = @CC@
+CFLAGS = @CFLAGS@
+
+CLUTTER_CFLAGS = @CLUTTER_CFLAGS@
+CLUTTER_LDFLAGS = @CLUTTER_LIBS@
+
+all: alpha-snake
+
+$(OBJ_DIR)/%.o: %.c
+	@test -d $(@D) || mkdir -p $(@D)
+	@echo CC $<
+	@$(CC) -c $< -o $@ $(CFLAGS) $(CLUTTER_CFLAGS)
+
+alpha-snake: $(PROG_OBJ_FILES)
+	@echo CCLD $<
+	@test -d $(BUILD_DIR) || mkdir -p $(BUILD_DIR)
+	@$(CC) $< -o $(BUILD_DIR)/$@ $(CLUTTER_LDFLAGS)
+
+tests: $(TESTS_OBJ_FILES)
+	@test -d $(BUILD_DIR) || mkdir -p $(BUILD_DIR)
+	@echo CCLD $<
+	@$(CC) $< -o $(BUILD_DIR)/$@ $(CLUTTER_LDFLAGS)
+
+clean:
+	-rm -rv $(OBJ_DIR)
+
+maintainer-clean: clean
+	-rm -rv Makefile configure config.status autom4te.cache aclocal.m4 config.log 
+
