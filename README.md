@@ -21,6 +21,7 @@ Ouvrir un terminal et taper :
     autoreconf
     ./configure
     make
+    ./bin/alpha-snake
     
 Autres cibles définies dans le Makefile :
 
