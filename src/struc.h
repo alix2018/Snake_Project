@@ -15,7 +15,9 @@
 typedef struct maillon_snake *ListeSnake;
 
 typedef struct snake Snake;
-
+/**
+ * 
+ */
 typedef struct
 {
 	int x;
