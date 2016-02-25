@@ -29,6 +29,15 @@ Autres cibles définies dans le Makefile :
  - `make maintainer-clean` : le grand ménage.
 
 
+Utilisation des branches
+------------------------
+	Mettre à jour le git
+	git pull
+	Voir les branches
+	git branch -a
+	Pour changer de branche
+	git checkout nom_branche
+
 Require
 -------
 clutter en version 1.0 dev
