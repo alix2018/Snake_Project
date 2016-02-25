@@ -1,7 +1,7 @@
 
 ALPHA SNAKE
 ===========
-Récuparation des sources
+Récuperation des sources
 ------------------------
 Ouvrir un terminal et taper:
     
@@ -10,7 +10,17 @@ Ouvrir un terminal et taper:
     git checkout develop
     git branch #pour verifier s'il y a une étoile devant develop
     git pull #obselete
+    
 
+Envoie de fichiers sur git
+--------------------------
+Ouvrir un terminal et taper:
+
+   git status
+   make maintainer-clean #enlever paquets qu'on ne veut pas envoyer
+   git add 'nom fichier'
+   git commit
+   git push #envoyer fichier
 
 
 Compilation
@@ -28,6 +38,15 @@ Autres cibles définies dans le Makefile :
  - `make clean` : supprime les fichiers objet générés par le compilateur.
  - `make maintainer-clean` : le grand ménage.
 
+
+Utilisation des branches
+------------------------
+	Mettre à jour le git
+	git pull
+	Voir les branches
+	git branch -a
+	Pour changer de branche
+	git checkout nom_branche
 
 Require
 -------
