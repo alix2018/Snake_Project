@@ -7,7 +7,8 @@
  * @details    --- 
  */
 
-
+#include <stdio.h>
+#include <stdlib.h>
 
 /**
  * @brief    liste de Snake
@@ -27,7 +28,7 @@ typedef struct
 typedef enum
 {
 	/* Sens trigo */
-	GAUCHE = 180, DROITE = 0, BAS = 270, HAUT = 90, ARRET = -1;
+	GAUCHE = 180, DROITE = 0, BAS = 270, HAUT = 90, ARRET = -1
 } Direction;
 
 /* Fonction de base de coord */
@@ -35,8 +36,8 @@ typedef enum
 Coord coord_from_xy(int x,int y);
 void print_coord(Coord c);
 
-/*Fonctions de base de ListeSnake*/
 
+/*Fonctions de base de ListeSnake*/
 
 ListeSnake cons_liste_snake(Coord c, ListeSnake liste);
 void free_liste_snake(ListeSnake liste);
@@ -44,8 +45,8 @@ void print_liste_snake(ListeSnake liste);
 
 Coord liste_snake_coord(ListeSnake l);
 
-/* Fonctions de base de Snake */
 
+/* Fonctions de base de Snake */
 
 Snake *create_snake(int longueur, Coord c, Direction dir);
 void free_snake(Snake *snake);
