@@ -41,12 +41,12 @@ Autres cibles définies dans le Makefile :
 
 Utilisation des branches
 ------------------------
-	Mettre à jour le git
-	git pull
-	Voir les branches
-	git branch -a
-	Pour changer de branche
-	git checkout nom_branche
+  Mettre à jour le git
+  git pull
+  Voir les branches
+  git branch -a
+  Pour changer de branche
+  git checkout nom_branche
 
 Require
 -------
