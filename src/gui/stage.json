@@ -1,0 +1,24 @@
+[
+  {
+    "id": "stage",
+    "type": "ClutterStage",
+    "background-color": "#000000",
+    "layout-manager": { "type": "ClutterBinLayout" },
+    "visible": true,
+    "signals": [
+      { "name": "destroy", "handler": "clutter_main_quit" }
+    ],
+    "children": [
+      {
+        "id": "zone_snake",
+        "type": "ClutterActor",
+        "x-align": "fill",
+        "y-align": "fill",
+        "x-expand": true,
+        "y-expand": true,
+        "reactive": true,
+        "background-color": "#FFFFFF"
+      }
+    ]
+  }
+]

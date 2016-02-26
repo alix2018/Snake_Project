@@ -7,8 +7,6 @@
  * @details    --- 
  */
 
-
-
 /**
  * @brief    liste de Snake
  */
@@ -27,7 +25,7 @@ typedef struct
 typedef enum
 {
 	/* Sens trigo */
-	GAUCHE = 180, DROITE = 0, BAS = 270, HAUT = 90, ARRET = -1;
+	GAUCHE = 180, DROITE = 0, BAS = 270, HAUT = 90, ARRET = -1
 } Direction;
 
 /* Fonction de base de coord */
@@ -59,10 +57,3 @@ Direction snake_direction(Snake *snake);
 void snake_set_direction(Snake *snake, Direction dir);
 
 void snake_forward(Snake *snake);
-
-
-
-
-
-
-

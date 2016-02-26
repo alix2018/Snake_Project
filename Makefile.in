@@ -1,5 +1,6 @@
 
-SOURCE_FILES = 
+SOURCE_FILES = struc.c \
+               affichage.c
 SRC_DIR = src
 OBJ_DIR = build
 BUILD_DIR = bin

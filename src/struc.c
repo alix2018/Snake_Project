@@ -14,8 +14,8 @@
 struct maillon_snake
 {
 	Coord coord;/*la coordonnée dans la liste*/
-	Snake suivant;/*la suite de la liste*/
-	Snake precedent; /*la fin de la liste*/
+	ListeSnake suivant;/*la suite de la liste*/
+	ListeSnake precedent; /*la fin de la liste*/
 };
 /**
  * @brief      la structure du snake 
