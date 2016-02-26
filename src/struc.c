@@ -165,7 +165,7 @@ void print_liste_snake(ListeSnake liste)
 
 	printf("\n");
 
-	}
+	}9
 
 }
 
@@ -177,12 +177,18 @@ void print_liste_snake(ListeSnake liste)
  *
  * @return     Renvoie les coordonnées de la tête
  */
-Coord liste_snake_coord(ListeSnake l);
+Coord liste_snake_coord(ListeSnake liste)
+{
+	Coord coord = liste -> coord;
+
+	return coord;
+}
+
 
 /* Fonctions de base de Snake */
 
 /**
- * @brief      Genère un snake de différente taille avec une position initial et un angle de direction
+ * @brief      Genère un snake de différente taille avec une position initiale et un angle de direction
  *
  * @param[in]  longueur  la taille du snake initiale
  * @param[in]  c         la position initiale
@@ -191,6 +197,8 @@ Coord liste_snake_coord(ListeSnake l);
  * @return     Renvoie un snake
  */
 Snake *create_snake(int longueur, Coord c, Direction dir);
+
+
 /**
  * @brief      Libère en mémoire le snake
  *

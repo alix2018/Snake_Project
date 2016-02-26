@@ -40,10 +40,12 @@ void print_coord(Coord c);
 /*Fonctions de base de ListeSnake*/
 
 ListeSnake cons_liste_snake(Coord c, ListeSnake liste);
+ListeSnake add_liste_snake(Coord c, ListeSnake liste)
+
 void free_liste_snake(ListeSnake liste);
 void print_liste_snake(ListeSnake liste);
 
-Coord liste_snake_coord(ListeSnake l);
+Coord liste_snake_coord(ListeSnake liste);
 
 
 /* Fonctions de base de Snake */
