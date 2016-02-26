@@ -130,7 +130,7 @@ int main(int argc, char **argv) {
      * des signaux (voir plus bas).
      */
     ClutterActor *rectangle;
-    //coord_from_xy(3,2);
+    coord_from_xy(3,2);
 //    Snake *snake_struc = create_snake(3,coord_from_xy(2,3),GAUCHE);
  //   ClutterActor ** snake_forme = generate_form_snake(snake_struc);
     // Pas de commentaire.
