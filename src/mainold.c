@@ -1,104 +1,59 @@
-
 #include <clutter/clutter.h>
-int dx,dy,direction;
-    float vitesse = 20;
-gboolean paint( gpointer data) 
-{
 
+gboolean clic_souris_cb(ClutterActor *actor, ClutterEvent *event, gpointer data) {
+    /*
+     * Cette fonction est appelée lorsque le bouton de la souris est enfoncé
+     * dans la fenêtre
+     */
+
+    // cast automatique pour récuperer le rectangle.
     ClutterActor *rectangle = data;
+    ClutterPoint *pos = clutter_point_alloc();
 
-   clutter_actor_save_easing_state(rectangle);
-    float x = clutter_actor_get_x(rectangle);
-    float y = clutter_actor_get_y(rectangle);
-    //printf("pos %f, %f \n", x,y);
-    switch (direction)  
-    {
-     
-    case 90:  // haut 
-        dx = 0;
-        dy = -vitesse;
+    /*
+     * Le paramètre event contient toutes les données relatives au clic de
+     * souris.
+     */
+    clutter_event_get_position(event, pos);
 
-    break;
+    /*
+     * Là on fait une animation (parce que les animations c'est cool, surtout
+     * en 3 lignes de code *_* )
+     */
+    clutter_actor_save_easing_state(rectangle);
 
-    case 180: //bas 
-        dx = 0;
-        dy = vitesse;
-    break;
+    /*
+     * La ligne du dessus peut paraître mystérieuse. En fait, dans clutter,
+     * tous les acteurs sont animés par défaut. La durée d'animation est
+     * simplement fixée à 0 par défaut. On sauvegarde d'abord les paramètres
+     * d'animation du rectangle pour pouvoir les rétablir une fois que
+     * l'animation sera lancée.
+     * On peut noter que, puisque seule la position du rectangle est modifiée
+     * dans ce programme, on aurait simplement pu définir les paramètres
+     * d'animation du rectangle dans la fonction main et s'épargner les appels
+     * aux fonctions clutter_actor_save/restore_easing_state.
+     */
 
-    case 270: // gauche  
-        dx = -vitesse;
-        dy = 0;
-
-    break;
-
-    case 0: //droite
-        dx = vitesse;
-        dy = 0;
-    break;
-    default:;
-    }
-    clutter_actor_set_position(rectangle,  x+dx,  y+dy);
-
-    clutter_actor_restore_easing_state(rectangle);
-
-}
-gboolean clic_souris_cb(ClutterActor *actor, ClutterEvent *event, gpointer data) 
-{
-        // cast automatique pour récuperer le rectangle.
-    ClutterActor *rectangle = data;
-
-
-
-
-  printf("button %i\n",clutter_event_get_key_symbol(event));
-
-  /*
-   * Les boutons haut sont : 65362 / 122 /90
-   * Les boutons bas sont : 65364 / 115 / 83
-   * Les boutons gauche sont : 65361 / 113 /81
-   * Les boutons droite sont : 65363 / 100 / 68
-   */
-   clutter_actor_save_easing_state(rectangle);
-
-
-    //clutter_actor_set_easing_duration(rectangle, 400);
+    clutter_actor_set_easing_duration(rectangle, 400);
     /*
      * Désormais, tous les changements de couleur, de taille, de position,
      * d'opacité, ... se feront en 400 ms.
      */
-   // clutter_actor_set_easing_mode(rectangle, CLUTTER_EASE_IN_QUAD);
-    float x = clutter_actor_get_x(rectangle);
-    float y = clutter_actor_get_y(rectangle);
-    printf("pos %f, %f \n", x,y);
-    float dx,dy;
+    clutter_actor_set_easing_mode(rectangle, CLUTTER_EASE_IN_OUT_CUBIC);
+    clutter_actor_set_position(rectangle, pos->x - 25, pos->y - 25);
 
-    int keypressed = clutter_event_get_key_symbol(event);
-    switch (keypressed) 
-    {
-        case 65362:;case 90:;
-    case 122: printf("haut\n"); 
-        direction = 90;
-    break;
-        case 65364:;case 83:;
-    case 115: printf("bas\n"); 
-        direction = 180;
-    break;
-        case 65361:;case 81:;
-    case 113: printf("gauche\n"); 
-        direction = 270;
+    clutter_actor_restore_easing_state(rectangle);
 
-    break;
-        case 65363:;case 68:;
-    case 100: printf("droite\n"); 
-        direction = 0;
-    break;
-    default: printf("not\n");
-    }
-   // clutter_actor_set_position(rectangle,  x+dx,  y+dy);
+    clutter_point_free(pos);
 
-    //clutter_actor_restore_easing_state(rectangle);
-
+    /*
+     * On retourne TRUE pour signifier que le signal a été bien traité.
+     * Lorsqu'on retourne FALSE, le signal sera émis dans les acteurs situés
+     * en dessous du rectangle s'ils existent.
+     */
+    return TRUE;
 }
+
 int main(int argc, char **argv) {
     /*
      * ClutterStage : c'est la fenêtre du programme, elle hérite de
@@ -162,15 +117,12 @@ int main(int argc, char **argv) {
      * clic_souris_cb(stage, <l'évènement>, rectangle)
      * est appelée dès que le bouton de la souris est enfoncé.
      * Si on veut utiliser un acteur comme un bouton, on peut utiliser l'objet
-     * ClutterCli  
-
-
-     }ckAction   : il faut l'associer à un acteur (voir la doc) et
+     * ClutterClickAction : il faut l'associer à un acteur (voir la doc) et
      * connecter le signal "clicked".
      */
-    g_signal_connect(stage, "key-press-event", G_CALLBACK(clic_souris_cb), rectangle);
+    g_signal_connect(stage, "button-press-event", G_CALLBACK(clic_souris_cb), rectangle);
 
-    g_timeout_add(30,G_CALLBACK(paint),rectangle); 
+    // Cette fonction affiche un ClutterActor (ici la fenêtre) et tous ses enfants.
     clutter_actor_show(stage);
 
     /*
