@@ -6,6 +6,11 @@
  * @brief      Toutes les fonctions permetant d'utiliser la structure et de jouer
  * @details    --- 
  */
+#ifndef _STRUCT_
+#define _STRUCT_
+
+#include <stdio.h>
+#include <stdlib.h>
 
 /**
  * @brief    liste de Snake
@@ -33,17 +38,19 @@ typedef enum
 Coord coord_from_xy(int x,int y);
 void print_coord(Coord c);
 
+
 /*Fonctions de base de ListeSnake*/
 
 
-ListeSnake cons_liste_snake(Coord c, ListeSnake liste);
+ListeSnake cons_liste_snake_debut(Coord c, ListeSnake liste);
+ListeSnake cons_liste_snake_fin(Coord c, ListeSnake liste);
 void free_liste_snake(ListeSnake liste);
 void print_liste_snake(ListeSnake liste);
 
-Coord liste_snake_coord(ListeSnake l);
+Coord liste_snake_coord(ListeSnake liste);
+
 
 /* Fonctions de base de Snake */
-
 
 Snake *create_snake(int longueur, Coord c, Direction dir);
 void free_snake(Snake *snake);
@@ -57,3 +64,5 @@ Direction snake_direction(Snake *snake);
 void snake_set_direction(Snake *snake, Direction dir);
 
 void snake_forward(Snake *snake);
+
+#endif
