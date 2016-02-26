@@ -81,9 +81,9 @@ ListeSnake cons_liste_snake(Coord c, ListeSnake liste)
 {
 
 	ListeSnake res;
-	res = malloc (sizeof(ListeSnake));
+	res = malloc (sizeof(struct maillon_snake));
 	res -> coord = c;
-	res -> suivant = NULL;
+	res -> suivant = liste;
 	res -> precedent = NULL;
 
 	return res;
@@ -165,7 +165,7 @@ void print_liste_snake(ListeSnake liste)
 
 	printf("\n");
 
-	}9
+	}
 
 }
 
