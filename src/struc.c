@@ -14,9 +14,10 @@
 struct maillon_snake
 {
 	Coord coord;/*la coordonnée dans la liste*/
-	Snake suivant;/*la suite de la liste*/
-	Snake precedent; /*la fin de la liste*/
+	ListeSnake suivant;/*la suite de la liste*/
+	ListeSnake precedent; /*la fin de la liste*/
 };
+
 /**
  * @brief      la structure du snake 
  * 
@@ -34,8 +35,6 @@ struct snake
 	Direction direction;
 };
 
-
-
 /* Fonction de base de coord */
 /**
  * @brief      A partir de deux integer renvoie un couple de type coordonnée
@@ -45,13 +44,23 @@ struct snake
  *
  * @return     renvoie un couple de type coordonnée 
  */
-Coord coord_from_xy(int x,int y);
+Coord coord_from_xy(int x,int y)
+{
+	Coord res;
+	res.x = x;
+	res.y = y;
+	return res;
+}
+
 /**
  * @brief      affiche un couple dans la console de la forme (x,y)
  *
  * @param[in]  c     la coordonnée à afficher
  */
-void print_coord(Coord c);
+void print_coord(Coord c)
+{
+	printf("(%d,%d)\n", c.x, c.y);
+}
 
 /*Fonctions de base de ListeSnake*/
 
@@ -62,21 +71,75 @@ void print_coord(Coord c);
  * @param[in]  c      la position du couple de type coordonnée
  * @param[in]  liste  la suite de la liste (NULL si on crée une liste à un élément)
  *
- * @return     une liste augmenté
+ * @return     une liste augmenté ou l'on a ajouté c au début de la liste
  */
-ListeSnake cons_liste_snake(Coord c, ListeSnake liste);
+ListeSnake cons_liste_snake_debut(Coord c, ListeSnake liste)
+{
+	ListeSnake res = malloc(sizeof(struct maillon_snake));
+	res->coord = c;
+	res->precedent = NULL;
+	res->suivant = liste;
+	return res;
+}
+
+/**
+ * @brief      construit en mémoire une liste représentant le snake
+ *
+ * @param[in]  c      la position du couple de type coordonnée
+ * @param[in]  liste  la suite de la liste (NULL si on crée une liste à un élément)
+ *
+ * @return     une liste augmenté ou l'on a ajouté c au début de la liste
+ */
+ListeSnake cons_liste_snake_fin(Coord c, ListeSnake liste)
+{
+	ListeSnake dernier = malloc(sizeof(struct maillon_snake));
+	dernier->coord = c;
+
+	if(liste == NULL)
+	{
+		dernier->precedent = NULL;
+		dernier->suivant = NULL;
+		return dernier;
+	}
+	else
+	{
+		ListeSnake res = liste;
+		while(liste->suivant != NULL)
+		{
+			liste=liste->suivant;
+		}
+		liste->suivant = dernier;
+		dernier->precedent = liste;
+		dernier->suivant = NULL;
+		return res;
+	}
+}
+
 /**
  * @brief      Libère en mémoire toute la liste
  *
  * @param[in]  liste  la liste à libérer
  */
-void free_liste_snake(ListeSnake liste);
+void free_liste_snake(ListeSnake liste)
+{
+	free(liste);
+}
+
 /**
  * @brief      Affiche sur la console la liste complête sous la forme (x1,y1) - (x2,y2) - (x3,y3) ...
  *
  * @param[in]  liste  la liste à afficher
  */
-void print_liste_snake(ListeSnake liste);
+void print_liste_snake(ListeSnake liste)
+{
+	while(liste != NULL)
+	{
+		printf(" (%d, %d)", liste->coord.x, liste->coord.y);
+		liste = liste->suivant;
+	}
+	printf("\n");
+}
+
 /**
  * @brief      Récupère les coordonnées de la tête d'une liste
  *
@@ -84,7 +147,10 @@ void print_liste_snake(ListeSnake liste);
  *
  * @return     Renvoie les coordonnées de la tête
  */
-Coord liste_snake_coord(ListeSnake l);
+Coord liste_snake_coord(ListeSnake l)
+{
+	return l->coord;
+}
 
 /* Fonctions de base de Snake */
 
@@ -97,13 +163,62 @@ Coord liste_snake_coord(ListeSnake l);
  *
  * @return     Renvoie un snake
  */
-Snake *create_snake(int longueur, Coord c, Direction dir);
+Snake create_snake(int longueur, Coord c, Direction dir)
+{
+	int i;
+	Snake res;
+	res.longueur = longueur;
+	res.direction = dir;
+	ListeSnake ls = NULL;
+	for( i = 0 ; i < longueur ; i++ )
+	{
+		switch(dir)
+		{
+			case GAUCHE :
+				ls = cons_liste_snake_fin(c, ls);
+				c.x += 1;
+				break;
+			case DROITE :
+				ls = cons_liste_snake_fin(c, ls);
+				c.x -= 1;
+				break;
+			case HAUT :
+				printf("ok\n");
+				ls = cons_liste_snake_fin(c, ls);
+				printf("ok2\n");
+				c.y += 1;
+				break;
+			case BAS : 
+				ls = cons_liste_snake_fin(c, ls);
+				c.y -= 1;
+				break;
+			default:
+				ls = cons_liste_snake_fin(c, ls);
+		}
+		printf("%d\n", i);
+	}
+
+	res.tete=ls;
+
+	while( ls->suivant != NULL )
+	{
+		ls=ls->suivant;
+	}
+	res.dernier=ls;
+
+	return res;
+}
 /**
  * @brief      Libère en mémoire le snake
  *
  * @param      snake  le snake à libérer
  */
-void free_snake(Snake *snake);
+void free_snake(Snake *snake)
+{
+	free_liste_snake((*snake).tete);
+	free(snake);
+}
+
 /**
  * @brief      Affiche un snake sur la console sous la forme L : #longeur - Direction : - La liste
  *
@@ -167,3 +282,22 @@ void snake_set_direction(Snake *snake, Direction dir);
  */
 void snake_forward(Snake *snake);
 
+int main(int argc, char const *argv[])
+{
+
+	Coord c1 = coord_from_xy(2, 8);
+	Coord c2 = coord_from_xy(10, 10);
+
+	ListeSnake ls = NULL;
+	ls = cons_liste_snake_debut(c1, ls);
+	ls = cons_liste_snake_fin(c2, ls);
+	print_liste_snake(ls);
+	free_liste_snake(ls);
+
+	Snake s = create_snake(2, c1, HAUT);
+
+	print_liste_snake(s.tete);
+
+
+	return 0;
+}
