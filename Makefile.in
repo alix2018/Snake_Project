@@ -5,10 +5,10 @@ SRC_DIR = src
 OBJ_DIR = build
 BUILD_DIR = bin
 
-PROG_SOURCE_FILES = $(SRC_DIR)/main.c $(SRC_DIR)/$(SOURCE_FILES)
+PROG_SOURCE_FILES = $(SRC_DIR)/main.c $(addprefix $(SRC_DIR)/, $(SOURCE_FILES))
 TESTS_SOURCE_FILES = test/tests.c $(SOURCE_FILES)
-TESTS_OBJ_FILES = $(OBJ_DIR)/$(TESTS_SOURCE_FILES:.c=.o)
-PROG_OBJ_FILES = $(OBJ_DIR)/$(PROG_SOURCE_FILES:.c=.o)
+TESTS_OBJ_FILES = $(addprefix $(OBJ_DIR)/, $(TESTS_SOURCE_FILES:.c=.o))
+PROG_OBJ_FILES = $(addprefix $(OBJ_DIR)/, $(PROG_SOURCE_FILES:.c=.o))
 
 CC = @CC@
 CFLAGS = @CFLAGS@
@@ -24,14 +24,14 @@ $(OBJ_DIR)/%.o: %.c
 	@$(CC) -c $< -o $@ $(CFLAGS) $(CLUTTER_CFLAGS)
 
 alpha-snake: $(PROG_OBJ_FILES)
-	@echo CCLD $<
+	@echo CCLD $^
 	@test -d $(BUILD_DIR) || mkdir -p $(BUILD_DIR)
-	@$(CC) $< -o $(BUILD_DIR)/$@ $(CLUTTER_LDFLAGS)
+	@$(CC) $^ -o $(BUILD_DIR)/$@ $(CLUTTER_LDFLAGS)
 
 tests: $(TESTS_OBJ_FILES)
 	@test -d $(BUILD_DIR) || mkdir -p $(BUILD_DIR)
-	@echo CCLD $<
-	@$(CC) $< -o $(BUILD_DIR)/$@ $(CLUTTER_LDFLAGS)
+	@echo CCLD $^
+	@$(CC) $^ -o $(BUILD_DIR)/$@ $(CLUTTER_LDFLAGS)
 
 clean:
 	-rm -rv $(OBJ_DIR)
