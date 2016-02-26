@@ -122,7 +122,13 @@ ListeSnake cons_liste_snake_fin(Coord c, ListeSnake liste)
  */
 void free_liste_snake(ListeSnake liste)
 {
-	free(liste);
+	if(liste->suivant==NULL){
+		free(liste);
+	}
+	else{
+		free_liste_snake(liste->suivant);
+		free(liste);
+	}
 }
 
 /**
@@ -163,12 +169,12 @@ Coord liste_snake_coord(ListeSnake l)
  *
  * @return     Renvoie un snake
  */
-Snake create_snake(int longueur, Coord c, Direction dir)
+Snake *create_snake(int longueur, Coord c, Direction dir)
 {
 	int i;
-	Snake res;
-	res.longueur = longueur;
-	res.direction = dir;
+	Snake *res = (Snake *)malloc(sizeof(Snake));
+	(*res).longueur = longueur;
+	(*res).direction = dir;
 	ListeSnake ls = NULL;
 	for( i = 0 ; i < longueur ; i++ )
 	{
@@ -183,9 +189,7 @@ Snake create_snake(int longueur, Coord c, Direction dir)
 				c.x -= 1;
 				break;
 			case HAUT :
-				printf("ok\n");
 				ls = cons_liste_snake_fin(c, ls);
-				printf("ok2\n");
 				c.y += 1;
 				break;
 			case BAS : 
@@ -195,16 +199,15 @@ Snake create_snake(int longueur, Coord c, Direction dir)
 			default:
 				ls = cons_liste_snake_fin(c, ls);
 		}
-		printf("%d\n", i);
 	}
 
-	res.tete=ls;
+	(*res).tete=ls;
 
 	while( ls->suivant != NULL )
 	{
 		ls=ls->suivant;
 	}
-	res.dernier=ls;
+	(*res).dernier=ls;
 
 	return res;
 }
@@ -224,7 +227,11 @@ void free_snake(Snake *snake)
  *
  * @param      snake  le snake à afficher
  */
-void print_snake(Snake *snake);
+void print_snake(Snake *snake)
+{
+	printf("# %d - %d : ", (*snake).longueur, (*snake).direction);
+	print_liste_snake((*snake).tete);
+}
 
 /**
  * @brief      Récupère la position du snake
@@ -233,7 +240,11 @@ void print_snake(Snake *snake);
  *
  * @return     La position de type coordonnée
  */
-Coord snake_pos(Snake *snake);
+Coord snake_pos(Snake *snake)
+{
+	return (*snake).tete->coord;
+}
+
 /**
  * @brief      Récupère la longueur d'un snake
  *
@@ -241,7 +252,18 @@ Coord snake_pos(Snake *snake);
  *
  * @return     Renvoie un integer représentant la longueur du snake
  */
-int snake_longueur(Snake *snake);
+int snake_longueur(Snake *snake)
+{
+	int res = 0;
+	Snake s = *snake;
+	while(s.tete != NULL)
+	{
+		s.tete = s.tete->suivant;
+		res += 1;
+	}
+	return res;
+}
+
 /**
  * @brief      Récupère le dernier élément de la liste 
  *
@@ -249,7 +271,11 @@ int snake_longueur(Snake *snake);
  *
  * @return     Renvoie une liste comportant un élément : la fin de queue
  */
-ListeSnake snake_dernier(Snake *snake);
+ListeSnake snake_dernier(Snake *snake)
+{
+	return (*snake).dernier;
+}
+
 /**
  * @brief      Récupère tout la liste en partant de la tête  
  *
@@ -257,7 +283,11 @@ ListeSnake snake_dernier(Snake *snake);
  *
  * @return     Renvoie la liste complête du snake
  */
-ListeSnake snake_premier(Snake *snake);
+ListeSnake snake_premier(Snake *snake)
+{
+	return (*snake).tete;
+}
+
 /**
  * @brief      La direction de la tête au prochain coup
  *
@@ -265,14 +295,21 @@ ListeSnake snake_premier(Snake *snake);
  *
  * @return     Renvoie la direction du prochain coup
  */
-Direction snake_direction(Snake *snake);
+Direction snake_direction(Snake *snake)
+{
+	return (*snake).direction;
+}
+
 /**
  * @brief      Change la direction futur du snake
  *
  * @param      snake  le snake à changer
  * @param[in]  dir    La direction du déplacement
  */
-void snake_set_direction(Snake *snake, Direction dir);
+void snake_set_direction(Snake *snake, Direction dir)
+{
+	(*snake).direction = dir;
+}
 
 /**
  * @brief      Déplace l'intégralité du snake
@@ -280,7 +317,36 @@ void snake_set_direction(Snake *snake, Direction dir);
  * @param      snake  le snake à déplacer
  * @param[in]  dir    La direction du déplacement
  */
-void snake_forward(Snake *snake);
+void snake_forward(Snake *snake)
+{
+
+	ListeSnake ls = (*snake).dernier;
+
+	while(ls->precedent != NULL){
+		ls->coord = ls->precedent->coord;
+		ls = ls->precedent;
+	}
+
+	switch((*snake).direction)
+	{
+		case DROITE :
+			ls->coord.x += 1;
+			break;
+		case GAUCHE :
+			ls->coord.x -= 1;
+			break;
+		case HAUT :
+			ls->coord.y -= 1;
+			break;
+		case BAS :
+			ls->coord.y += 1;
+			break;
+		default:
+			printf("Problème de direction...\n");
+	}
+
+	(*snake).tete=ls;
+}
 
 int main(int argc, char const *argv[])
 {
@@ -293,11 +359,20 @@ int main(int argc, char const *argv[])
 	ls = cons_liste_snake_fin(c2, ls);
 	print_liste_snake(ls);
 	free_liste_snake(ls);
+	
+	Snake *s = create_snake(8, c1, HAUT);
 
-	Snake s = create_snake(2, c1, HAUT);
+	print_snake(s);
+	printf("%d\n", snake_longueur(s));
+	printf("%d\n", snake_longueur(s));
 
-	print_liste_snake(s.tete);
+	snake_set_direction(s, BAS);
+	print_snake(s);
 
+	snake_forward(s);
+	print_snake(s);
+	
+	free_snake(s);
 
 	return 0;
 }

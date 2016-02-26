@@ -51,7 +51,7 @@ Coord liste_snake_coord(ListeSnake l);
 /* Fonctions de base de Snake */
 
 
-Snake create_snake(int longueur, Coord c, Direction dir);
+Snake *create_snake(int longueur, Coord c, Direction dir);
 void free_snake(Snake *snake);
 void print_snake(Snake *snake);
 
