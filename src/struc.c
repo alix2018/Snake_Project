@@ -375,31 +375,8 @@ void snake_forward(Snake *snake)
 	(*snake).tete=ls;
 }
 
-int main(int argc, char const *argv[])
-{
+ListeSnake cons_liste_snake_fin(Coord c, ListeSnake liste) {
+	// TODO à implémenter
 
-	Coord c1 = coord_from_xy(2, 8);
-	Coord c2 = coord_from_xy(10, 10);
-
-	ListeSnake ls = NULL;
-	ls = cons_liste_snake_debut(c1, ls);
-	ls = cons_liste_snake_fin(c2, ls);
-	print_liste_snake(ls);
-	free_liste_snake(ls);
-
-	Snake *s = create_snake(8, c1, HAUT);
-
-	print_snake(s);
-	printf("%d\n", snake_longueur(s));
-	printf("%d\n", snake_longueur(s));
-
-	snake_set_direction(s, BAS);
-	print_snake(s);
-
-	snake_forward(s);
-	print_snake(s);
-
-	free_snake(s);
-
-	return 0;
+	return NULL;
 }
