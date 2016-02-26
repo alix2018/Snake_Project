@@ -1,7 +1,11 @@
 
 #include <clutter/clutter.h>
+#include "struc.h"
+
+
 int dx,dy,direction;
     float vitesse = 20;
+
 gboolean paint( gpointer data) 
 {
 
@@ -99,6 +103,18 @@ gboolean clic_souris_cb(ClutterActor *actor, ClutterEvent *event, gpointer data)
     //clutter_actor_restore_easing_state(rectangle);
 
 }
+
+/*ClutterActor** generate_form_snake(Snake *snake)
+{
+
+    ClutterActor ** res = (ClutterActor**)malloc( 5*sizeof(ClutterActor * )); 
+    printf("Snake longueur : %i \n",snake_longueur(snake));
+
+
+    return res;
+}
+*/
+
 int main(int argc, char **argv) {
     /*
      * ClutterStage : c'est la fenêtre du programme, elle hérite de
@@ -114,7 +130,9 @@ int main(int argc, char **argv) {
      * des signaux (voir plus bas).
      */
     ClutterActor *rectangle;
-
+    //coord_from_xy(3,2);
+//    Snake *snake_struc = create_snake(3,coord_from_xy(2,3),GAUCHE);
+ //   ClutterActor ** snake_forme = generate_form_snake(snake_struc);
     // Pas de commentaire.
     clutter_init(&argc, &argv);
     /*
@@ -123,8 +141,8 @@ int main(int argc, char **argv) {
      */
     stage = clutter_stage_new();
     // En Java, cette ligne donnerait stage.set_title("Essai Clutter");
-    clutter_stage_set_title(CLUTTER_STAGE(stage), "Essai Clutter");
-    clutter_actor_set_size(stage, 400, 400);
+    clutter_stage_set_title(CLUTTER_STAGE(stage), "The title xD ");
+    clutter_actor_set_size(stage, 800, 800);
     clutter_actor_set_background_color(stage, CLUTTER_COLOR_Black);
     /*
      * Cette ligne signifie que le ClutterActor stage émettra des signaux
@@ -149,7 +167,7 @@ int main(int argc, char **argv) {
     g_signal_connect(stage, "destroy", G_CALLBACK(clutter_main_quit), NULL);
 
     rectangle = clutter_actor_new();
-    clutter_actor_set_size(rectangle, 50, 50);
+    clutter_actor_set_size(rectangle, 20, 20);
     clutter_actor_set_position(rectangle, 50, 50);
     clutter_actor_set_background_color(rectangle, CLUTTER_COLOR_Blue);
     /*

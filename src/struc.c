@@ -347,7 +347,7 @@ void snake_forward(Snake *snake)
 
 	(*snake).tete=ls;
 }
-
+/*
 int main(int argc, char const *argv[])
 {
 
@@ -376,3 +376,4 @@ int main(int argc, char const *argv[])
 
 	return 0;
 }
+*/
