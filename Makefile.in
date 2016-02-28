@@ -1,6 +1,7 @@
 
 SOURCE_FILES = struc.c \
-               affichage.c
+               affichage.c \
+               list.c
 SRC_DIR = src
 OBJ_DIR = build
 BUILD_DIR = bin

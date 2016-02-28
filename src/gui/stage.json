@@ -2,9 +2,9 @@
   {
     "id": "stage",
     "type": "ClutterStage",
+    "title": "Alpha-Snake",
     "background-color": "#000000",
     "layout-manager": { "type": "ClutterBinLayout" },
-    "visible": true,
     "signals": [
       { "name": "destroy", "handler": "clutter_main_quit" }
     ],

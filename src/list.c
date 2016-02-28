@@ -164,3 +164,75 @@ void list_foreach(List *list, void (*fn)(void *, void *), void *data)
     for (cur = list->first; cur != NULL; cur = cur->next)
         fn(cur->elt, data);
 }
+
+/**
+ * @brief   Retourne l'élément stocké dans un nœud.
+ */
+void *node_elt(Node node)
+{
+    return node->elt;
+}
+
+/**
+ * @brief   Retourne le noeud suivant un noeud.
+ */
+Node node_next(Node node)
+{
+    return node->next;
+}
+
+/**
+ * @brief   Retourne le noeud précédant un noeud.
+ */
+Node node_prev(Node node)
+{
+    return node->prev;
+}
+
+/**
+ * @brief   Retourne le premier noeud d'une liste.
+ */
+Node list_first_node(List *list)
+{
+    return list->first;
+}
+
+/**
+ * @brief   Retourne le dernier noeud d'une liste.
+ */
+Node list_last_node(List *list)
+{
+    return list->last;
+}
+
+/**
+ * @brief   Retourne 1 si la liste est vide, 0 sinon.
+ */
+int list_is_empty(List *list)
+{
+    return list->first == NULL;
+}
+
+void *list_pop_last(List *list)
+{
+    void *res;
+
+    res = list->last->elt;
+    list->last = list->last->prev;
+    free(list->last->next);
+    list->last->next = NULL;
+
+    return res;
+}
+
+void *list_pop_first(List *list)
+{
+    void *res;
+
+    res = list->first->elt;
+    list->first = list->first->next;
+    free(list->first->prev);
+    list->first->prev = NULL;
+
+    return res;
+}
