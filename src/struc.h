@@ -47,7 +47,8 @@ ListeSnake cons_liste_snake_fin(Coord c, ListeSnake liste);
 void free_liste_snake(ListeSnake liste);
 void print_liste_snake(ListeSnake liste);
 
-Coord liste_snake_coord(ListeSnake liste);
+Coord liste_snake_coord(ListeSnake l);
+ListeSnake liste_snake_suivant(ListeSnake liste);
 
 
 /* Fonctions de base de Snake */

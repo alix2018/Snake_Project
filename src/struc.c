@@ -77,15 +77,12 @@ void print_coord(Coord c)
  *
  * @return     une liste augmentée avec le nouvel élement en début de liste
  */
-ListeSnake cons_liste_snake(Coord c, ListeSnake liste)
+ListeSnake cons_liste_snake_debut(Coord c, ListeSnake liste)
 {
-
-	ListeSnake res;
-	res = malloc (sizeof(struct maillon_snake));
-	res -> coord = c;
-	res -> suivant = liste;
-	res -> precedent = NULL;
-
+	ListeSnake res = malloc(sizeof(struct maillon_snake));
+	res->coord = c;
+	res->precedent = NULL;
+	res->suivant = liste;
 	return res;
 }
 
@@ -93,32 +90,33 @@ ListeSnake cons_liste_snake(Coord c, ListeSnake liste)
  * @brief      construit en mémoire une liste représentant le snake
  *
  * @param[in]  c      la position du couple de type coordonnée
- * @param[in]  liste  la suite de la liste (NULL si on crée une liste à un seul élément)
+ * @param[in]  liste  la suite de la liste (NULL si on crée une liste à un élément)
  *
  * @return     une liste augmentée avec le nouvel élement en fin de liste
  */
-ListeSnake add_liste_snake(Coord c, ListeSnake liste)
+ListeSnake cons_liste_snake_fin(Coord c, ListeSnake liste)
 {
-	ListeSnake res;
+	ListeSnake dernier = malloc(sizeof(struct maillon_snake));
+	dernier->coord = c;
 
-	if ( liste == NULL )
+	if(liste == NULL)
 	{
-		res = cons_liste_snake(c,res);
+		dernier->precedent = NULL;
+		dernier->suivant = NULL;
+		return dernier;
 	}
-
 	else
 	{
-		res = liste;
-
-		while ( res -> suivant != NULL )
+		ListeSnake res = liste;
+		while(liste->suivant != NULL)
 		{
-			res = res -> suivant;
+			liste=liste->suivant;
 		}
-
-		res -> suivant = cons_liste_snake(c,res); /* ne s'occupe pas de changer le pointeur sur la nouvelle queue du snake */
+		liste->suivant = dernier;
+		dernier->precedent = liste;
+		dernier->suivant = NULL;
+		return res;
 	}
-
-	return res;
 }
 
 
@@ -129,15 +127,13 @@ ListeSnake add_liste_snake(Coord c, ListeSnake liste)
  */
 void free_liste_snake(ListeSnake liste)
 {
-	ListeSnake temp;
-
-	while ( liste != NULL )
-	{
-		temp = liste -> suivant;
+	if(liste->suivant==NULL){
 		free(liste);
-		liste=temp;
 	}
-
+	else{
+		free_liste_snake(liste->suivant);
+		free(liste);
+	}
 }
 
 
@@ -148,27 +144,13 @@ void free_liste_snake(ListeSnake liste)
  */
 void print_liste_snake(ListeSnake liste)
 {
-
-	if ( liste == NULL ) {
-		printf("liste nulle");
-	}
-
-	else
+	while(liste != NULL)
 	{
-		printf("(%d,%d)", liste -> coord.x, liste -> coord.y);
-		liste = liste -> suivant;
-
-		while ( liste != NULL ) {
-			printf(" - (%d,%d)", liste -> coord.x, liste -> coord.y);
-			liste = liste -> suivant;
-		}
-
-	printf("\n");
-
+		printf(" (%d, %d)", liste->coord.x, liste->coord.y);
+		liste = liste->suivant;
 	}
-
+	printf("\n");
 }
-
 
 /**
  * @brief      Récupère les coordonnées de la tête d'une liste
@@ -177,13 +159,15 @@ void print_liste_snake(ListeSnake liste)
  *
  * @return     Renvoie les coordonnées de la tête
  */
-Coord liste_snake_coord(ListeSnake liste)
+Coord liste_snake_coord(ListeSnake l)
 {
-	Coord coord = liste -> coord;
-
-	return coord;
+	return l->coord;
 }
 
+ListeSnake liste_snake_suivant(ListeSnake liste)
+{
+	return liste->suivant;
+}
 
 /* Fonctions de base de Snake */
 
@@ -238,6 +222,7 @@ Snake *create_snake(int longueur, Coord c, Direction dir)
 
 	return res;
 }
+
 /**
  * @brief      Libère en mémoire le snake
  *
@@ -292,7 +277,7 @@ int snake_longueur(Snake *snake)
 }
 
 /**
- * @brief      Récupère le dernier élément de la liste 
+ * @brief      Récupère le dernier élément de la liste
  *
  * @param      snake  le snake avec une queue
  *
@@ -304,7 +289,7 @@ ListeSnake snake_dernier(Snake *snake)
 }
 
 /**
- * @brief      Récupère tout la liste en partant de la tête  
+ * @brief      Récupère tout la liste en partant de la tête
  *
  * @param      snake  le snake
  *
@@ -318,7 +303,7 @@ ListeSnake snake_premier(Snake *snake)
 /**
  * @brief      La direction de la tête au prochain coup
  *
- * @param      snake  le snake 
+ * @param      snake  le snake
  *
  * @return     Renvoie la direction du prochain coup
  */
@@ -373,10 +358,4 @@ void snake_forward(Snake *snake)
 	}
 
 	(*snake).tete=ls;
-}
-
-ListeSnake cons_liste_snake_fin(Coord c, ListeSnake liste) {
-	// TODO à implémenter
-
-	return NULL;
 }
