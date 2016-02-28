@@ -71,7 +71,7 @@ static void free_clutter_actor_fn(void * elt)
 {
     ClutterActor *actor = elt;
 
-    clutter_actor_destroy(elt);
+    clutter_actor_destroy(actor);
 }
 
 void free_snake_actor(SnakeActor *sa)
