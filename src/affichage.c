@@ -51,13 +51,49 @@ gboolean zone_snake_key_press_cb(ClutterActor *actor, ClutterEvent *event, gpoin
     return TRUE;
 }
 
+/**
+    Renvoie true si le snake est contre un mur et veux avancer dans le mur
+*/
+int snake_border_map(SnakeActor *sa)
+{
+    int res = 0;
+    Snake *s = sa->snake;
+    
+    if(snake_direction(s) == HAUT && snake_pos(s).y == 0)
+    {
+        res = 1;
+    }
+    if(snake_direction(s) == GAUCHE && snake_pos(s).x == 0)
+    {
+        res = 1;
+    }
+
+    float w, h;
+    clutter_actor_get_size(sa->parent, &w, &h);
+    int l_w = (int) w/GRID_SIZE;
+    int l_h = (int) h/GRID_SIZE;
+
+    if(snake_direction(s) == BAS && snake_pos(s).y == l_h-1)
+    {
+        res = 1;
+    }
+    if(snake_direction(s) == DROITE && snake_pos(s).x == l_w-1)
+    {
+        res = 1;
+    }
+
+    return res;
+}
+
 gboolean timeout_tick_cb(gpointer data)
 {
     SnakeActor *sa = data;
     gfloat x, y;
 
-    snake_forward(sa->snake);
-    snake_actor_update(sa);
+    if(!snake_border_map(sa)){
+        snake_forward(sa->snake);
+        snake_actor_update(sa);
+    }
 
     return G_SOURCE_CONTINUE;
 }
