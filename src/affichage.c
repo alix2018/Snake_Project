@@ -2,7 +2,7 @@
 #include "affichage.h"
 #include "list.h"
 #include "struc.h"
-
+#include <gdk/gdk.h>
 #define GRID_SIZE 10
 
 struct _snake_actor
@@ -11,6 +11,15 @@ struct _snake_actor
     ClutterActor *parent;
     Snake *snake;
     int cur_size;
+};
+
+struct _snake_image
+{
+    ClutterContent *tete;
+    ClutterContent *queue;
+    ClutterContent *corps;
+    ClutterContent *turnlight;
+    ClutterContent *turndark;
 };
 
 gboolean zone_snake_key_press_cb(ClutterActor *actor, ClutterEvent *event, gpointer data)
@@ -139,6 +148,38 @@ void snake_actor_update(SnakeActor *sa)
     }
 }
 
+ClutterContent *generate_image(char * filename)
+{
+
+    ClutterContent *image = clutter_image_new ();
+
+    GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file (filename, NULL);
+
+    clutter_image_set_data (CLUTTER_IMAGE (image),
+                            gdk_pixbuf_get_pixels (pixbuf),
+                            gdk_pixbuf_get_has_alpha (pixbuf)
+                              ? COGL_PIXEL_FORMAT_RGBA_8888
+                              : COGL_PIXEL_FORMAT_RGB_888,
+                            gdk_pixbuf_get_width (pixbuf),
+                            gdk_pixbuf_get_height (pixbuf),
+                            gdk_pixbuf_get_rowstride (pixbuf),
+                            NULL);
+
+    g_object_unref (pixbuf);
+    return image;
+}
+
+
+
+SnakeImage *snake_generate_image()
+{
+    SnakeImage res;
+
+
+
+
+}
+
 void init_view(ClutterScript *ui, int width, int height, Direction direction,
                int size, Coord pos)
 {
@@ -164,6 +205,9 @@ void init_view(ClutterScript *ui, int width, int height, Direction direction,
     g_signal_connect(zone_snake, "key-press-event", G_CALLBACK(zone_snake_key_press_cb), snk);
     g_signal_connect(stage, "destroy", G_CALLBACK(stage_destroy_cb), sa);
     g_timeout_add(200, timeout_tick_cb, sa);
+
+    ClutterContent *image = generate_image("data/fond.jpg");
+    clutter_actor_set_content (zone_snake,image);
 
     clutter_actor_show(stage);
 
