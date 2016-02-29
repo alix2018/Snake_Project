@@ -53,6 +53,13 @@ gboolean timeout_tick_cb(gpointer data)
     return G_SOURCE_CONTINUE;
 }
 
+void stage_destroy_cb(ClutterActor *actor, gpointer data)
+{
+    SnakeActor *sa = data;
+
+    free_snake_actor(sa);
+    clutter_main_quit();
+}
 
 SnakeActor *create_snake_actor(ClutterActor *parent, Snake *s)
 {
@@ -94,10 +101,12 @@ void snake_actor_update(SnakeActor *sa)
         for (; delta > 0; delta--)
         {
             actor = clutter_actor_new();
+            g_object_ref(actor);
             clutter_actor_set_size(actor, GRID_SIZE, GRID_SIZE);
             clutter_actor_set_background_color(actor, CLUTTER_COLOR_Blue);
             clutter_actor_set_easing_duration(actor, 300);
             clutter_actor_add_child(sa->parent, actor);
+
 
             list_add_last(sa->actors, actor);
         }
@@ -153,6 +162,7 @@ void init_view(ClutterScript *ui, int width, int height, Direction direction,
     snake_actor_update(sa);
 
     g_signal_connect(zone_snake, "key-press-event", G_CALLBACK(zone_snake_key_press_cb), snk);
+    g_signal_connect(stage, "destroy", G_CALLBACK(stage_destroy_cb), sa);
     g_timeout_add(200, timeout_tick_cb, sa);
 
     clutter_actor_show(stage);
@@ -160,5 +170,4 @@ void init_view(ClutterScript *ui, int width, int height, Direction direction,
     clutter_main();
 
     free_snake(snk);
-    free_snake_actor(sa);
 }

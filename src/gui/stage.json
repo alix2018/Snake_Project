@@ -5,9 +5,6 @@
     "title": "Alpha-Snake",
     "background-color": "#000000",
     "layout-manager": { "type": "ClutterBinLayout" },
-    "signals": [
-      { "name": "destroy", "handler": "clutter_main_quit" }
-    ],
     "children": [
       {
         "id": "zone_snake",
