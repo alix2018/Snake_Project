@@ -53,7 +53,7 @@ gboolean zone_snake_key_press_cb(ClutterActor *actor, ClutterEvent *event, gpoin
 
 /**
     Renvoie true si le snake est contre un mur et veux avancer dans le mur
-*/
+*/ 
 int snake_border_map(SnakeActor *sa)
 {
     int res = 0;
