@@ -11,6 +11,13 @@ TESTS_SOURCE_FILES = test/tests.c $(SOURCE_FILES)
 TESTS_OBJ_FILES = $(addprefix $(OBJ_DIR)/, $(TESTS_SOURCE_FILES:.c=.o))
 PROG_OBJ_FILES = $(addprefix $(OBJ_DIR)/, $(PROG_SOURCE_FILES:.c=.o))
 
+DIST_DIRS = src \
+             tests \
+             data
+        
+DIST_FILES = configure \
+             Makefile.in
+
 CC = @CC@
 CFLAGS = @CFLAGS@
 
@@ -38,5 +45,15 @@ clean:
 	-rm -rv $(OBJ_DIR)
 
 maintainer-clean: clean
-	-rm -rv Makefile configure config.status autom4te.cache aclocal.m4 config.log 
+	-rm -rv Makefile configure config.status autom4te.cache aclocal.m4 config.log
+	-rm -rv projet-ipi-jalon1
+	-rm -v projet-ipi-jalon1.tar.bz2
+	
+dist-bzip:
+	mkdir -p projet-ipi-jalon1
+	@cp -rv $(DIST_DIRS) projet-ipi-jalon1
+	@cp -v $(DIST_FILES) projet-ipi-jalon1
+	@cp -v README_prof.md projet-ipi-jalon1/README.md
+	tar -cvjSf projet-ipi-jalon1.tar.bz2 projet-ipi-jalon1
+	@rm -rv projet-ipi-jalon1
 
