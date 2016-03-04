@@ -67,6 +67,25 @@ void print_coord(Coord c)
 	printf("(%d,%d)\n", c.x, c.y);
 }
 
+
+/**
+ * @brief      Test l'égalité entre deux coordonnées
+ *
+ * @param[in]  c1  coord à vérifier
+ * @param[in]  c2  coord à vérifier
+ *
+ * @return     1 si les coord sont égales, 0 sinon
+ */
+int coord_egales(Coord c1, Coord c2){
+	if(c1.x==c2.x && c1.y==c2.y){
+		return 1;
+	}
+	else{
+		return 0;
+	}
+}
+
+
 /* Fonctions de base de ListeSnake */
 
 /**

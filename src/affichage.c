@@ -43,13 +43,20 @@ gboolean zone_snake_key_press_cb(ClutterActor *actor, ClutterEvent *event, gpoin
 }
 
 /**
-    Renvoie true si le snake est contre un mur et veux avancer dans le mur
+    Renvoie 0 si le snake est contre un mur et veux avancer dans le mur, 1 sinon
+    Appelé dans la fonction timeout_tich_cb
 */
 int snake_border_map(SnakeActor *sa)
 {
-    int res = 0;
+    int res = 0, l_w, l_h;
+    float w, h;
+
     Snake *s = sa->snake;
-    
+
+    clutter_actor_get_size(sa->parent, &w, &h);
+    l_w = (int) w/GRID_SIZE;
+    l_h = (int) h/GRID_SIZE;
+
     if(snake_direction(s) == HAUT && snake_pos(s).y == 0)
     {
         res = 1;
@@ -58,12 +65,6 @@ int snake_border_map(SnakeActor *sa)
     {
         res = 1;
     }
-
-    float w, h;
-    clutter_actor_get_size(sa->parent, &w, &h);
-    int l_w = (int) w/GRID_SIZE;
-    int l_h = (int) h/GRID_SIZE;
-
     if(snake_direction(s) == BAS && snake_pos(s).y == l_h-1)
     {
         res = 1;
@@ -76,12 +77,79 @@ int snake_border_map(SnakeActor *sa)
     return res;
 }
 
+/**
+    Renvoie 0 si le snake essaie de se mordre la queu, 1 sinon
+    Appelé dans la fonction timeout_tich_cb
+*/
+int snake_border_snake(SnakeActor *sa)
+{
+    int res = 0;
+    Snake *s = sa->snake;
+    ListeSnake ls = snake_premier(s);
+    Coord c_tete = snake_pos(s);
+
+    if(snake_direction(s) == HAUT)
+    {
+        c_tete.y -= 1;
+        while( ls != NULL )
+        {
+            if(coord_egales(c_tete,liste_snake_coord(ls)))
+            {
+                res = 1;
+            }
+            ls = liste_snake_suivant(ls);
+        }
+    }
+
+    if(snake_direction(s) == BAS)
+    {
+        c_tete.y += 1;
+        while( ls != NULL )
+        {
+            if(coord_egales(c_tete,liste_snake_coord(ls)))
+            {
+                res = 1;
+            }
+            ls = liste_snake_suivant(ls);
+        }
+    }
+
+    if(snake_direction(s) == GAUCHE)
+    {
+        c_tete.x -= 1;
+        while( ls != NULL )
+        {
+            if(coord_egales(c_tete,liste_snake_coord(ls)))
+            {
+                res = 1;
+            }
+            ls = liste_snake_suivant(ls);
+        }
+    }
+
+    if(snake_direction(s) == DROITE)
+    {
+        c_tete.x += 1;
+        while( ls != NULL )
+        {
+            if(coord_egales(c_tete,liste_snake_coord(ls)))
+            {
+                res = 1;
+            }
+            ls = liste_snake_suivant(ls);
+        }
+    }
+
+    return res;
+}
+
 gboolean timeout_tick_cb(gpointer data)
 {
     SnakeActor *sa = data;
     gfloat x, y;
 
-    if(!snake_border_map(sa)){
+    if(!snake_border_map(sa) && !snake_border_snake(sa))
+    {
         snake_forward(sa->snake);
         snake_actor_update(sa);
     }
