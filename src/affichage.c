@@ -52,14 +52,9 @@ gboolean zone_snake_key_press_cb(ClutterActor *actor, ClutterEvent *event, gpoin
 }
 
 /**
-<<<<<<< HEAD
     Renvoie 0 si le snake est contre un mur et veux avancer dans le mur, 1 sinon
     Appelé dans la fonction timeout_tich_cb
 */
-=======
-    Renvoie true si le snake est contre un mur et veux avancer dans le mur
-*/ 
->>>>>>> 51cc0bdd99214c31720af1a3a749ede6de4fdb3a
 int snake_border_map(SnakeActor *sa)
 {
     int res = 0, l_w, l_h;
@@ -222,7 +217,7 @@ void snake_actor_update(SnakeActor *sa)
             g_object_ref(actor);
             clutter_actor_set_size(actor, GRID_SIZE, GRID_SIZE);
             clutter_actor_set_background_color(actor, CLUTTER_COLOR_Blue);
-            clutter_actor_set_easing_duration(actor, 300);
+            clutter_actor_set_easing_duration(actor, 150);
             clutter_actor_add_child(sa->parent, actor);
 
 
