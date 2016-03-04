@@ -3,6 +3,8 @@
 #include "list.h"
 #include "struc.h"
 #include <gdk/gdk.h>
+#include <time.h>
+
 #define GRID_SIZE 10
 
 struct _snake_actor
@@ -10,6 +12,7 @@ struct _snake_actor
     List *actors;
     ClutterActor *parent;
     Snake *snake;
+    ClutterColor *color;
     int cur_size;
 };
 
@@ -21,6 +24,67 @@ struct _snake_image
     ClutterContent *turnlight;
     ClutterContent *turndark;
 };
+
+typedef struct
+{
+    SnakeActor *sa;
+    SnakeActor *sa_ia;
+} CoupleSnakeActor;
+
+typedef struct
+{
+    Coord coord;
+} Bouf;
+
+typedef struct
+{
+    ClutterActor *parent;
+    Bouf *bouf;
+    ClutterColor *color;
+} BoufActor;
+
+
+Bouf *bouf_new()
+{
+    srand(time(NULL));
+    Bouf *new = malloc(sizeof(Bouf *));
+    new->coord = coord_from_xy(10, 10);
+    return new;
+}
+
+BoufActor *create_bouf_actor(ClutterActor *parent, Bouf *b, ClutterColor *color)
+{
+    BoufActor *res;
+
+    res = malloc(sizeof(BoufActor));
+    res->parent = parent;
+    res->color = color;
+    res->bouf = b;
+
+    return res;
+}
+
+void bouf_actor_update(BoufActor *ba)
+{
+    ClutterActor *bouf;
+    Coord c;
+
+    c = ba->bouf->coord;
+    bouf = clutter_actor_new();
+    g_object_ref(bouf);
+    clutter_actor_set_size(bouf, GRID_SIZE, GRID_SIZE);
+    clutter_actor_set_background_color(bouf, ba->color);
+    clutter_actor_add_child(ba->parent, bouf);
+    clutter_actor_set_position(bouf,c.x * GRID_SIZE, c.y * GRID_SIZE);
+
+}
+CoupleSnakeActor couple_snake_actor_new(SnakeActor *a1, SnakeActor *a2)
+{
+    CoupleSnakeActor new;
+    new.sa = a1;
+    new.sa_ia = a2;
+    return(new);
+}
 
 gboolean zone_snake_key_press_cb(ClutterActor *actor, ClutterEvent *event, gpointer data)
 {
@@ -51,10 +115,15 @@ gboolean zone_snake_key_press_cb(ClutterActor *actor, ClutterEvent *event, gpoin
     return TRUE;
 }
 
+
 /**
-    Renvoie 0 si le snake est contre un mur et veux avancer dans le mur, 1 sinon
-    Appelé dans la fonction timeout_tich_cb
-*/
+ * @brief      Renvoie true si le snake est contre un mur et veux avancer dans le mur. Appelé dans la fonction timeout_tich_cb
+ *
+ * @param[in]  c1  coord à vérifier
+ * @param[in]  c2  coord à vérifier
+ *
+ * @return      Renvoie 0 si le snake est contre un mur et veux avancer dans le mur, 1 sinon
+ */
 int snake_border_map(SnakeActor *sa)
 {
     int res = 0, l_w, l_h;
@@ -154,17 +223,23 @@ int snake_border_snake(SnakeActor *sa)
 
 gboolean timeout_tick_cb(gpointer data)
 {
-    SnakeActor *sa = data;
+    CoupleSnakeActor *csa = data;
+    SnakeActor *sa = csa->sa;
+    SnakeActor *sa_ia = csa->sa_ia;
+
     gfloat x, y;
 
     if(!snake_border_map(sa) && !snake_border_snake(sa))
     {
         snake_forward(sa->snake);
         snake_actor_update(sa);
+        snake_forward(sa_ia->snake);
+        snake_actor_update(sa_ia);
     }
 
     return G_SOURCE_CONTINUE;
 }
+
 
 void stage_destroy_cb(ClutterActor *actor, gpointer data)
 {
@@ -174,7 +249,8 @@ void stage_destroy_cb(ClutterActor *actor, gpointer data)
     clutter_main_quit();
 }
 
-SnakeActor *create_snake_actor(ClutterActor *parent, Snake *s)
+
+SnakeActor *create_snake_actor(ClutterActor *parent, Snake *s, ClutterColor *color)
 {
     SnakeActor *res;
 
@@ -182,10 +258,12 @@ SnakeActor *create_snake_actor(ClutterActor *parent, Snake *s)
     res->actors = create_list();
     res->parent = parent;
     res->cur_size = 0;
+    res->color = color;
     res->snake = s;
 
     return res;
 }
+
 
 static void free_clutter_actor_fn(void * elt)
 {
@@ -194,11 +272,13 @@ static void free_clutter_actor_fn(void * elt)
     clutter_actor_destroy(actor);
 }
 
+
 void free_snake_actor(SnakeActor *sa)
 {
     free_list_fn(sa->actors, free_clutter_actor_fn);
     free(sa);
 }
+
 
 void snake_actor_update(SnakeActor *sa)
 {
@@ -216,8 +296,8 @@ void snake_actor_update(SnakeActor *sa)
             actor = clutter_actor_new();
             g_object_ref(actor);
             clutter_actor_set_size(actor, GRID_SIZE, GRID_SIZE);
-            clutter_actor_set_background_color(actor, CLUTTER_COLOR_Blue);
-            clutter_actor_set_easing_duration(actor, 150);
+            clutter_actor_set_background_color(actor, sa->color);
+            clutter_actor_set_easing_duration(actor, 300);
             clutter_actor_add_child(sa->parent, actor);
 
 
@@ -278,10 +358,6 @@ ClutterContent *generate_image(char * filename)
 SnakeImage *snake_generate_image()
 {
     SnakeImage res;
-
-
-
-
 }
 
 void init_view(ClutterScript *ui, int width, int height, Direction direction,
@@ -289,8 +365,10 @@ void init_view(ClutterScript *ui, int width, int height, Direction direction,
 {
     ClutterActor *zone_snake;
     ClutterActor *stage;
-    Snake *snk;
-    SnakeActor *sa;
+    Snake *snk, *snk_ia;
+    SnakeActor *sa, *sa_ia;
+    Bouf *bouf;
+    BoufActor *ba;
 
     stage = CLUTTER_ACTOR(clutter_script_get_object(ui, "stage"));
     clutter_actor_set_size(stage, width * GRID_SIZE, height * GRID_SIZE);
@@ -301,14 +379,31 @@ void init_view(ClutterScript *ui, int width, int height, Direction direction,
         direction
     );
 
+    snk_ia = create_snake(
+        size,
+        coord_from_xy(pos.x, pos.y+5),//L'ia commence 5 case en dessous du snake de base
+        direction
+    );
+
+
+    bouf = bouf_new();
+
     zone_snake = CLUTTER_ACTOR(clutter_script_get_object(ui, "zone_snake"));
     clutter_stage_set_key_focus(CLUTTER_STAGE(stage), zone_snake);
-    sa = create_snake_actor(zone_snake, snk);
+
+    sa = create_snake_actor(zone_snake, snk, CLUTTER_COLOR_Blue);
+    sa_ia = create_snake_actor(zone_snake, snk_ia, CLUTTER_COLOR_Red);
+    ba = create_bouf_actor(zone_snake, bouf, CLUTTER_COLOR_Green);
+
     snake_actor_update(sa);
+    snake_actor_update(sa_ia);
+    bouf_actor_update(ba);
 
     g_signal_connect(zone_snake, "key-press-event", G_CALLBACK(zone_snake_key_press_cb), snk);
     g_signal_connect(stage, "destroy", G_CALLBACK(stage_destroy_cb), sa);
-    g_timeout_add(200, timeout_tick_cb, sa);
+
+    CoupleSnakeActor couple_snake_a = couple_snake_actor_new(sa, sa_ia);
+    g_timeout_add(200, timeout_tick_cb, &couple_snake_a);
 
     ClutterContent *image = generate_image("data/fond.jpg");
     clutter_actor_set_content (zone_snake,image);
