@@ -10,7 +10,7 @@
 typedef struct _snake_actor SnakeActor;
 typedef struct _snake_image SnakeImage;
 
-SnakeActor *create_snake_actor(ClutterActor *parent, Snake *s);
+SnakeActor *create_snake_actor(ClutterActor *parent, Snake *s, ClutterColor *color);
 void free_snake_actor(SnakeActor *sa);
 
 void snake_actor_update(SnakeActor *sa);
