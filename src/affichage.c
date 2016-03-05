@@ -27,37 +27,52 @@ struct _snake_image
 
 typedef struct
 {
-    SnakeActor *sa;
-    SnakeActor *sa_ia;
-} CoupleSnakeActor;
-
-typedef struct
-{
     Coord coord;
 } Bouf;
 
 typedef struct
 {
     ClutterActor *parent;
+    ClutterActor *bouf_c_actor;
     Bouf *bouf;
     ClutterColor *color;
 } BoufActor;
 
+typedef struct
+{
+    SnakeActor *sa;
+    SnakeActor *sa_ia;
+    BoufActor  *bouf
+} UpletActor;
 
-Bouf *bouf_new()
+
+Bouf *bouf_new(int x, int y)
 {
     srand(time(NULL));
     Bouf *new = malloc(sizeof(Bouf *));
-    new->coord = coord_from_xy(10, 10);
+    new->coord = coord_from_xy(rand()%x, rand()%y);
     return new;
+}
+
+void bouf_update(Bouf *bouf, int x, int y)
+{
+    bouf->coord = coord_from_xy(rand()%x, rand()%y);
 }
 
 BoufActor *create_bouf_actor(ClutterActor *parent, Bouf *b, ClutterColor *color)
 {
     BoufActor *res;
+    ClutterActor *bouf_c_actor;
+
+    bouf_c_actor = clutter_actor_new();
+    clutter_actor_set_size(bouf_c_actor, GRID_SIZE, GRID_SIZE);
+    clutter_actor_set_background_color(bouf_c_actor, color);
+    clutter_actor_add_child(parent, bouf_c_actor);
+    clutter_actor_set_position(bouf_c_actor, b->coord.x * GRID_SIZE, b->coord.y * GRID_SIZE);
 
     res = malloc(sizeof(BoufActor));
     res->parent = parent;
+    res->bouf_c_actor = bouf_c_actor;
     res->color = color;
     res->bouf = b;
 
@@ -66,23 +81,15 @@ BoufActor *create_bouf_actor(ClutterActor *parent, Bouf *b, ClutterColor *color)
 
 void bouf_actor_update(BoufActor *ba)
 {
-    ClutterActor *bouf;
-    Coord c;
-
-    c = ba->bouf->coord;
-    bouf = clutter_actor_new();
-    g_object_ref(bouf);
-    clutter_actor_set_size(bouf, GRID_SIZE, GRID_SIZE);
-    clutter_actor_set_background_color(bouf, ba->color);
-    clutter_actor_add_child(ba->parent, bouf);
-    clutter_actor_set_position(bouf,c.x * GRID_SIZE, c.y * GRID_SIZE);
-
+    clutter_actor_set_position(ba->bouf_c_actor, ba->bouf->coord.x * GRID_SIZE, ba->bouf->coord.y * GRID_SIZE);
 }
-CoupleSnakeActor couple_snake_actor_new(SnakeActor *a1, SnakeActor *a2)
+
+UpletActor uplet_actor_new(SnakeActor *a1, SnakeActor *a2, BoufActor *bouf)
 {
-    CoupleSnakeActor new;
+    UpletActor new;
     new.sa = a1;
     new.sa_ia = a2;
+    new.bouf = bouf;
     return(new);
 }
 
@@ -221,20 +228,56 @@ int snake_border_snake(SnakeActor *sa)
     return res;
 }
 
+/**
+    Renvoie 1 si et seulement si les coords de la te et de la queue sont égales
+*/
+int snake_eat(Snake *s, Bouf *b)
+{
+    if(coord_egales(snake_pos(s), b->coord))
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
 gboolean timeout_tick_cb(gpointer data)
 {
-    CoupleSnakeActor *csa = data;
-    SnakeActor *sa = csa->sa;
-    SnakeActor *sa_ia = csa->sa_ia;
+    UpletActor *ua = data;
+    SnakeActor *sa = ua->sa;
+    SnakeActor *sa_ia = ua->sa_ia;
+    BoufActor  *bouf = ua->bouf;
 
-    gfloat x, y;
+    float w, h;
+
+    clutter_actor_get_size(sa->parent, &w, &h);
+    int l_w = (int) w/GRID_SIZE;
+    int l_h = (int) h/GRID_SIZE;
+
 
     if(!snake_border_map(sa) && !snake_border_snake(sa))
     {
         snake_forward(sa->snake);
         snake_actor_update(sa);
-        snake_forward(sa_ia->snake);
+        snake_forward_ia1(sa_ia->snake, sa->snake, bouf->bouf->coord);
         snake_actor_update(sa_ia);
+        if(snake_eat(sa->snake, bouf->bouf))
+        {
+            snake_increase(sa->snake);
+            bouf_update(bouf->bouf, l_w, l_h);
+            bouf_actor_update(bouf);
+            printf("Snake eat!\n");
+        }
+        if(snake_eat(sa_ia->snake, bouf->bouf))
+        {
+            snake_increase(sa_ia->snake);
+            bouf_update(bouf->bouf, l_w, l_h);
+            bouf_actor_update(bouf);
+            printf("Snake ia eat!\n");
+
+        }
     }
 
     return G_SOURCE_CONTINUE;
@@ -360,6 +403,7 @@ SnakeImage *snake_generate_image()
     SnakeImage res;
 }
 
+
 void init_view(ClutterScript *ui, int width, int height, Direction direction,
                int size, Coord pos)
 {
@@ -386,7 +430,7 @@ void init_view(ClutterScript *ui, int width, int height, Direction direction,
     );
 
 
-    bouf = bouf_new();
+    bouf = bouf_new(width, height);
 
     zone_snake = CLUTTER_ACTOR(clutter_script_get_object(ui, "zone_snake"));
     clutter_stage_set_key_focus(CLUTTER_STAGE(stage), zone_snake);
@@ -402,8 +446,8 @@ void init_view(ClutterScript *ui, int width, int height, Direction direction,
     g_signal_connect(zone_snake, "key-press-event", G_CALLBACK(zone_snake_key_press_cb), snk);
     g_signal_connect(stage, "destroy", G_CALLBACK(stage_destroy_cb), sa);
 
-    CoupleSnakeActor couple_snake_a = couple_snake_actor_new(sa, sa_ia);
-    g_timeout_add(200, timeout_tick_cb, &couple_snake_a);
+    UpletActor ua = uplet_actor_new(sa, sa_ia, ba);
+    g_timeout_add(200, timeout_tick_cb, &ua);
 
     ClutterContent *image = generate_image("data/fond.jpg");
     clutter_actor_set_content (zone_snake,image);
