@@ -434,9 +434,9 @@ void init_view(ClutterScript *ui, int width, int height, Direction direction, in
     zone_snake = CLUTTER_ACTOR(clutter_script_get_object(ui, "zone_snake"));
     clutter_stage_set_key_focus(CLUTTER_STAGE(stage), zone_snake);
 
-    sa = create_snake_actor(zone_snake, snk, CLUTTER_COLOR_Blue);
-    sa_ia = create_snake_actor(zone_snake, snk_ia, CLUTTER_COLOR_Red);
-    ba = create_bouf_actor(zone_snake, bouf, CLUTTER_COLOR_Green);
+    sa = create_snake_actor(zone_snake, snk, clutter_color_new (0, 0, 255, 255));
+    sa_ia = create_snake_actor(zone_snake, snk_ia, clutter_color_new (255, 0,0, 255));
+    ba = create_bouf_actor(zone_snake, bouf, clutter_color_new (0, 255, 0, 255));
 
     snake_actor_update(sa);
     snake_actor_update(sa_ia);
