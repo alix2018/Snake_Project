@@ -63,6 +63,7 @@ ListeSnake snake_dernier(Snake *snake);
 ListeSnake snake_premier(Snake *snake);
 Direction snake_direction(Snake *snake);
 void snake_set_direction(Snake *snake, Direction dir);
+void snake_set_liste(Snake *snake, ListeSnake *ls);
 
 void snake_forward(Snake *snake);
 void snake_forward_ia1(Snake *snake_ia, Snake *snake, Coord bouf);

@@ -342,6 +342,20 @@ void snake_set_direction(Snake *snake, Direction dir)
 	(*snake).direction = dir;
 }
 
+void snake_set_liste(Snake *snake, ListeSnake *ls)
+{
+	ListeSnake l = *ls;
+	
+	snake->tete = l;
+
+	while(l->suivant != NULL)
+	{
+		l = l->suivant;
+	}
+	
+	snake->dernier = l;
+}
+
 /**
  * @brief      Déplace l'intégralité du snake
  *

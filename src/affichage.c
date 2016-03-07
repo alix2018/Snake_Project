@@ -25,25 +25,25 @@ struct _snake_image
     ClutterContent *turndark;
 };
 
-typedef struct
+struct _bouf
 {
     Coord coord;
-} Bouf;
+};
 
-typedef struct
+struct _bouf_actor
 {
     ClutterActor *parent;
     ClutterActor *bouf_c_actor;
     Bouf *bouf;
     ClutterColor *color;
-} BoufActor;
+};
 
-typedef struct
+struct _uplet_actor
 {
     SnakeActor *sa;
     SnakeActor *sa_ia;
-    BoufActor  *bouf
-} UpletActor;
+    BoufActor  *bouf;
+};
 
 
 Bouf *bouf_new(int x, int y)
@@ -404,8 +404,7 @@ SnakeImage *snake_generate_image()
 }
 
 
-void init_view(ClutterScript *ui, int width, int height, Direction direction,
-               int size, Coord pos)
+void init_view(ClutterScript *ui, int width, int height, Direction direction, int size, Coord pos)
 {
     ClutterActor *zone_snake;
     ClutterActor *stage;
