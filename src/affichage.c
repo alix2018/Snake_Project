@@ -130,7 +130,7 @@ gboolean zone_snake_key_press_cb(ClutterActor *actor, ClutterEvent *event, gpoin
  * @param[in]  c2  coord à vérifier
  *
  * @return      Renvoie 0 si le snake est contre un mur et veux avancer dans le mur, 1 sinon
- */ 
+ */
 int snake_border_map(SnakeActor *sa)
 {
     int res = 0, l_w, l_h;
@@ -433,7 +433,7 @@ void init_view(ClutterScript *ui, int width, int height, Direction direction, in
 
     zone_snake = CLUTTER_ACTOR(clutter_script_get_object(ui, "zone_snake"));
     clutter_stage_set_key_focus(CLUTTER_STAGE(stage), zone_snake);
-    
+
     sa = create_snake_actor(zone_snake, snk, CLUTTER_COLOR_Blue);
     sa_ia = create_snake_actor(zone_snake, snk_ia, CLUTTER_COLOR_Red);
     ba = create_bouf_actor(zone_snake, bouf, CLUTTER_COLOR_Green);
