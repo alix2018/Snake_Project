@@ -6,6 +6,12 @@
 #define ALPHA_SNAKE_ACTOR_LIST_H
 
 typedef struct _node *Node;
+
+/**
+ * Une liste doublement chainée avec pointeur sur le dernier élément.
+ *
+ * *Attention :* Cette liste ne peut contenir que des pointeurs.
+ */
 typedef struct _list List;
 
 Node cons_node(void *elt, Node node);

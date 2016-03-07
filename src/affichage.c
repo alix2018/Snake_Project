@@ -7,12 +7,22 @@
 
 struct _snake_actor
 {
-    List *actors;
-    ClutterActor *parent;
-    Snake *snake;
-    int cur_size;
+    List *actors;           /// La liste des ClutterActor du snake.
+    ClutterActor *parent;   /// Le ClutterActor qui contient les acteurs du snake.
+    Snake *snake;           /// Le Snake affiché par le SnakeActor.
+    int cur_size;           /// La taille du snake _affiché_ (peut être différente de la taille du Snake)
 };
 
+
+/**
+ * @brief   Fonction callback appelée lorsqu'une touche du clavier est appuyée.
+ *
+ * @param[in]    actor  L'acteur qui a émis le signal.
+ * @param[in]    event  Permet de récupérer des données sur la touche appuyée.
+ * @param[in]    data   Un pointeur void* vers le snake contrôlé par le joueur.
+ * 
+ * @return ce prototype est défini par Clutter, cf. la documentation de Clutter.
+ */
 gboolean zone_snake_key_press_cb(ClutterActor *actor, ClutterEvent *event, gpointer data)
 {
     Snake *s = data;
@@ -42,6 +52,12 @@ gboolean zone_snake_key_press_cb(ClutterActor *actor, ClutterEvent *event, gpoin
     return TRUE;
 }
 
+
+/**
+ * @brief Fonction callback appelée à intervalles réguliers.
+ * 
+ * @param[in]    data   Le SnakeActor du snake.
+ */
 gboolean timeout_tick_cb(gpointer data)
 {
     SnakeActor *sa = data;
@@ -53,6 +69,13 @@ gboolean timeout_tick_cb(gpointer data)
     return G_SOURCE_CONTINUE;
 }
 
+/**
+ * @brief   Fonction callback appelée lorsque la fenêtre est fermée.
+ * 
+ * @param[in]    data   Le SnakeActor du snake.
+ * 
+ * Ce prototype est défini par Clutter, cf. la documentation de Clutter.
+ */
 void stage_destroy_cb(ClutterActor *actor, gpointer data)
 {
     SnakeActor *sa = data;
@@ -61,6 +84,15 @@ void stage_destroy_cb(ClutterActor *actor, gpointer data)
     clutter_main_quit();
 }
 
+
+/**
+ * @brief   Initialise un SnakeActor.
+ * 
+ * @param[in]    parent Le ClutterActor qui contiendra le snake.
+ * @param[in]    s      Le snake qui sera affiché par le SnakeActor.
+ *
+ * @return  Le SnakeActor initialisé.
+ */
 SnakeActor *create_snake_actor(ClutterActor *parent, Snake *s)
 {
     SnakeActor *res;
@@ -74,6 +106,11 @@ SnakeActor *create_snake_actor(ClutterActor *parent, Snake *s)
     return res;
 }
 
+
+/**
+ * Fonction appliquée à chaque élément de la liste des acteurs de SnakeActor
+ * lors de la suppression de cette liste.
+ */
 static void free_clutter_actor_fn(void * elt)
 {
     ClutterActor *actor = elt;
@@ -81,12 +118,24 @@ static void free_clutter_actor_fn(void * elt)
     clutter_actor_destroy(actor);
 }
 
+
+/**
+ * Libère la mémoire consommée par un SnakeActor.
+ *
+ * @param[in]    sa     Le SnakeActor à libérer.
+ */
 void free_snake_actor(SnakeActor *sa)
 {
     free_list_fn(sa->actors, free_clutter_actor_fn);
     free(sa);
 }
 
+
+/**
+ * Met à jour la longueur et la position d'un SnakeActor.
+ *
+ * @param[in]    sa     Le SnakeActor à mettre à jour.
+ */
 void snake_actor_update(SnakeActor *sa)
 {
     int delta;
@@ -139,6 +188,19 @@ void snake_actor_update(SnakeActor *sa)
     }
 }
 
+
+/**
+ * @brief   Crée la fenêtre du snake.
+ *
+ * @param[in]    ui         Le fichier ui contenant la déclaration de
+ *                          la fenêtre du Snake.
+ * @param[in]    width      La largeur de la fenêtre en nombre de cases de la
+ *                          grille.
+ * @param[in]    height     La hauteur de la fenêtre.
+ * @param[in]    direction  La direction de départ du snake.
+ * @param[in]    size       La longueur du snake.
+ * @param[in]    pos        La position de départ du snake.
+ */
 void init_view(ClutterScript *ui, int width, int height, Direction direction,
                int size, Coord pos)
 {
