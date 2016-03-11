@@ -28,10 +28,9 @@ gboolean timeout_tick_cb_res(gpointer data){
     j1->snake = serv_get_j1();
     j2->snake = serv_get_j2();
 
-    if(!snake_border_map(j1) && !snake_border_snake(j1))
+    if(!snake_border_map(j1) && !snake_border_snake(j1) && !snake_border_other(j1, j2))
     {
         snake_forward(j1->snake);
-        snake_actor_update(j1);
         if(snake_eat(j1->snake, bouf->bouf))
         {
             snake_increase(j1->snake);
@@ -41,10 +40,9 @@ gboolean timeout_tick_cb_res(gpointer data){
         }
     }
 
-    if(!snake_border_map(j2) && !snake_border_snake(j2))
+    if(!snake_border_map(j2) && !snake_border_snake(j2) && !snake_border_other(j2, j1))
     {
         snake_forward(j2->snake);
-        snake_actor_update(j2);
         if(snake_eat(j2->snake, bouf->bouf))
         {
             snake_increase(j2->snake);
@@ -62,6 +60,8 @@ gboolean timeout_tick_cb_res(gpointer data){
     bouf->bouf->coord.x = bouf_coord->x;
     bouf->bouf->coord.y = bouf_coord->y;
 
+    snake_actor_update(j1);
+    snake_actor_update(j2);
     bouf_actor_update(bouf);
 
     printf("\n\n  -- FIN TIMEOUT -- \n\n");

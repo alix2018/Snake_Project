@@ -191,12 +191,14 @@ void serv_set_j2(Snake *s)
 
 Coord *serv_get_bouf()
 {
+	envoi = 0;
 	return &bouf_coord;
 }
 
 void serv_set_bouf(Coord c)
 {
 	bouf_coord = c;
+	envoi = 1;
 }
 
 int main(int argc, char **argv)

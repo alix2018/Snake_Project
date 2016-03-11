@@ -190,6 +190,73 @@ int snake_border_snake(SnakeActor *sa)
     return res;
 }
 
+/*
+    renvoie 1 ssi s1 essay d'avancer alors qu'il y la queue de s2 devant
+*/
+int snake_border_other(SnakeActor *sa1, SnakeActor *sa2)
+{
+    int res = 0;
+    Snake *s1 = sa1->snake;
+    Snake *s2 = sa2->snake;
+
+    ListeSnake ls_s2 = snake_premier(s2);
+    Coord c_tete = snake_pos(s1);
+
+    if(snake_direction(s1) == HAUT)
+    {
+        c_tete.y -= 1;
+        while( ls_s2 != NULL )
+        {
+            if(coord_egales(c_tete,liste_snake_coord(ls_s2)))
+            {
+                res = 1;
+            }
+            ls_s2 = liste_snake_suivant(ls_s2);
+        }
+    }
+
+    if(snake_direction(s1) == BAS)
+    {
+        c_tete.y += 1;
+        while( ls_s2 != NULL )
+        {
+            if(coord_egales(c_tete,liste_snake_coord(ls_s2)))
+            {
+                res = 1;
+            }
+            ls_s2 = liste_snake_suivant(ls_s2);
+        }
+    }
+
+    if(snake_direction(s1) == GAUCHE)
+    {
+        c_tete.x -= 1;
+        while( ls_s2 != NULL )
+        {
+            if(coord_egales(c_tete,liste_snake_coord(ls_s2)))
+            {
+                res = 1;
+            }
+            ls_s2 = liste_snake_suivant(ls_s2);
+        }
+    }
+
+    if(snake_direction(s1) == DROITE)
+    {
+        c_tete.x += 1;
+        while( ls_s2 != NULL )
+        {
+            if(coord_egales(c_tete,liste_snake_coord(ls_s2)))
+            {
+                res = 1;
+            }
+            ls_s2 = liste_snake_suivant(ls_s2);
+        }
+    }
+
+    return res;
+}
+
 /**
     Renvoie 1 si et seulement si les coords de la te et de la queue sont égales
 */
