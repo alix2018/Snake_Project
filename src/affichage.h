@@ -1,5 +1,9 @@
 #include <clutter/clutter.h>
+#include <gdk/gdk.h>
+#include <time.h>
+
 #include "struc.h"
+#include "list.h"
 
 #ifndef ALPHA_SNAKE_AFFICHAGE_H
 #define ALPHA_SNAKE_AFFICHAGE_H
@@ -8,17 +12,56 @@
  * Cette structure contient les ClutterActor nécessaires à l'affichage du snake.
  */
 typedef struct _snake_actor SnakeActor;
+struct _snake_actor
+{
+    List *actors;
+    ClutterActor *parent;
+    Snake *snake;
+    ClutterColor *color;
+    int cur_size;
+};
+
 typedef struct _snake_image SnakeImage;
+struct _snake_image
+{
+    ClutterContent *tete;
+    ClutterContent *queue;
+    ClutterContent *corps;
+    ClutterContent *turnlight;
+    ClutterContent *turndark;
+};
 
 typedef struct _bouf Bouf;
+struct _bouf
+{
+    Coord coord;
+};
+
 typedef struct _bouf_actor BoufActor;
+struct _bouf_actor
+{
+    ClutterActor *parent;
+    ClutterActor *bouf_c_actor;
+    Bouf *bouf;
+    ClutterColor *color;
+};
+
 typedef struct _uplet_actor UpletActor;
+struct _uplet_actor
+{
+    SnakeActor *sa;
+    SnakeActor *sa_ia;
+    BoufActor  *bouf;
+};
 
 //Créé un nouvelle emplacement mémoir pour la bouf
 Bouf *bouf_new(int x, int y);
 
 //Créé les coordonnés de la bouf sur la map
 void bouf_update(Bouf *bouf, int x, int y);
+
+//Met les coord x, y à bouf
+void bouf_set_coord(Bouf *bouf, Coord *c);
 
 //Créé le BoufActor
 BoufActor *create_bouf_actor(ClutterActor *parent, Bouf *b, ClutterColor *color);

@@ -1,49 +1,6 @@
-#include <clutter/clutter.h>
 #include "affichage.h"
-#include "list.h"
-#include "struc.h"
-#include <gdk/gdk.h>
-#include <time.h>
 
 #define GRID_SIZE 10
-
-struct _snake_actor
-{
-    List *actors;
-    ClutterActor *parent;
-    Snake *snake;
-    ClutterColor *color;
-    int cur_size;
-};
-
-struct _snake_image
-{
-    ClutterContent *tete;
-    ClutterContent *queue;
-    ClutterContent *corps;
-    ClutterContent *turnlight;
-    ClutterContent *turndark;
-};
-
-struct _bouf
-{
-    Coord coord;
-};
-
-struct _bouf_actor
-{
-    ClutterActor *parent;
-    ClutterActor *bouf_c_actor;
-    Bouf *bouf;
-    ClutterColor *color;
-};
-
-struct _uplet_actor
-{
-    SnakeActor *sa;
-    SnakeActor *sa_ia;
-    BoufActor  *bouf;
-};
 
 
 Bouf *bouf_new(int x, int y)
@@ -57,6 +14,11 @@ Bouf *bouf_new(int x, int y)
 void bouf_update(Bouf *bouf, int x, int y)
 {
     bouf->coord = coord_from_xy(rand()%x, rand()%y);
+}
+
+void bouf_set_coord(Bouf *bouf, Coord *c)
+{
+    bouf->coord = coord_from_xy(c->x, c->y);
 }
 
 BoufActor *create_bouf_actor(ClutterActor *parent, Bouf *b, ClutterColor *color)
@@ -434,9 +396,9 @@ void init_view(ClutterScript *ui, int width, int height, Direction direction, in
     zone_snake = CLUTTER_ACTOR(clutter_script_get_object(ui, "zone_snake"));
     clutter_stage_set_key_focus(CLUTTER_STAGE(stage), zone_snake);
 
-    sa = create_snake_actor(zone_snake, snk, CLUTTER_COLOR_Blue);
-    sa_ia = create_snake_actor(zone_snake, snk_ia, CLUTTER_COLOR_Red);
-    ba = create_bouf_actor(zone_snake, bouf, CLUTTER_COLOR_Green);
+    sa = create_snake_actor(zone_snake, snk, clutter_color_new(0, 0, 255, 255));
+    sa_ia = create_snake_actor(zone_snake, snk_ia, clutter_color_new(255, 0, 0, 255));
+    ba = create_bouf_actor(zone_snake, bouf, clutter_color_new(0, 255, 0, 255));
 
     snake_actor_update(sa);
     snake_actor_update(sa_ia);
