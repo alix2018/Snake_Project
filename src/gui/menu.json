@@ -1,0 +1,80 @@
+[{
+  "id": "stage",
+  "type": "ClutterStage",
+  "width": 400,
+  "height": 400,
+  "background-color": "#FFFFFF",
+  "layout-manager": { "type": "ClutterBinLayout" },
+  "signals": [
+    {"name": "destroy", "handler": "clutter_main_quit"}
+  ],
+  "children": [
+    {
+      "type": "ClutterActor",
+      "background-color": "#FFFFFF",
+      "layout::x-align": "center",
+      "layout::y-align": "center",
+      "children": [
+        {
+          "type": "ClutterActor",
+          "margin": [20, 40],
+          "layout-manager": {
+            "type": "ClutterBoxLayout",
+            "orientation": "vertical",
+            "spacing": 30
+          },
+          "children": [
+            {
+              "id": "Jouer",
+              "type":"ClutterActor",
+              "background-color": "#FFFFFF",
+              "reactive": true,
+              "signals": [
+                {"name": "enter-event", "handler": "button_enter_cb"},
+                {"name": "leave-event", "handler": "button_leave_cb"}
+              ],
+              "actions": [
+                {
+                  "type": "ClutterClickAction",
+                  "signals": [{"name": "clicked", "handler": "jouer_clicked_cb"}]
+                }
+              ],
+              "children": [
+                {
+                  "type": "ClutterText",
+                  "text": "Jouer",
+                  "editable": false,
+                  "margin": [ 5 ]
+                }
+              ]
+            },
+            {
+              "id": "Quitter",
+              "type":"ClutterActor",
+              "background-color": "#FFFFFF",
+              "reactive": true,
+              "signals": [
+                {"name": "enter-event", "handler": "button_enter_cb"},
+                {"name": "leave-event", "handler": "button_leave_cb"}
+              ],
+              "actions": [
+                {
+                  "type": "ClutterClickAction",
+                  "signals": [{"name": "clicked", "handler": "quitter_clicked_cb"}]
+                }
+              ],
+              "children": [
+                {
+                  "type": "ClutterText",
+                  "text": "Quitter",
+                  "editable": false,
+                  "margin": [ 5 ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}]
