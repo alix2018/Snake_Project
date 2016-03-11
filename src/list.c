@@ -213,6 +213,14 @@ int list_is_empty(List *list)
     return list->first == NULL;
 }
 
+
+/**
+ * @brief   Supprime et retourne le dernier élément de la liste.
+ *
+ * @param[in]    list   La liste à modifier.
+ *
+ * @return  L'élément supprimé.
+ */
 void *list_pop_last(List *list)
 {
     void *res;
@@ -225,6 +233,14 @@ void *list_pop_last(List *list)
     return res;
 }
 
+
+/**
+ * @brief   Supprime et retourne le dernier élément de la liste.
+ *
+ * @param[in]    list   La liste à modifier.
+ *
+ * @return  L'élément supprimé.
+ */
 void *list_pop_first(List *list)
 {
     void *res;

@@ -49,6 +49,7 @@ void print_liste_snake(ListeSnake liste);
 
 Coord liste_snake_coord(ListeSnake l);
 ListeSnake liste_snake_suivant(ListeSnake liste);
+ListeSnake liste_snake_precedent(ListeSnake liste);
 
 
 /* Fonctions de base de Snake */
