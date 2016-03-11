@@ -1,6 +1,5 @@
-#include <clutter/clutter.h>
-#include <stdlib.h>
 #include "affichage.h"
+#include "menu.h"
 
 gboolean jouer_clicked_cb(ClutterClickAction *action,
                             ClutterActor *actor,
@@ -10,10 +9,12 @@ gboolean jouer_clicked_cb(ClutterClickAction *action,
 	printf("Jouer\n");
 
     ClutterScript *ui;
+
+
     GError *err = NULL;
     ui = clutter_script_new();
     clutter_script_load_from_file(ui, "src/gui/stage.json", &err);
-    
+
     if (err != NULL) {
         printf("%s\n", err->message);
         err=NULL;

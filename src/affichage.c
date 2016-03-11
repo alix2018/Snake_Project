@@ -487,9 +487,5 @@ void init_view(ClutterScript *ui, int width, int height, Direction direction,
     ClutterContent *image = generate_image("data/fond.jpg");
     clutter_actor_set_content (zone_snake,image);
 
-    clutter_actor_show(stage);
-
-    clutter_main();
-
     free_snake(snk);
 }
