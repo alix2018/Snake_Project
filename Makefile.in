@@ -1,7 +1,8 @@
 
 SOURCE_FILES = struc.c \
                affichage.c \
-               list.c
+               list.c \
+               menu.c
 SRC_DIR = src
 OBJ_DIR = build
 BUILD_DIR = bin
@@ -22,7 +23,7 @@ CC = @CC@
 CFLAGS = @CFLAGS@
 
 CLUTTER_CFLAGS = @CLUTTER_CFLAGS@
-CLUTTER_LDFLAGS = @CLUTTER_LIBS@
+CLUTTER_LDFLAGS = -export-dynamic @CLUTTER_LIBS@
 
 all: alpha-snake
 
