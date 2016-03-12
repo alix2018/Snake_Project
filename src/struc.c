@@ -157,7 +157,7 @@ void free_liste_snake(ListeSnake liste)
 
 
 /**
- * @brief      Affiche sur la console la liste complête sous la forme (x1,y1) - (x2,y2) - (x3,y3) ...
+ * @brief      Affiche sur la console la liste complète sous la forme (x1,y1) - (x2,y2) - (x3,y3) ...
  *
  * @param[in]  liste  la liste à afficher
  */
@@ -183,15 +183,36 @@ Coord liste_snake_coord(ListeSnake l)
 	return l->coord;
 }
 
+
+/**
+ * @brief      Récupère le pointeur sur la liste suivante
+ *
+ * @param[in]  l     la liste avec une tête
+ *
+ * @return     Renvoie la liste suivante
+ */
 ListeSnake liste_snake_suivant(ListeSnake liste)
 {
 	return liste->suivant;
 }
 
+
+/**
+ * @brief      Récupère le pointeur sur la liste précédent
+ *
+ * @param[in]  l     la liste avec une tête
+ *
+ * @return     Renvoie la liste précédente
+ */
+ListeSnake liste_snake_precedent(ListeSnake liste)
+{
+	return liste->precedent;
+}
+
 /* Fonctions de base de Snake */
 
 /**
- * @brief      Genère un snake de différente taille avec une position initiale et un angle de direction
+ * @brief      Génère un snake de différente taille avec une position initiale et un angle de direction
  *
  * @param[in]  longueur  la taille du snake initiale
  * @param[in]  c         la position initiale
