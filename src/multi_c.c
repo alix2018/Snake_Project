@@ -89,9 +89,8 @@ void *client_receive(){
 		printf("bouf\n");
 		print_coord(bouf_coord);
 
-		printf(" --------------  Fin de reception  --------------- J2 envoi = 1\n\n");
+		printf(" --------------  Fin de reception  --------------- J2 envoi = %d\n\n", envoi);
 
-		envoi = 1 ;
 	}
 
 	}
@@ -244,8 +243,6 @@ int main(int argc, char **argv)
 		bouf_coord.x = 10;
 		bouf_coord.y = 10;
 
-		envoi = 0;
-
 		ret=pthread_create(&tids_rec, NULL, client_receive, NULL);
 	    errmask |= (ret==-1);
 		    
@@ -254,6 +251,8 @@ int main(int argc, char **argv)
 	    	perror("pb creation threads");
 	    	exit(1);
 	    }
+
+   		envoi = 1;
 
 	    ret=pthread_create(&tids_send, NULL, client_send, NULL);
 		errmask |= (ret==-1);

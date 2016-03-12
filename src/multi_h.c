@@ -95,7 +95,6 @@ void *serveur_receive()
 		print_coord(bouf_coord);
 		printf(" --------------  Fin de reception  --------------- J1 envoi = 1\n\n");
 
-		envoi = 1;
 	}
 
 	}
