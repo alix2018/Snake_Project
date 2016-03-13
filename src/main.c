@@ -12,7 +12,7 @@ int main(int argc, char **argv)
     clutter_script_load_from_file(ui, "src/gui/stage.json", NULL);
     clutter_script_connect_signals(ui, ui);
 
-    init_view(ui, 30, 30, DROITE, 20, coord_from_xy(22, 2));
+    init_view(ui, 30, 30, DROITE, 4, coord_from_xy(22, 2));
 
     return 0;
 }

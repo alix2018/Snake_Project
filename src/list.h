@@ -28,6 +28,7 @@ void list_add_last(List *list, void *elt);
 Node list_first_node(List *list);
 Node list_last_node(List *list);
 int list_is_empty(List *list);
+int list_size(List * list);
 
 void *list_pop_last(List *list);
 void *list_pop_first(List *list);

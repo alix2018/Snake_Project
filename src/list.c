@@ -214,6 +214,21 @@ int list_is_empty(List *list)
 }
 
 
+int list_size(List * list)
+{
+    Node cur = list_first_node(list);
+    int i = 0;
+
+    while (cur != NULL)
+    {
+        i++;
+        cur = node_next(cur);
+    }
+
+    return i;
+}
+
+
 /**
  * @brief   Supprime et retourne le dernier élément de la liste.
  *
@@ -236,6 +251,8 @@ void *list_pop_last(List *list)
 
 /**
  * @brief   Supprime et retourne le dernier élément de la liste.
+ *
+ * Ne pas oublier de libérer la mémoire utilisée par l'élément si nécessaire.
  *
  * @param[in]    list   La liste à modifier.
  *

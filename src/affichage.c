@@ -141,8 +141,8 @@ void snake_actor_update(SnakeActor *sa)
     int delta;
     ClutterActor *actor;
     Node node_sa;
-    ListeSnake node_s;
-    Coord c;
+    Node node_s;
+    Coord *c;
 
     delta = snake_longueur(sa->snake) - sa->cur_size;
     if (delta > 0)
@@ -176,14 +176,14 @@ void snake_actor_update(SnakeActor *sa)
     node_s = snake_premier(sa->snake);
     for (node_sa = list_first_node(sa->actors);
          node_sa != NULL;
-         node_sa = node_next(node_sa), node_s = liste_snake_suivant(node_s))
+         node_sa = node_next(node_sa), node_s = node_next(node_s))
     {
-        c = liste_snake_coord(node_s);
+        c = node_elt(node_s);
         actor = node_elt(node_sa);
         clutter_actor_set_position(
             actor,
-            c.x * GRID_SIZE,
-            c.y * GRID_SIZE
+            c->x * GRID_SIZE,
+            c->y * GRID_SIZE
         );
     }
 }
