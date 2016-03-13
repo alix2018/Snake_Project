@@ -169,7 +169,7 @@ int snake_border_snake(SnakeActor *sa)
 {
     int res = 0;
     Snake *s = sa->snake;
-    ListeSnake ls = snake_premier(s);
+    Node ls = snake_premier(s);
     Coord c_tete = snake_pos(s);
 
     if(snake_direction(s) == HAUT)
@@ -177,11 +177,11 @@ int snake_border_snake(SnakeActor *sa)
         c_tete.y -= 1;
         while( ls != NULL )
         {
-            if(coord_egales(c_tete,liste_snake_coord(ls)))
+            if(coord_egales(c_tete,*((Coord *) node_elt(ls))))
             {
                 res = 1;
             }
-            ls = liste_snake_suivant(ls);
+            ls = node_next(ls);
         }
     }
 
@@ -190,11 +190,11 @@ int snake_border_snake(SnakeActor *sa)
         c_tete.y += 1;
         while( ls != NULL )
         {
-            if(coord_egales(c_tete,liste_snake_coord(ls)))
+            if(coord_egales(c_tete,*((Coord *) node_elt(ls))))
             {
                 res = 1;
             }
-            ls = liste_snake_suivant(ls);
+            ls = node_next(ls);
         }
     }
 
@@ -203,11 +203,11 @@ int snake_border_snake(SnakeActor *sa)
         c_tete.x -= 1;
         while( ls != NULL )
         {
-            if(coord_egales(c_tete,liste_snake_coord(ls)))
+            if(coord_egales(c_tete,*((Coord *) node_elt(ls))))
             {
                 res = 1;
             }
-            ls = liste_snake_suivant(ls);
+            ls = node_next(ls);
         }
     }
 
@@ -216,11 +216,11 @@ int snake_border_snake(SnakeActor *sa)
         c_tete.x += 1;
         while( ls != NULL )
         {
-            if(coord_egales(c_tete,liste_snake_coord(ls)))
+            if(coord_egales(c_tete,*((Coord *) node_elt(ls))))
             {
                 res = 1;
             }
-            ls = liste_snake_suivant(ls);
+            ls = node_next(ls);
         }
     }
 
@@ -371,7 +371,7 @@ void snake_actor_update(SnakeActor *sa)
             g_object_ref(actor);
             clutter_actor_set_size(actor, GRID_SIZE, GRID_SIZE);
             clutter_actor_set_background_color(actor, sa->color);
-            clutter_actor_set_easing_duration(actor, 300);
+            clutter_actor_set_easing_duration(actor, 150);
             clutter_actor_add_child(sa->parent, actor);
 
 

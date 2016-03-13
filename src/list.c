@@ -269,3 +269,16 @@ void *list_pop_first(List *list)
 
     return res;
 }
+
+
+void *list_get_last(List *list)
+{
+    return node_elt(list_last_node(list));
+}
+
+
+void *list_get_first(List *list)
+{
+    return node_elt(list_first_node(list));
+}
+

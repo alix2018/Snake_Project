@@ -373,18 +373,9 @@ void snake_set_direction(Snake *snake, Direction dir)
 	snake->direction = dir;
 }
 
-void snake_set_liste(Snake *snake, ListeSnake *ls)
+void snake_set_liste(Snake *snake, List *ls)
 {
-	ListeSnake l = *ls;
-	
-	snake->tete = l;
-
-	while(l->suivant != NULL)
-	{
-		l = l->suivant;
-	}
-	
-	snake->dernier = l;
+	snake->liste_snake = ls;
 }
 
 /**
@@ -524,7 +515,7 @@ void snake_forward_ia1(Snake *snake_ia, Snake *snake, Coord bouf)
 
 void snake_increase(Snake *snake)
 {
-	Coord c = snake->dernier->coord;
-	cons_liste_snake_fin(c, snake_dernier(snake));
-	snake->dernier = snake_dernier(snake)->suivant;
+    Coord *c = malloc(sizeof(Coord));
+    *c = *((Coord *) list_get_last(snake->liste_snake));
+    list_add_last(snake->liste_snake, c);
 }

@@ -32,6 +32,8 @@ int list_size(List * list);
 
 void *list_pop_last(List *list);
 void *list_pop_first(List *list);
+void *list_get_last(List *list);
+void *list_get_first(List *list);
 
 void list_foreach(List *list, void (*fn)(void *, void *), void *data);
 
