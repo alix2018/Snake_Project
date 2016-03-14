@@ -2,17 +2,8 @@
 #include "affichage.h"
 #include "list.h"
 #include "struc.h"
+#include "ia.h"
 #include <gdk/gdk.h>
-#include <time.h>
-
-#define GRID_SIZE 23
-#define BACKGROUND_IMAGE_SRC "data/fond.jpg"
-#define TETE_IMAGE_SRC "data/tetev1.png"
-#define QUEUE_IMAGE_SRC "data/queuev1.png"
-#define CORPS_IMAGE_SRC "data/corpsv1.png"
-#define TURNLIGHT_IMAGE_SRC "data/corpsturnlightside.png"
-#define TURNDARK_IMAGE_SRC "data/corpsturndarkside.png"
-#define POMME_IMAGE "data/pommeapple.png"
 
 struct _snake_actor
 {
@@ -34,19 +25,6 @@ struct _snake_image
     ClutterContent *turndark;
 };
 
-struct _bouf
-{
-    Coord coord;
-};
-
-struct _bouf_actor
-{
-    ClutterActor *parent;
-    ClutterActor *bouf_c_actor;
-    Bouf *bouf;
-    ClutterColor *color;
-};
-
 struct _uplet_actor
 {
     SnakeActor *sa;
@@ -54,50 +32,6 @@ struct _uplet_actor
     BoufActor  *bouf;
 };
 
-
-Bouf *bouf_new(int x, int y)
-{
-    srand(time(NULL));
-    Bouf *new = malloc(sizeof(Bouf *));
-    new->coord = coord_from_xy(rand()%x, rand()%y);
-    return new;
-}
-
-void bouf_update(Bouf *bouf, int x, int y)
-{
-    bouf->coord = coord_from_xy(rand()%x, rand()%y);
-}
-
-BoufActor *create_bouf_actor(ClutterActor *parent, Bouf *b, ClutterColor *color)
-{
-    BoufActor *res;
-    ClutterActor *bouf_c_actor;
-
-    bouf_c_actor = clutter_actor_new();
-    clutter_actor_set_size(bouf_c_actor, GRID_SIZE, GRID_SIZE);
-    //clutter_actor_set_background_color(bouf_c_actor, color);
-
-    // SET IMAGE POMME/BOUF/bonus
-
-    ClutterContent *imgpomme = generate_image(POMME_IMAGE );
-    clutter_actor_set_content(bouf_c_actor,imgpomme);
-
-    clutter_actor_add_child(parent, bouf_c_actor);
-    clutter_actor_set_position(bouf_c_actor, b->coord.x * GRID_SIZE, b->coord.y * GRID_SIZE);
-
-    res = malloc(sizeof(BoufActor));
-    res->parent = parent;
-    res->bouf_c_actor = bouf_c_actor;
-    res->color = color;
-    res->bouf = b;
-
-    return res;
-}
-
-void bouf_actor_update(BoufActor *ba)
-{
-    clutter_actor_set_position(ba->bouf_c_actor, ba->bouf->coord.x * GRID_SIZE, ba->bouf->coord.y * GRID_SIZE);
-}
 
 UpletActor uplet_actor_new(SnakeActor *a1, SnakeActor *a2, BoufActor *bouf)
 {
@@ -315,7 +249,7 @@ int snake_border_snake(SnakeActor *sa,SnakeActor *sa_ia)
 */
 int snake_eat(Snake *s, Bouf *b)
 {
-    if(coord_egales(snake_pos(s), b->coord))
+    if(coord_egales(snake_pos(s), bouf_coord(b)))
     {
         return 1;
     }
@@ -348,19 +282,19 @@ gboolean timeout_tick_cb(gpointer data)
     {
         snake_forward(sa->snake);
         snake_actor_update(sa);
-        snake_forward_ia1(sa_ia->snake, sa->snake, bouf->bouf->coord);
+        snake_forward_ia1(sa_ia->snake, sa->snake, bouf_coord(bouf_actor_bouf(bouf)));
         snake_actor_update(sa_ia);
-        if(snake_eat(sa->snake, bouf->bouf))
+        if(snake_eat(sa->snake, bouf_actor_bouf(bouf)))
         {
             snake_increase(sa->snake);
-            bouf_update(bouf->bouf, l_w, l_h);
+            bouf_update(bouf_actor_bouf(bouf), l_w, l_h);
             bouf_actor_update(bouf);
             printf("Snake eat!\n");
         }
-        if(snake_eat(sa_ia->snake, bouf->bouf))
+        if(snake_eat(sa_ia->snake, bouf_actor_bouf(bouf)))
         {
             snake_increase(sa_ia->snake);
-            bouf_update(bouf->bouf, l_w, l_h);
+            bouf_update(bouf_actor_bouf(bouf), l_w, l_h);
             bouf_actor_update(bouf);
             printf("Snake ia eat!\n");
 

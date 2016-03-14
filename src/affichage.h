@@ -1,8 +1,18 @@
 #include <clutter/clutter.h>
 #include "struc.h"
+#include "bonus.h"
 
 #ifndef ALPHA_SNAKE_AFFICHAGE_H
 #define ALPHA_SNAKE_AFFICHAGE_H
+
+#define GRID_SIZE 23
+#define BACKGROUND_IMAGE_SRC "data/fond.jpg"
+#define TETE_IMAGE_SRC "data/tetev1.png"
+#define QUEUE_IMAGE_SRC "data/queuev1.png"
+#define CORPS_IMAGE_SRC "data/corpsv1.png"
+#define TURNLIGHT_IMAGE_SRC "data/corpsturnlightside.png"
+#define TURNDARK_IMAGE_SRC "data/corpsturndarkside.png"
+#define POMME_IMAGE "data/pommeapple.png"
 
 /**
  * Cette structure contient les ClutterActor nécessaires à l'affichage du snake.
@@ -10,21 +20,7 @@
 typedef struct _snake_actor SnakeActor;
 typedef struct _snake_image SnakeImage;
 
-typedef struct _bouf Bouf;
-typedef struct _bouf_actor BoufActor;
 typedef struct _uplet_actor UpletActor;
-
-//Créé un nouvelle emplacement mémoir pour la bouf
-Bouf *bouf_new(int x, int y);
-
-//Créé les coordonnés de la bouf sur la map
-void bouf_update(Bouf *bouf, int x, int y);
-
-//Créé le BoufActor
-BoufActor *create_bouf_actor(ClutterActor *parent, Bouf *b, ClutterColor *color);
-
-//Met à jour les coord du clutteractor
-void bouf_actor_update(BoufActor *ba);
 
 //Génère un 3-uplet, utile pour la fonction timeout
 UpletActor uplet_actor_new(SnakeActor *a1, SnakeActor *a2, BoufActor *bouf);
