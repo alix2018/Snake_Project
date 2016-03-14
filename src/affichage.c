@@ -194,7 +194,7 @@ int snake_border_snake(SnakeActor *sa,SnakeActor *sa_ia)
 {
     int res = 0;
     Snake *s = sa->snake;
-    ListeSnake ls = snake_premier(s);
+    Node ls = snake_premier(s);
     Coord c_tete = snake_pos(s);
 
     if(snake_direction(s) == HAUT)
@@ -251,8 +251,6 @@ int snake_border_snake(SnakeActor *sa,SnakeActor *sa_ia)
 
     //ia sur lui même
 
-    // TODO à convertir pour le type List
-
     Snake *s_ia = sa_ia->snake;
     Node ls_ia = snake_premier(s_ia);
     Coord c_tete_ia = snake_pos(s_ia);
@@ -262,11 +260,11 @@ int snake_border_snake(SnakeActor *sa,SnakeActor *sa_ia)
         c_tete_ia.y -= 1;
         while( ls_ia != NULL )
         {
-            if(coord_egales(c_tete_ia,liste_snake_coord(ls_ia)))
+            if(coord_egales(c_tete_ia,*((Coord *) node_elt(ls_ia))))
             {
                 res = 1;
             }
-            ls_ia = liste_snake_suivant(ls_ia);
+            ls_ia = node_next(ls_ia);
         }
     }
 
@@ -275,11 +273,11 @@ int snake_border_snake(SnakeActor *sa,SnakeActor *sa_ia)
         c_tete_ia.y += 1;
         while( ls_ia != NULL )
         {
-            if(coord_egales(c_tete_ia,liste_snake_coord(ls_ia)))
+            if(coord_egales(c_tete_ia,*((Coord *) node_elt(ls_ia))))
             {
                 res = 1;
             }
-            ls_ia = liste_snake_suivant(ls_ia);
+            ls_ia = node_next(ls_ia);
         }
     }
 
@@ -288,24 +286,24 @@ int snake_border_snake(SnakeActor *sa,SnakeActor *sa_ia)
         c_tete_ia.x -= 1;
         while( ls_ia != NULL )
         {
-            if(coord_egales(c_tete_ia,liste_snake_coord(ls_ia)))
+            if(coord_egales(c_tete_ia,*((Coord *) node_elt(ls_ia))))
             {
                 res = 1;
             }
-            ls_ia = liste_snake_suivant(ls_ia);
+            ls_ia = node_next(ls_ia);
         }
     }
 
     if(snake_direction(s_ia) == DROITE)
     {
         c_tete_ia.x += 1;
-        while( ls != NULL )
+        while( ls_ia != NULL )
         {
-            if(coord_egales(c_tete_ia,liste_snake_coord(ls_ia)))
+            if(coord_egales(c_tete_ia,*((Coord *) node_elt(ls_ia))))
             {
                 res = 1;
             }
-            ls_ia = liste_snake_suivant(ls_ia);
+            ls_ia = node_next(ls_ia);
         }
     }
     //fin ia
@@ -516,31 +514,31 @@ void snake_actor_update(SnakeActor *sa)
         {
             clutter_actor_set_content(actor,sa->images->corps);
         } */
-        Coord cnext;
-        Coord cprev;
+        Coord *cnext;
+        Coord *cprev;
         if(node_sa == list_first_node(sa->actors) )
         {
-            Coord cnext = liste_snake_coord(liste_snake_suivant(node_s));
+            cnext = node_elt(node_next(node_s));
             clutter_actor_set_content(actor,sa->images->tete);
             clutter_actor_set_pivot_point (actor,0.5, 0.5 );
             clutter_actor_set_rotation_angle(actor,CLUTTER_Z_AXIS,0);
 
-            if(cnext.x == c.x && c.y < cnext.y)
+            if(cnext->x == c->x && c->y < cnext->y)
             {
                 // TODO tête droite (pas de rotation)
 
             }
-            else if (cnext.x == c.x && c.y > cnext.y)
+            else if (cnext->x == c->x && c->y > cnext->y)
             {
 
                 clutter_actor_set_rotation_angle(actor,CLUTTER_Z_AXIS,180);
             }
-            else if (cnext.y == c.y && c.x > cnext.x )
+            else if (cnext->y == c->y && c->x > cnext->x )
             {
 
                 clutter_actor_set_rotation_angle(actor,CLUTTER_Z_AXIS,90);
             }
-            else if(cnext.y == c.y && c.x < cnext.x)
+            else if(cnext->y == c->y && c->x < cnext->x)
             {
 
 
@@ -552,108 +550,109 @@ void snake_actor_update(SnakeActor *sa)
         else if(node_sa == list_last_node(sa->actors))
         {
 
-            Coord cprev = liste_snake_coord(liste_snake_precedent(node_s));
+            cprev = node_elt(node_prev(node_s));
             clutter_actor_set_content(actor,sa->images->queue);
             clutter_actor_set_pivot_point (actor,0.5, 0.5 );
             clutter_actor_set_rotation_angle(actor,CLUTTER_Z_AXIS,0);
-            if(cprev.x == c.x && c.y < cprev.y)
+            if(cprev->x == c->x && c->y < cprev->y)
             {
 
                 clutter_actor_set_rotation_angle(actor,CLUTTER_Z_AXIS,180);
             }
-            else if (cprev.x == c.x && c.y > cprev.y)
+            else if (cprev->x == c->x && c->y > cprev->y)
             {
 
 
                // clutter_actor_set_rotation_angle(actor,CLUTTER_Z_AXIS,-180);
             }
-            else if (cprev.y == c.y && c.x > cprev.x )
+            else if (cprev->y == c->y && c->x > cprev->x )
             {
 
                 clutter_actor_set_rotation_angle(actor,CLUTTER_Z_AXIS,-90);
             }
-            else if(cprev.y == c.y && c.x < cprev.x)
+            else if(cprev->y == c->y && c->x < cprev->x)
             {
 
                 clutter_actor_set_rotation_angle(actor,CLUTTER_Z_AXIS,90);
             }
 
-        }else
+        }
+        else
         {
 
-            Coord cnext = liste_snake_coord(liste_snake_suivant(node_s)); // vers la queue
-            Coord cprev = liste_snake_coord(liste_snake_precedent(node_s)); // vers la tête
+            cnext = node_elt(node_next(node_s)); // vers la queue
+            cprev = node_elt(node_prev(node_s)); // vers la tête
             clutter_actor_set_content(actor,sa->images->corps);
 
             clutter_actor_set_pivot_point (actor,0.5, 0.5 );
             clutter_actor_set_rotation_angle(actor,CLUTTER_Z_AXIS,0);
-            if(c.x == cnext.x && c.x == cprev.x && cnext.y > cprev.y)
+            if(c->x == cnext->x && c->x == cprev->x && cnext->y > cprev->y)
             {
                 // nothing
 
             }
-            else if (c.x == cnext.x && c.x == cprev.x && cnext.y < cprev.y)
+            else if (c->x == cnext->x && c->x == cprev->x && cnext->y < cprev->y)
             {
 
 
                 clutter_actor_set_rotation_angle(actor,CLUTTER_Z_AXIS,180);
             }
-            else if (c.y == cnext.y && c.y == cprev.y && cprev.x < cnext.x)
+            else if (c->y == cnext->y && c->y == cprev->y && cprev->x < cnext->x)
             {
                 clutter_actor_set_rotation_angle(actor,CLUTTER_Z_AXIS,-90);
             }
-            else if(c.y == cnext.y && c.y == cprev.y && cprev.x > cnext.x)
+            else if(c->y == cnext->y && c->y == cprev->y && cprev->x > cnext->x)
             {
 
 
                 clutter_actor_set_rotation_angle(actor,CLUTTER_Z_AXIS,90);
             }
-            else if(c.x == cnext.x && c.y < cnext.y && c.y == cprev.y && c.x < cprev.x) // Les turnlight et turndark
+            else if(c->x == cnext->x && c->y < cnext->y && c->y == cprev->y && c->x < cprev->x) // Les turnlight et turndark
             {
 
                 clutter_actor_set_content(actor,sa->images->turnlight);
 
             }
-            else if(c.x == cnext.x && c.y < cnext.y && c.y == cprev.y && c.x > cprev.x)
+            else if(c->x == cnext->x && c->y < cnext->y && c->y == cprev->y && c->x > cprev->x)
             {
 
                 clutter_actor_set_content(actor, sa->images->turndark);
 
             }
-            else if(c.x == cnext.x && c.y > cnext.y && c.y == cprev.y && c.x > cprev.x)
+            else if(c->x == cnext->x && c->y > cnext->y && c->y == cprev->y && c->x > cprev->x)
             {
 
                 clutter_actor_set_content(actor,sa->images->turnlight);
                 clutter_actor_set_rotation_angle(actor,CLUTTER_Z_AXIS,180);
             }
-            else if(c.x == cnext.x && c.y > cnext.y && c.y == cprev.y && c.x < cprev.x)
+            else if(c->x == cnext->x && c->y > cnext->y && c->y == cprev->y && c->x < cprev->x)
             {
 
                 clutter_actor_set_content(actor,sa->images->turndark);
                 clutter_actor_set_rotation_angle(actor,CLUTTER_Z_AXIS,180);
             }
-            else if(c.x == cprev.x && c.y > cprev.y && c.y == cnext.y && c.x < cnext.x)
+            else if(c->x == cprev->x && c->y > cprev->y && c->y == cnext->y && c->x < cnext->x)
             {
 
                 clutter_actor_set_rotation_angle(actor,CLUTTER_Z_AXIS,-90);
                 clutter_actor_set_content(actor,sa->images->turnlight);
 
             }
-            else if(c.x == cprev.x && c.y > cprev.y && c.y == cnext.y && c.x > cnext.x)
+            else if(c->x == cprev->x && c->y > cprev->y && c->y == cnext->y && c->x > cnext->x)
             {
 
                 clutter_actor_set_rotation_angle(actor,CLUTTER_Z_AXIS,90);
                 clutter_actor_set_content(actor,sa->images->turndark);
 
             }
-            else if(c.x == cprev.x && c.y < cprev.y && c.y == cnext.y && c.x > cnext.x)
+            else if(c->x == cprev->x && c->y < cprev->y && c->y == cnext->y && c->x > cnext->x)
             {
 
                 clutter_actor_set_content(actor,sa->images->turnlight);
                 clutter_actor_set_rotation_angle(actor,CLUTTER_Z_AXIS,90);
 
             }
-            else if(c.x == cprev.x && c.y < cprev.y && c.y == cnext.y && c.x < cnext.x)
+            else if(c->x == cprev->x && c->y < cprev->y && c->y == cnext->y && c->x < cnext->x)
             {
 
                 clutter_actor_set_content(actor,sa->images->turndark);

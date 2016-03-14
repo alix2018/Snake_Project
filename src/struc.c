@@ -8,6 +8,7 @@
  */
 
 #include <string.h>
+#include <time.h>
 #include "struc.h"
 #include "list.h"
 
@@ -196,10 +197,6 @@ Coord liste_snake_coord(ListeSnake l)
 ListeSnake liste_snake_suivant(ListeSnake liste)
 {
 	return liste->suivant;
-}
-ListeSnake liste_snake_precedent(ListeSnake liste)
-{
-	return liste->precedent;
 }
 
 int coord_is_in_liste_snake( Coord c,ListeSnake liste)
@@ -434,8 +431,9 @@ void snake_forward(Snake *snake)
 // Verifie le prochain mouvement du snake
 void snake_verif_ia(Snake *snake_ia,Snake *snake,Direction futurdir) // TODO déplacement défensif
 {
+	// TODO à réimplémenter avec le type list
 	Coord ctete_ia = snake_pos(snake_ia);
-	ListeSnake ls = snake->tete;
+	Node ls = list_first_node(snake->liste_snake);
 	srand(time(NULL));
 	/**switch (futurdir)
 	{
