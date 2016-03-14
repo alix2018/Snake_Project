@@ -12,7 +12,7 @@
 #define CORPS_IMAGE_SRC "data/corpsv1.png"
 #define TURNLIGHT_IMAGE_SRC "data/corpsturnlightside.png"
 #define TURNDARK_IMAGE_SRC "data/corpsturndarkside.png"
-
+#define POMME_IMAGE "data/pommeapple.png"
 
 struct _snake_actor
 {
@@ -76,7 +76,13 @@ BoufActor *create_bouf_actor(ClutterActor *parent, Bouf *b, ClutterColor *color)
 
     bouf_c_actor = clutter_actor_new();
     clutter_actor_set_size(bouf_c_actor, GRID_SIZE, GRID_SIZE);
-    clutter_actor_set_background_color(bouf_c_actor, color);
+    //clutter_actor_set_background_color(bouf_c_actor, color);
+
+    // SET IMAGE POMME/BOUF/bonus
+
+    ClutterContent *imgpomme = generate_image(POMME_IMAGE );
+    clutter_actor_set_content(bouf_c_actor,imgpomme);
+
     clutter_actor_add_child(parent, bouf_c_actor);
     clutter_actor_set_position(bouf_c_actor, b->coord.x * GRID_SIZE, b->coord.y * GRID_SIZE);
 
@@ -700,8 +706,11 @@ void init_view(ClutterScript *ui, int width, int height, Direction direction, in
     UpletActor ua = uplet_actor_new(sa, sa_ia, ba);
     g_timeout_add(150, timeout_tick_cb, &ua);
 
+    // SET IMAGE BACKGROUND
     ClutterContent *image = generate_image(BACKGROUND_IMAGE_SRC );
     clutter_actor_set_content(zone_snake,image);
+
+
 
     clutter_actor_show(stage);
 
