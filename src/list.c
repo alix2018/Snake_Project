@@ -213,6 +213,29 @@ int list_is_empty(List *list)
     return list->first == NULL;
 }
 
+
+int list_size(List * list)
+{
+    Node cur = list_first_node(list);
+    int i = 0;
+
+    while (cur != NULL)
+    {
+        i++;
+        cur = node_next(cur);
+    }
+
+    return i;
+}
+
+
+/**
+ * @brief   Supprime et retourne le dernier élément de la liste.
+ *
+ * @param[in]    list   La liste à modifier.
+ *
+ * @return  L'élément supprimé.
+ */
 void *list_pop_last(List *list)
 {
     void *res;
@@ -225,6 +248,16 @@ void *list_pop_last(List *list)
     return res;
 }
 
+
+/**
+ * @brief   Supprime et retourne le dernier élément de la liste.
+ *
+ * Ne pas oublier de libérer la mémoire utilisée par l'élément si nécessaire.
+ *
+ * @param[in]    list   La liste à modifier.
+ *
+ * @return  L'élément supprimé.
+ */
 void *list_pop_first(List *list)
 {
     void *res;
@@ -236,3 +269,16 @@ void *list_pop_first(List *list)
 
     return res;
 }
+
+
+void *list_get_last(List *list)
+{
+    return node_elt(list_last_node(list));
+}
+
+
+void *list_get_first(List *list)
+{
+    return node_elt(list_first_node(list));
+}
+

@@ -16,12 +16,12 @@
 
 struct _snake_actor
 {
-    List *actors;
-    ClutterActor *parent;
-    Snake *snake;
-    ClutterColor *color;
+    List *actors;           /// La liste des ClutterActor du snake.
+    ClutterActor *parent;   /// Le ClutterActor qui contient les acteurs du snake.
+    Snake *snake;           /// Le Snake affiché par le SnakeActor.
+    ClutterColor *color;    /// La couleur
     SnakeImage *images;
-    int cur_size;
+    int cur_size;           /// La taille du snake _affiché_ (peut être différente de la taille du Snake)
 
 };
 
@@ -53,7 +53,6 @@ struct _uplet_actor
     SnakeActor *sa_ia;
     BoufActor  *bouf;
 };
-
 
 
 Bouf *bouf_new(int x, int y)
@@ -109,6 +108,15 @@ UpletActor uplet_actor_new(SnakeActor *a1, SnakeActor *a2, BoufActor *bouf)
     return(new);
 }
 
+/**
+ * @brief   Fonction callback appelée lorsqu'une touche du clavier est appuyée.
+ *
+ * @param[in]    actor  L'acteur qui a émis le signal.
+ * @param[in]    event  Permet de récupérer des données sur la touche appuyée.
+ * @param[in]    data   Un pointeur void* vers le snake contrôlé par le joueur.
+ *
+ * @return ce prototype est défini par Clutter, cf. la documentation de Clutter.
+ */
 gboolean zone_snake_key_press_cb(ClutterActor *actor, ClutterEvent *event, gpointer data)
 {
     Snake *s = data;
@@ -194,11 +202,11 @@ int snake_border_snake(SnakeActor *sa,SnakeActor *sa_ia)
         c_tete.y -= 1;
         while( ls != NULL )
         {
-            if(coord_egales(c_tete,liste_snake_coord(ls)))
+            if(coord_egales(c_tete,*((Coord *) node_elt(ls))))
             {
                 res = 1;
             }
-            ls = liste_snake_suivant(ls);
+            ls = node_next(ls);
         }
     }
 
@@ -207,11 +215,11 @@ int snake_border_snake(SnakeActor *sa,SnakeActor *sa_ia)
         c_tete.y += 1;
         while( ls != NULL )
         {
-            if(coord_egales(c_tete,liste_snake_coord(ls)))
+            if(coord_egales(c_tete,*((Coord *) node_elt(ls))))
             {
                 res = 1;
             }
-            ls = liste_snake_suivant(ls);
+            ls = node_next(ls);
         }
     }
 
@@ -220,11 +228,11 @@ int snake_border_snake(SnakeActor *sa,SnakeActor *sa_ia)
         c_tete.x -= 1;
         while( ls != NULL )
         {
-            if(coord_egales(c_tete,liste_snake_coord(ls)))
+            if(coord_egales(c_tete,*((Coord *) node_elt(ls))))
             {
                 res = 1;
             }
-            ls = liste_snake_suivant(ls);
+            ls = node_next(ls);
         }
     }
 
@@ -233,18 +241,20 @@ int snake_border_snake(SnakeActor *sa,SnakeActor *sa_ia)
         c_tete.x += 1;
         while( ls != NULL )
         {
-            if(coord_egales(c_tete,liste_snake_coord(ls)))
+            if(coord_egales(c_tete,*((Coord *) node_elt(ls))))
             {
                 res = 1;
             }
-            ls = liste_snake_suivant(ls);
+            ls = node_next(ls);
         }
     }
 
     //ia sur lui même
 
+    // TODO à convertir pour le type List
+
     Snake *s_ia = sa_ia->snake;
-    ListeSnake ls_ia = snake_premier(s_ia);
+    Node ls_ia = snake_premier(s_ia);
     Coord c_tete_ia = snake_pos(s_ia);
 
     if(snake_direction(s_ia) == HAUT)
@@ -317,6 +327,11 @@ int snake_eat(Snake *s, Bouf *b)
     }
 }
 
+/**
+ * @brief Fonction callback appelée à intervalles réguliers.
+ *
+ * @param[in]    data   Le SnakeActor du snake.
+ */
 gboolean timeout_tick_cb(gpointer data)
 {
     UpletActor *ua = data;
@@ -357,7 +372,13 @@ gboolean timeout_tick_cb(gpointer data)
     return G_SOURCE_CONTINUE;
 }
 
-
+/**
+ * @brief   Fonction callback appelée lorsque la fenêtre est fermée.
+ *
+ * @param[in]    data   Le SnakeActor du snake.
+ *
+ * Ce prototype est défini par Clutter, cf. la documentation de Clutter.
+ */
 void stage_destroy_cb(ClutterActor *actor, gpointer data)
 {
     SnakeActor *sa = data;
@@ -367,6 +388,14 @@ void stage_destroy_cb(ClutterActor *actor, gpointer data)
 }
 
 
+/**
+ * @brief   Initialise un SnakeActor.
+ *
+ * @param[in]    parent Le ClutterActor qui contiendra le snake.
+ * @param[in]    s      Le snake qui sera affiché par le SnakeActor.
+ *
+ * @return  Le SnakeActor initialisé.
+ */
 SnakeActor *create_snake_actor(ClutterActor *parent, Snake *s, ClutterColor *color, SnakeImage *imgs)
 {
     SnakeActor *res;
@@ -383,6 +412,10 @@ SnakeActor *create_snake_actor(ClutterActor *parent, Snake *s, ClutterColor *col
 }
 
 
+/**
+ * Fonction appliquée à chaque élément de la liste des acteurs de SnakeActor
+ * lors de la suppression de cette liste.
+ */
 static void free_clutter_actor_fn(void * elt)
 {
     ClutterActor *actor = elt;
@@ -391,6 +424,11 @@ static void free_clutter_actor_fn(void * elt)
 }
 
 
+/**
+ * Libère la mémoire consommée par un SnakeActor.
+ *
+ * @param[in]    sa     Le SnakeActor à libérer.
+ */
 void free_snake_actor(SnakeActor *sa)
 {
     free_list_fn(sa->actors, free_clutter_actor_fn);
@@ -398,14 +436,18 @@ void free_snake_actor(SnakeActor *sa)
 }
 
 
-
+/**
+ * Met à jour la longueur et la position d'un SnakeActor.
+ *
+ * @param[in]    sa     Le SnakeActor à mettre à jour.
+ */
 void snake_actor_update(SnakeActor *sa)
 {
     int delta;
     ClutterActor *actor;
     Node node_sa;
-    ListeSnake node_s;
-    Coord c;
+    Node node_s;
+    Coord *c;
 
     delta = snake_longueur(sa->snake) - sa->cur_size;
 
@@ -442,14 +484,14 @@ void snake_actor_update(SnakeActor *sa)
     node_s = snake_premier(sa->snake);
     for (node_sa = list_first_node(sa->actors);
          node_sa != NULL;
-         node_sa = node_next(node_sa), node_s = liste_snake_suivant(node_s))
+         node_sa = node_next(node_sa), node_s = node_next(node_s))
     {
-        c = liste_snake_coord(node_s);
+        c = node_elt(node_s);
         actor = node_elt(node_sa);
         clutter_actor_set_position(
             actor,
-            c.x * GRID_SIZE,
-            c.y * GRID_SIZE
+            c->x * GRID_SIZE,
+            c->y * GRID_SIZE
         );
 
         // TODO changer les images pendant le deplacement
@@ -655,11 +697,23 @@ SnakeImage *snake_generate_image()
     res->corps = generate_image(CORPS_IMAGE_SRC);
     res->turnlight = generate_image(TURNLIGHT_IMAGE_SRC);
     res->turndark = generate_image(TURNDARK_IMAGE_SRC);
-    
+
     return res;
 }
 
 
+/**
+ * @brief   Crée la fenêtre du snake.
+ *
+ * @param[in]    ui         Le fichier ui contenant la déclaration de
+ *                          la fenêtre du Snake.
+ * @param[in]    width      La largeur de la fenêtre en nombre de cases de la
+ *                          grille.
+ * @param[in]    height     La hauteur de la fenêtre.
+ * @param[in]    direction  La direction de départ du snake.
+ * @param[in]    size       La longueur du snake.
+ * @param[in]    pos        La position de départ du snake.
+ */
 void init_view(ClutterScript *ui, int width, int height, Direction direction, int size, Coord pos)
 {
     ClutterActor *zone_snake;
@@ -673,7 +727,7 @@ void init_view(ClutterScript *ui, int width, int height, Direction direction, in
     stage = CLUTTER_ACTOR(clutter_script_get_object(ui, "stage"));
     clutter_actor_set_size(stage, width * GRID_SIZE, height * GRID_SIZE);
     //clutter_actor_set_position (stage, 600,500);
-    
+
     snk = create_snake(
         size,
         pos,
@@ -709,8 +763,6 @@ void init_view(ClutterScript *ui, int width, int height, Direction direction, in
     // SET IMAGE BACKGROUND
     ClutterContent *image = generate_image(BACKGROUND_IMAGE_SRC );
     clutter_actor_set_content(zone_snake,image);
-
-
 
     clutter_actor_show(stage);
 

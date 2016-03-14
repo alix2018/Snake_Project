@@ -11,6 +11,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "list.h"
 
 /**
  * @brief    liste de Snake
@@ -62,11 +63,11 @@ void print_snake(Snake *snake);
 
 Coord snake_pos(Snake *snake);
 int snake_longueur(Snake *snake);
-ListeSnake snake_dernier(Snake *snake);
-ListeSnake snake_premier(Snake *snake);
+Node snake_dernier(Snake *snake);
+Node snake_premier(Snake *snake);
 Direction snake_direction(Snake *snake);
 void snake_set_direction(Snake *snake, Direction dir);
-void snake_set_liste(Snake *snake, ListeSnake *ls);
+void snake_set_liste(Snake *snake, List *ls);
 
 void snake_forward(Snake *snake);
 void snake_forward_ia1(Snake *snake_ia, Snake *snake, Coord bouf);
