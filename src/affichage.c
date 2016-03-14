@@ -7,45 +7,6 @@
 
 #define GRID_SIZE 10
 
-struct _snake_actor
-{
-    List *actors;
-    ClutterActor *parent;
-    Snake *snake;
-    ClutterColor *color;
-    int cur_size;
-};
-
-struct _snake_image
-{
-    ClutterContent *tete;
-    ClutterContent *queue;
-    ClutterContent *corps;
-    ClutterContent *turnlight;
-    ClutterContent *turndark;
-};
-
-struct _bouf
-{
-    Coord coord;
-};
-
-struct _bouf_actor
-{
-    ClutterActor *parent;
-    ClutterActor *bouf_c_actor;
-    Bouf *bouf;
-    ClutterColor *color;
-};
-
-struct _uplet_actor
-{
-    SnakeActor *sa;
-    SnakeActor *sa_ia;
-    BoufActor  *bouf;
-};
-
-
 Bouf *bouf_new(int x, int y)
 {
     srand(time(NULL));
