@@ -195,10 +195,7 @@ ListeSnake liste_snake_suivant(ListeSnake liste)
 {
 	return liste->suivant;
 }
-ListeSnake liste_snake_precedent(ListeSnake liste)
-{
-	return liste->precedent;
-}
+
 
 int coord_is_in_liste_snake( Coord c,ListeSnake liste)
 {

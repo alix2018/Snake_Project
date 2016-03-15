@@ -14,10 +14,51 @@
 #define TURNDARK_IMAGE_SRC "data/corpsturndarkside.png"
 
 
+<<<<<<< HEAD
+=======
+struct _snake_actor
+{
+    List *actors;
+    ClutterActor *parent;
+    Snake *snake;
+    ClutterColor *color;
+    SnakeImage *images;
+    int cur_size;
+
+};
+
+struct _snake_image
+{
+    ClutterContent *tete;
+    ClutterContent *queue;
+    ClutterContent *corps;
+    ClutterContent *turnlight;
+    ClutterContent *turndark;
+};
+
+struct _bouf
+{
+    Coord coord;
+};
+
+struct _bouf_actor
+{
+    ClutterActor *parent;
+    ClutterActor *bouf_c_actor;
+    Bouf *bouf;
+    ClutterColor *color;
+};
+
+struct _uplet_actor
+{
+    SnakeActor *sa;
+    SnakeActor *sa_ia;
+    BoufActor  *bouf;
+};
 
 
 
-
+>>>>>>> affichage
 Bouf *bouf_new(int x, int y)
 {
     srand(time(NULL));
@@ -69,7 +110,15 @@ UpletActor uplet_actor_new(SnakeActor *a1, SnakeActor *a2, BoufActor *bouf)
     new.bouf = bouf;
     return(new);
 }
-
+/**
+ * @brief   Fonction callback appelée lorsqu'une touche du clavier est appuyée.
+ *
+ * @param[in]    actor  L'acteur qui a émis le signal.
+ * @param[in]    event  Permet de récupérer des données sur la touche appuyée.
+ * @param[in]    data   Un pointeur void* vers le snake contrôlé par le joueur.
+ * 
+ * @return ce prototype est défini par Clutter, cf. la documentation de Clutter.
+ */
 gboolean zone_snake_key_press_cb(ClutterActor *actor, ClutterEvent *event, gpointer data)
 {
     Snake *s = data;
@@ -143,7 +192,7 @@ int snake_border_map(SnakeActor *sa)
     Renvoie 0 si le snake essaie de se mordre la queu, 1 sinon
     Appelé dans la fonction timeout_tich_cb
 */
-int snake_border_snake(SnakeActor *sa)
+int snake_border_snake(SnakeActor *sa,SnakeActor *sa_ia)
 {
     int res = 0;
     Snake *s = sa->snake;
@@ -202,7 +251,64 @@ int snake_border_snake(SnakeActor *sa)
         }
     }
 
-    
+    //ia sur lui même
+
+    Snake *s_ia = sa_ia->snake;
+    ListeSnake ls_ia = snake_premier(s_ia);
+    Coord c_tete_ia = snake_pos(s_ia);
+
+    if(snake_direction(s_ia) == HAUT)
+    {
+        c_tete_ia.y -= 1;
+        while( ls_ia != NULL )
+        {
+            if(coord_egales(c_tete_ia,liste_snake_coord(ls_ia)))
+            {
+                res = 1;
+            }
+            ls_ia = liste_snake_suivant(ls_ia);
+        }
+    }
+
+    if(snake_direction(s_ia) == BAS)
+    {
+        c_tete_ia.y += 1;
+        while( ls_ia != NULL )
+        {
+            if(coord_egales(c_tete_ia,liste_snake_coord(ls_ia)))
+            {
+                res = 1;
+            }
+            ls_ia = liste_snake_suivant(ls_ia);
+        }
+    }
+
+    if(snake_direction(s_ia) == GAUCHE)
+    {
+        c_tete_ia.x -= 1;
+        while( ls_ia != NULL )
+        {
+            if(coord_egales(c_tete_ia,liste_snake_coord(ls_ia)))
+            {
+                res = 1;
+            }
+            ls_ia = liste_snake_suivant(ls_ia);
+        }
+    }
+
+    if(snake_direction(s_ia) == DROITE)
+    {
+        c_tete_ia.x += 1;
+        while( ls != NULL )
+        {
+            if(coord_egales(c_tete_ia,liste_snake_coord(ls_ia)))
+            {
+                res = 1;
+            }
+            ls_ia = liste_snake_suivant(ls_ia);
+        }
+    }
+    //fin ia
     return res;
 }
 
@@ -306,7 +412,7 @@ gboolean timeout_tick_cb(gpointer data)
     int l_h = (int) h/GRID_SIZE;
 
 
-    if(!snake_border_map(sa) && !snake_border_snake(sa))
+    if(!snake_border_map(sa) && !snake_border_snake(sa,sa_ia))
     {
         snake_forward(sa->snake);
         snake_actor_update(sa);
@@ -348,6 +454,7 @@ void stage_destroy_cb(ClutterActor *actor, gpointer data)
 }
 
 
+<<<<<<< HEAD
 /**
  * @brief   Initialise un SnakeActor.
  * 
@@ -356,7 +463,10 @@ void stage_destroy_cb(ClutterActor *actor, gpointer data)
  *
  * @return  Le SnakeActor initialisé.
  */
-SnakeActor *create_snake_actor(ClutterActor *parent, Snake *s,ClutterColor *color, SnakeImage *imgs)
+SnakeActor *create_snake_actor(ClutterActor *parent, Snake *s,ClutterColor *color)
+=======
+SnakeActor *create_snake_actor(ClutterActor *parent, Snake *s, ClutterColor *color, SnakeImage *imgs)
+>>>>>>> affichage
 {
     SnakeActor *res;
 
@@ -396,11 +506,15 @@ void free_snake_actor(SnakeActor *sa)
 }
 
 
+<<<<<<< HEAD
 /**
  * Met à jour la longueur et la position d'un SnakeActor.
  *
  * @param[in]    sa     Le SnakeActor à mettre à jour.
  */
+=======
+
+>>>>>>> affichage
 void snake_actor_update(SnakeActor *sa)
 {
     int delta;
@@ -420,8 +534,8 @@ void snake_actor_update(SnakeActor *sa)
             clutter_actor_set_size(actor, GRID_SIZE, GRID_SIZE);
            // clutter_actor_set_background_color(actor, sa->color);
 
-            clutter_actor_set_easing_duration(actor, 300);
-            clutter_actor_set_easing_mode(actor,CLUTTER_EASE_IN_QUART);
+            clutter_actor_set_easing_duration(actor, 0);
+            //clutter_actor_set_easing_mode(actor,CLUTTER_EASE_IN_QUART);
             clutter_actor_add_child(sa->parent, actor);
 
 
@@ -704,10 +818,17 @@ void init_view(ClutterScript *ui, int width, int height, Direction direction, in
 
     zone_snake = CLUTTER_ACTOR(clutter_script_get_object(ui, "zone_snake"));
     clutter_stage_set_key_focus(CLUTTER_STAGE(stage), zone_snake);
+<<<<<<< HEAD
+
+    sa = create_snake_actor(zone_snake, snk, clutter_color_new(0, 0, 255, 255));
+    sa_ia = create_snake_actor(zone_snake, snk_ia, clutter_color_new(255, 0, 0, 255));
+    ba = create_bouf_actor(zone_snake, bouf, clutter_color_new(0, 255, 0, 255));
+=======
     SnakeImage *simages = snake_generate_image();
     sa = create_snake_actor(zone_snake, snk, clutter_color_new (0, 0, 255, 255),simages);
     sa_ia = create_snake_actor(zone_snake, snk_ia, clutter_color_new (255, 0,0, 255),simages);
     ba = create_bouf_actor(zone_snake, bouf, clutter_color_new (0, 255, 0, 255));
+>>>>>>> affichage
 
     snake_actor_update(sa);
     snake_actor_update(sa_ia);
@@ -717,7 +838,7 @@ void init_view(ClutterScript *ui, int width, int height, Direction direction, in
     g_signal_connect(stage, "destroy", G_CALLBACK(stage_destroy_cb), sa);
 
     UpletActor ua = uplet_actor_new(sa, sa_ia, ba);
-    g_timeout_add(200, timeout_tick_cb, &ua);
+    g_timeout_add(150, timeout_tick_cb, &ua);
 
     ClutterContent *image = generate_image(BACKGROUND_IMAGE_SRC );
     clutter_actor_set_content(zone_snake,image);

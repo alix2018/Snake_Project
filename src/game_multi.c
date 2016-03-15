@@ -1,7 +1,7 @@
 //Contient le programme semblable à celui de affichage.c pour le multi
 #include "game_multi.h"
 
-#define GRID_SIZE 10
+#define GRID_SIZE 23
 
 #ifdef _CLIENT_
 #define JOUEUR 2
@@ -124,8 +124,10 @@ void init_game_m(int width, int height)
     zone_snake = CLUTTER_ACTOR(clutter_script_get_object(ui, "zone_snake"));
     clutter_stage_set_key_focus(CLUTTER_STAGE(stage), zone_snake);
     
-    j1 = create_snake_actor(zone_snake, snk_j1, clutter_color_new(0, 0, 255, 255));
-    j2 = create_snake_actor(zone_snake, snk_j2, clutter_color_new(255, 0, 0, 255));
+    SnakeImage *simages = snake_generate_image();
+
+    j1 = create_snake_actor(zone_snake, snk_j1, clutter_color_new(0, 0, 255, 255), simages);
+    j2 = create_snake_actor(zone_snake, snk_j2, clutter_color_new(255, 0, 0, 255), simages);
     ba = create_bouf_actor(zone_snake, bouf, clutter_color_new(0, 255, 0, 255));
 
     snake_actor_update(j1);

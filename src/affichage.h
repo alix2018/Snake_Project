@@ -11,16 +11,6 @@
 /**
  * Cette structure contient les ClutterActor nécessaires à l'affichage du snake.
  */
-typedef struct _snake_actor SnakeActor;
-struct _snake_actor
-{
-    List *actors;
-    ClutterActor *parent;
-    Snake *snake;
-    ClutterColor *color;
-    int cur_size;
-};
-
 typedef struct _snake_image SnakeImage;
 struct _snake_image
 {
@@ -29,6 +19,18 @@ struct _snake_image
     ClutterContent *corps;
     ClutterContent *turnlight;
     ClutterContent *turndark;
+};
+
+typedef struct _snake_actor SnakeActor;
+struct _snake_actor
+{
+    List *actors;
+    ClutterActor *parent;
+    Snake *snake;
+    ClutterColor *color;
+    SnakeImage *images;
+    int cur_size;
+
 };
 
 typedef struct _bouf Bouf;
@@ -79,7 +81,7 @@ gboolean zone_snake_key_press_cb(ClutterActor *actor, ClutterEvent *event, gpoin
 int snake_border_map(SnakeActor *sa);
 
 //Renvoie 0 si le snake essaie de se mordre la queu, 1 sinon
-int snake_border_snake(SnakeActor *sa,SnakeActor * sa_ia);
+int snake_border_snake(SnakeActor *sa);
 
 //Renvoie 1 si et seulement si les coords de la te et de la queue sont égales
 int snake_eat(Snake *s, Bouf *b);
