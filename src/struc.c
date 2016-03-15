@@ -195,6 +195,24 @@ ListeSnake liste_snake_suivant(ListeSnake liste)
 {
 	return liste->suivant;
 }
+ListeSnake liste_snake_precedent(ListeSnake liste)
+{
+	return liste->precedent;
+}
+
+int coord_is_in_liste_snake( Coord c,ListeSnake liste)
+{
+	int res = 0;
+	while(liste != NULL)
+	{
+		if( coord_egales(liste->coord,c))
+		{
+			res = 1;
+		}
+		liste = liste->suivant;
+	}
+	return res;
+}
 
 
 /**
@@ -413,7 +431,195 @@ void snake_forward(Snake *snake)
 
 	(*snake).tete=ls;
 }
+// Verifie le prochain mouvement du snake
+void snake_verif_ia(Snake *snake_ia,Snake *snake,Direction futurdir) // TODO déplacement défensif
+{
+	Coord ctete_ia = snake_pos(snake_ia);
+	ListeSnake ls = snake->tete;
+	srand(time(NULL));
+	/**switch (futurdir)
+	{
+		case HAUT :
+			if(coord_is_in_liste_snake(coord_from_xy(ctete_ia.x-1,ctete_ia.y),ls))
+			{
+				// TODO change direction
+				int i = rand()%3;  // 0
+				if(i == 0) // GAUCHE
+				{
+					if(coord_is_in_liste_snake(coord_from_xy(ctete_ia.x,ctete_ia.y-1),snake_ia->tete))
+					{
 
+						snake_verif_ia(snake_ia,snake,DROITE);
+					}
+					else
+					{
+						snake_set_direction(snake_ia,GAUCHE);
+					}
+
+				}
+				else if( i == 1 )// DROITE
+				{
+					if(coord_is_in_liste_snake(coord_from_xy(ctete_ia.x,ctete_ia.y+1),snake->tete))
+					{
+
+						snake_verif_ia(snake_ia,snake,GAUCHE);
+					}
+					else
+					{
+						snake_set_direction(snake_ia,DROITE);
+					}
+				}
+				else if(i == 2) // BAS
+				{
+					if(coord_is_in_liste_snake(coord_from_xy(ctete_ia.x+1,ctete_ia.y),snake->tete))
+					{
+
+						snake_verif_ia(snake_ia,snake,DROITE);
+					}
+					else
+					{
+						snake_set_direction(snake_ia,BAS);
+					}
+				}
+			}
+			break;
+		case BAS :
+			if(coord_is_in_liste_snake(coord_from_xy(ctete_ia.x+1,ctete_ia.y),ls))
+			{
+				// TODO change direction
+				int i = rand()%3;  // 0
+				if(i == 0) // GAUCHE
+				{
+					if(coord_is_in_liste_snake(coord_from_xy(ctete_ia.x,ctete_ia.y-1),snake_ia->tete))
+					{
+
+						snake_verif_ia(snake_ia,snake,DROITE);
+					}
+					else
+					{
+						snake_set_direction(snake_ia,GAUCHE);
+					}
+
+				}
+				else if( i == 1 )// DROITE
+				{
+					if(coord_is_in_liste_snake(coord_from_xy(ctete_ia.x,ctete_ia.y+1),snake->tete))
+					{
+
+						snake_verif_ia(snake_ia,snake,GAUCHE);
+					}
+					else
+					{
+						snake_set_direction(snake_ia,DROITE);
+					}
+				}
+				else if(i == 2) // HAUT
+				{
+					if(coord_is_in_liste_snake(coord_from_xy(ctete_ia.x-1,ctete_ia.y),snake->tete))
+					{
+
+						snake_verif_ia(snake_ia,snake,GAUCHE);
+					}
+					else
+					{
+						snake_set_direction(snake_ia,HAUT);
+					}
+				}
+			}
+
+			break;
+		case DROITE:
+			if(coord_is_in_liste_snake(coord_from_xy(ctete_ia.x,ctete_ia.y+1),ls))
+			{
+				// TODO change direction
+				int i = rand()%3;  // 0
+				if(i == 0) // GAUCHE
+				{
+					if(coord_is_in_liste_snake(coord_from_xy(ctete_ia.x,ctete_ia.y-1),snake_ia->tete))
+					{
+
+						snake_verif_ia(snake_ia,snake,HAUT);
+					}
+					else
+					{
+						snake_set_direction(snake_ia,GAUCHE);
+					}
+
+				}
+				else if( i == 1 )// HAUT
+				{
+					if(coord_is_in_liste_snake(coord_from_xy(ctete_ia.x-1,ctete_ia.y),snake->tete))
+					{
+
+						snake_verif_ia(snake_ia,snake,GAUCHE);
+					}
+					else
+					{
+						snake_set_direction(snake_ia,HAUT);
+					}
+				}
+				else if(i == 2) // BAS
+				{
+					if(coord_is_in_liste_snake(coord_from_xy(ctete_ia.x+1,ctete_ia.y),snake->tete))
+					{
+
+						snake_verif_ia(snake_ia,snake,DROITE);
+					}
+					else
+					{
+						snake_set_direction(snake_ia,BAS);
+					}
+				}
+			};
+
+			break;
+		case GAUCHE :
+			if(coord_is_in_liste_snake(coord_from_xy(ctete_ia.x,ctete_ia.y-1),ls))
+			{
+				// TODO change direction
+				int i = rand()%3;  // 0
+				if(i == 0) // HAUT
+				{
+					if(coord_is_in_liste_snake(coord_from_xy(ctete_ia.x-1,ctete_ia.y),snake_ia->tete))
+					{
+
+						snake_verif_ia(snake_ia,snake,DROITE);
+					}
+					else
+					{
+						snake_set_direction(snake_ia,HAUT);
+					}
+
+				}
+				else if( i == 1 )// DROITE
+				{
+					if(coord_is_in_liste_snake(coord_from_xy(ctete_ia.x,ctete_ia.y+1),snake->tete))
+					{
+
+						snake_verif_ia(snake_ia,snake,GAUCHE);
+					}
+					else
+					{
+						snake_set_direction(snake_ia,DROITE);
+					}
+				}
+				else if(i == 2) // BAS
+				{
+					if(coord_is_in_liste_snake(coord_from_xy(ctete_ia.x+1,ctete_ia.y),snake->tete))
+					{
+
+						snake_verif_ia(snake_ia,snake,DROITE);
+					}
+					else
+					{
+						snake_set_direction(snake_ia,BAS);
+					}
+				}
+			}
+
+			break;
+	}*/
+}
 
 void snake_forward_ia1(Snake *snake_ia, Snake *snake, Coord bouf)
 {
@@ -428,18 +634,18 @@ void snake_forward_ia1(Snake *snake_ia, Snake *snake, Coord bouf)
 			if(tete.y < bouf.y)
 			{
 				snake_set_direction(snake_ia, BAS);
-				printf("1\n");
+				snake_verif_ia(snake_ia,snake,BAS);
 			}
 			else
 			{
 				snake_set_direction(snake_ia, HAUT);
-				printf("2\n");
+				snake_verif_ia(snake_ia,snake,HAUT);
 			}
 		}
 		else
 		{
 			snake_set_direction(snake_ia, DROITE);
-			printf("3\n");
+			snake_verif_ia(snake_ia,snake,DROITE);
 		}
 	}
 	if(tete.x > bouf.x)
@@ -449,18 +655,18 @@ void snake_forward_ia1(Snake *snake_ia, Snake *snake, Coord bouf)
 			if(tete.y < bouf.y)
 			{
 				snake_set_direction(snake_ia, BAS);
-				printf("4\n");
+				snake_verif_ia(snake_ia,snake,BAS);
 			}
 			else
 			{
 				snake_set_direction(snake_ia, HAUT);
-				printf("5\n");
+				snake_verif_ia(snake_ia,snake,HAUT);
 			}
 		}
 		else
 		{
 			snake_set_direction(snake_ia, GAUCHE);
-			printf("6\n");
+			snake_verif_ia(snake_ia,snake,GAUCHE);
 		}
 	}
 	
@@ -471,18 +677,18 @@ void snake_forward_ia1(Snake *snake_ia, Snake *snake, Coord bouf)
 			if(tete.x < bouf.x)
 			{
 				snake_set_direction(snake_ia, DROITE);
-				printf("7\n");
+				snake_verif_ia(snake_ia,snake,DROITE);
 			}
 			else
 			{
 				snake_set_direction(snake_ia, GAUCHE);
-				printf("8\n");
+				snake_verif_ia(snake_ia,snake,GAUCHE);
 			}
 		}
 		else
 		{
 			snake_set_direction(snake_ia, BAS);
-			printf("9\n");
+			snake_verif_ia(snake_ia,snake,BAS);
 		}
 	}
 
@@ -493,18 +699,18 @@ void snake_forward_ia1(Snake *snake_ia, Snake *snake, Coord bouf)
 			if(tete.x < bouf.x)
 			{
 				snake_set_direction(snake_ia, DROITE);
-				printf("10\n");
+				snake_verif_ia(snake_ia,snake,DROITE);
 			}
 			else
 			{
 				snake_set_direction(snake_ia, GAUCHE);
-				printf("11\n");
+				snake_verif_ia(snake_ia,snake,GAUCHE);
 			}
 		}
 		else
 		{
 			snake_set_direction(snake_ia, HAUT);
-			printf("12\n");
+			snake_verif_ia(snake_ia,snake,HAUT);
 		}
 	}
 

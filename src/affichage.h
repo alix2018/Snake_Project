@@ -79,7 +79,7 @@ gboolean zone_snake_key_press_cb(ClutterActor *actor, ClutterEvent *event, gpoin
 int snake_border_map(SnakeActor *sa);
 
 //Renvoie 0 si le snake essaie de se mordre la queu, 1 sinon
-int snake_border_snake(SnakeActor *sa);
+int snake_border_snake(SnakeActor *sa,SnakeActor * sa_ia);
 
 //Renvoie 1 si et seulement si les coords de la te et de la queue sont égales
 int snake_eat(Snake *s, Bouf *b);
@@ -91,7 +91,7 @@ gboolean timeout_tick_cb(gpointer data);
 void stage_destroy_cb(ClutterActor *actor, gpointer data);
 
 
-SnakeActor *create_snake_actor(ClutterActor *parent, Snake *s, ClutterColor *color);
+SnakeActor *create_snake_actor(ClutterActor *parent, Snake *s, ClutterColor *color, SnakeImage *imgs);
 
 static void free_clutter_actor_fn(void * elt);
 void free_snake_actor(SnakeActor *sa);

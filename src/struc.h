@@ -51,6 +51,8 @@ Coord liste_snake_coord(ListeSnake l);
 ListeSnake liste_snake_suivant(ListeSnake liste);
 ListeSnake liste_snake_precedent(ListeSnake liste);
 
+int coord_is_in_liste_snake( Coord c,ListeSnake liste);
+
 
 /* Fonctions de base de Snake */
 
