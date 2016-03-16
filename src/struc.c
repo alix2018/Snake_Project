@@ -8,6 +8,7 @@
  */
 
 #include <string.h>
+#include <time.h>
 #include "struc.h"
 #include "list.h"
 
@@ -198,6 +199,20 @@ ListeSnake liste_snake_suivant(ListeSnake liste)
 	return liste->suivant;
 }
 
+int coord_is_in_liste_snake( Coord c,ListeSnake liste)
+{
+	int res = 0;
+	while(liste != NULL)
+	{
+		if( coord_egales(liste->coord,c))
+		{
+			res = 1;
+		}
+		liste = liste->suivant;
+	}
+	return res;
+}
+
 
 /**
  * @brief      Récupère le pointeur sur la liste précédent
@@ -326,6 +341,13 @@ int snake_longueur(Snake *snake)
     return snake->longueur;
 }
 
+
+List *snake_liste_snake(Snake *snake)
+{
+    return snake->liste_snake;
+}
+
+
 /**
  * @brief      Récupère le dernier élément de la liste
  *
@@ -412,105 +434,6 @@ void snake_forward(Snake *snake)
 	}
 
     list_add_first(snake->liste_snake, coord_tete);
-}
-
-
-void snake_forward_ia1(Snake *snake_ia, Snake *snake, Coord bouf)
-{
-	Coord tete = snake_pos(snake_ia);
-
-
-	printf("dir debut : %d\n", snake_direction(snake_ia));
-	if(tete.x < bouf.x)
-	{	
-		if(snake_direction(snake_ia) == GAUCHE)
-		{
-			if(tete.y < bouf.y)
-			{
-				snake_set_direction(snake_ia, BAS);
-				printf("1\n");
-			}
-			else
-			{
-				snake_set_direction(snake_ia, HAUT);
-				printf("2\n");
-			}
-		}
-		else
-		{
-			snake_set_direction(snake_ia, DROITE);
-			printf("3\n");
-		}
-	}
-	if(tete.x > bouf.x)
-	{
-		if(snake_direction(snake_ia) == DROITE)
-		{
-			if(tete.y < bouf.y)
-			{
-				snake_set_direction(snake_ia, BAS);
-				printf("4\n");
-			}
-			else
-			{
-				snake_set_direction(snake_ia, HAUT);
-				printf("5\n");
-			}
-		}
-		else
-		{
-			snake_set_direction(snake_ia, GAUCHE);
-			printf("6\n");
-		}
-	}
-	
-	if(tete.y < bouf.y)
-	{
-		if(snake_direction(snake_ia) == HAUT)
-		{
-			if(tete.x < bouf.x)
-			{
-				snake_set_direction(snake_ia, DROITE);
-				printf("7\n");
-			}
-			else
-			{
-				snake_set_direction(snake_ia, GAUCHE);
-				printf("8\n");
-			}
-		}
-		else
-		{
-			snake_set_direction(snake_ia, BAS);
-			printf("9\n");
-		}
-	}
-
-	if(tete.y > bouf.y)
-	{
-		if(snake_direction(snake_ia) == BAS)
-		{
-			if(tete.x < bouf.x)
-			{
-				snake_set_direction(snake_ia, DROITE);
-				printf("10\n");
-			}
-			else
-			{
-				snake_set_direction(snake_ia, GAUCHE);
-				printf("11\n");
-			}
-		}
-		else
-		{
-			snake_set_direction(snake_ia, HAUT);
-			printf("12\n");
-		}
-	}
-
-	snake_forward(snake_ia);
-
-	printf("dir  : %d\n\n", snake_direction(snake_ia));
 }
 
 void snake_increase(Snake *snake)

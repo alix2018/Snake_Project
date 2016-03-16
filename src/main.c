@@ -15,8 +15,10 @@ int main(int argc, char **argv)
 
 
 
-    init_view(ui, 30, 30, DROITE, 20, coord_from_xy(22, 2));
+    init_view(ui, 30, 30, DROITE, 10, coord_from_xy(22, 2));
 
+
+    //TODO free
     return 0;
 	 
 }

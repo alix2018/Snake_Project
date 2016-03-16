@@ -52,6 +52,8 @@ Coord liste_snake_coord(ListeSnake l);
 ListeSnake liste_snake_suivant(ListeSnake liste);
 ListeSnake liste_snake_precedent(ListeSnake liste);
 
+int coord_is_in_liste_snake( Coord c,ListeSnake liste);
+
 
 /* Fonctions de base de Snake */
 
@@ -61,6 +63,7 @@ void print_snake(Snake *snake);
 
 Coord snake_pos(Snake *snake);
 int snake_longueur(Snake *snake);
+List *snake_liste_snake(Snake *snake);
 Node snake_dernier(Snake *snake);
 Node snake_premier(Snake *snake);
 Direction snake_direction(Snake *snake);
@@ -68,7 +71,6 @@ void snake_set_direction(Snake *snake, Direction dir);
 void snake_set_liste(Snake *snake, List *ls);
 
 void snake_forward(Snake *snake);
-void snake_forward_ia1(Snake *snake_ia, Snake *snake, Coord bouf);
 
 void snake_increase(Snake *snake);
 
