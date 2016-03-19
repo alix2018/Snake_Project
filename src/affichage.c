@@ -413,8 +413,7 @@ void snake_actor_update(SnakeActor *sa)
         sa->cur_size = snake_longueur(sa->snake);
     }
 
-    node_s = snake_premier(sa->snake);
-    for (node_sa = list_first_node(sa->actors);
+    for (node_sa = list_first_node(sa->actors), node_s = snake_premier(sa->snake);
          node_sa != NULL;
          node_sa = node_next(node_sa), node_s = node_next(node_s))
     {
