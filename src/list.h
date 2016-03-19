@@ -36,5 +36,6 @@ void *list_get_last(List *list);
 void *list_get_first(List *list);
 
 void list_foreach(List *list, void (*fn)(void *, void *), void *data);
+//int egalite_node(Node n1,Node n2)
 
 #endif //ALPHA_SNAKE_ACTOR_LIST_H

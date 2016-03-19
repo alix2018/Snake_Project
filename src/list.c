@@ -29,7 +29,7 @@ struct _list
 /**
  * @brief   Alloue la mémoire nécessaire à un nœud de List.
  *
- * @param[in]       elt   L'élément à ajouter.
+ * @param[in]       elt   L'élément à ajouter au débuts.
  * @param[in,out]   node  Le successeur.
  *
  * @return  Le nœud créé.
@@ -282,3 +282,12 @@ void *list_get_first(List *list)
     return node_elt(list_first_node(list));
 }
 
+/*
+int egalite_node(Node n1,Node n2) {
+    int res=0;
+    if (n1 == n2) 
+    {
+        res=1;
+    }
+    return res;
+}*/
