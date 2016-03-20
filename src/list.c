@@ -282,12 +282,15 @@ void *list_get_first(List *list)
     return node_elt(list_first_node(list));
 }
 
-/*
-int egalite_node(Node n1,Node n2) {
-    int res=0;
-    if (n1 == n2) 
+
+int egalite_node(Node n1,Node n2)
+{
+    int res=1;
+
+    if (n1->elt != n2->elt || n1->next != n2-> next || n1->prev != n2->prev )
     {
-        res=1;
+        res=0;
     }
+
     return res;
-}*/
+}
