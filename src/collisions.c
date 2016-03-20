@@ -29,6 +29,12 @@ struct _GestionCollisions
     int taille_objs;
 };
 
+
+/**
+ * @brief   Crée un gestionnaire de collisions.
+ *
+ * @return  Le gestionnaire de collisions.
+ */
 GestionCollisions *create_gestion_collisions()
 {
     GestionCollisions *res;
@@ -40,6 +46,11 @@ GestionCollisions *create_gestion_collisions()
     return res;
 }
 
+/**
+ * @brief   Libère la mémoire consommée par un gestionnaire de collisions.
+ *
+ * @param[in]    collision  Le gestionnaire de collisions à supprimer.
+ */
 void free_gestion_collisions(GestionCollisions *collisions)
 {
     int i;
@@ -53,6 +64,17 @@ void free_gestion_collisions(GestionCollisions *collisions)
     free(collisions);
 }
 
+
+/**
+ * @brief   Ajoute un objet à un gestionnaire de collisions.
+ *
+ * @param[in]    gc     Le gestionneire de collisions.
+ * @param[in]    obj    L'objet à ajouter.
+ * @param[in]    type   Le type de l'objet à ajouter.
+ *
+ * @return  Le CollisionObject crée lors de l'ajout de obj, ou le
+ *          CollisionObject qui gère obj si obj est déjà géré par gc.
+ */
 CollisionObject *gestion_collision_add_object(GestionCollisions *gc, void *obj,
                                                CollisionType type)
 {
@@ -77,6 +99,13 @@ CollisionObject *gestion_collision_add_object(GestionCollisions *gc, void *obj,
     return gc->objs[gc->nb_objs - 1];
 }
 
+
+/**
+ * @brief   Supprime le CollisionObject qui gère obj de gc.
+ *
+ * @param[in]    gc     Le gestionnaire de collisions.
+ * @param[in]    obj    L'objet à supprimer.
+ */
 void gestion_collision_remove_object(GestionCollisions *gc, void *obj)
 {
     int i = 0;
@@ -95,6 +124,12 @@ void gestion_collision_remove_object(GestionCollisions *gc, void *obj)
 }
 
 
+/**
+ * @brief   Vérifie toutes les collisions activées pour un CollisionObject de
+ *          type snake.
+ *
+ * @param[in]    obj    Le CollisionObject dont il faut vérifier les collisions.
+ */
 static void check_collisions_for_snake(CollisionObject *obj) {
     int i;
     List *liste_snake = snake_liste_snake((Snake *) obj->obj2);
@@ -118,6 +153,13 @@ static void check_collisions_for_snake(CollisionObject *obj) {
     }
 }
 
+
+/**
+ * @brief Vérifie les collisions activées  pour un CollisionObject de type
+ *        bonus.
+ *
+ * @param[in]    obj    Le CollisionObject dont il faut vérifier les collisions.
+ */
 static void check_collisions_for_bonus(CollisionObject *obj)
 {
     Bouf *bonus = obj->obj2;
@@ -134,6 +176,14 @@ static void check_collisions_for_bonus(CollisionObject *obj)
     }
 }
 
+
+/**
+ * @brief Vérifie toutes les collisions activées pour tous les CollisionObject
+ *        activés.
+ *
+ * @param[in]    collisions Le gestionnaire de collisions qui contient les
+ *                          CollisionObject.
+ */
 void gestion_collisions_check(GestionCollisions *collisions)
 {
     int i;
@@ -157,6 +207,15 @@ void gestion_collisions_check(GestionCollisions *collisions)
     }
 }
 
+
+/**
+ * @brief   Crée un nouveau CollisionObject.
+ *
+ * @param[in]    obj    L'objet qui pourra recevoir des collisions.
+ * @param[in]    type   Le type de obj.
+ *
+ * @return Le CollisionObject crée.
+ */
 CollisionObject *create_collision_object(void *obj, CollisionType type)
 {
     CollisionObject *res;
@@ -172,6 +231,12 @@ CollisionObject *create_collision_object(void *obj, CollisionType type)
     return res;
 }
 
+
+/**
+ * @brief   Libère la mémoire consommée par un CollisionObject.
+ *
+ * @param[in]    object Le CollisionObject à libérer.
+ */
 void free_collision_object(CollisionObject *object)
 {
     int i;
@@ -185,11 +250,22 @@ void free_collision_object(CollisionObject *object)
     free(object);
 }
 
+
+/**
+ * @brief   Active ou désactive une collision.
+ */
 void collision_object_set_enabled(CollisionObject *object, int enabled)
 {
     object->enabled = enabled;
 }
 
+
+/**
+ * @brief   Ajoute une collision à un CollisionObject.
+ *
+ * @param[in]    obj        Le CollisionObject qui sera modifié.
+ * @param[in]    collision  La collision à ajouter.
+ */
 void collision_object_add_collision(CollisionObject *obj, Collision *collision)
 {
     collision->obj2 = obj->obj2;
@@ -207,6 +283,18 @@ void collision_object_add_collision(CollisionObject *obj, Collision *collision)
 }
 
 
+/**
+ * @brief   Crée une nouvelle condition.
+ *
+ * @param[in]    snake  Le Snake qui entrera en collision avec les autres
+ *                      objets présents sur le plateau.
+ * @param[in]    cb     La fonction callback qui sera appelée lorsque le snake
+ *                      passé en paramètre entrera en collision avec un objet.
+ * @param[in]    data   Un pointeur qui sera passé en paramètre à la fonction
+ *                      callback.
+ *
+ * @return La collision crée.
+ */
 Collision *create_collision(Snake *snake, CollisionCb cb, void *data)
 {
     Collision *res;
@@ -221,16 +309,35 @@ Collision *create_collision(Snake *snake, CollisionCb cb, void *data)
     return res;
 }
 
+/**
+ * @brief   Libère la mémoire consommée par une collision.
+ *
+ * @param[in]    collision  La Collision à libérer.
+ */
 void free_collision(Collision *collision)
 {
     free(collision);
 }
 
+
+/**
+ * @brief   Active ou désactive une collision. Les collisions désactivées ne
+ *          déclenchent plus la fonction callback qui leur est associée.
+ *
+ * @param[in]    collision  La collision à modifier.
+ * @param[in]    enabled    1 si la collision doit être activée, 0 sinon.
+ */
 void collision_set_enabled(Collision *collision, int enabled)
 {
     collision->enabled = enabled;
 }
 
+
+/**
+ * Appelle la fonction callback définie dans collision.
+ *
+ * @param[in]    collision  La collision qui a été déclenchée.
+ */
 void collision_trigger(Collision *collision)
 {
     collision->cb(collision->obj1, collision->obj2, collision->data);
