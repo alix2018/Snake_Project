@@ -1,0 +1,52 @@
+[
+  {
+    "id": "stage",
+    "type": "ClutterStage",
+    "title": "Alpha-Snake",
+    "background-color": "#000000",
+    "layout-manager": { "type": "ClutterBinLayout" },
+    "children": [
+      {
+        "id": "zone_snake",
+        "type": "ClutterActor",
+        "x-align": "fill",
+        "y-align": "fill",
+        "x-expand": true,
+        "y-expand": true,
+        "reactive": true,
+        "background-color": "#FFFFFF"
+      }
+    ]
+  },
+  {
+    "id": "fin_partie",
+    "type": "ClutterActor",
+    "layout-manager": { "type" : "ClutterBinLayout" },
+    "x-align": "fill",
+    "y-align": "fill",
+    "x-expand": true,
+    "y-expand": true,
+    "z-position": 1,
+    "opacity": 0,
+    "children": [
+      {
+        "type": "ClutterActor",
+        "background-color": "black",
+        "opacity": 200,
+        "x-align": "fill",
+        "y-align": "fill",
+        "x-expand": true,
+        "y-expand": true
+      },
+      {
+        "id": "fin_partie_texte",
+        "type": "ClutterText",
+        "text": "Fin de la partie.",
+        "x-align": "center",
+        "y-align": "center",
+        "font-name": "large bold",
+        "color": "white"
+      }
+    ]
+  },
+]
