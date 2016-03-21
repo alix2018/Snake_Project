@@ -3,7 +3,9 @@ SOURCE_FILES = struc.c \
                affichage.c \
                list.c \
                bonus.c \
-               ia.c
+               ia.c \
+               partie.c \
+               collisions.c
 
 SRC_DIR = src
 OBJ_DIR = build
