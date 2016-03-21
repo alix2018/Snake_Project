@@ -12,7 +12,7 @@ OBJ_DIR = build
 BUILD_DIR = bin
 
 PROG_SOURCE_FILES = $(SRC_DIR)/main.c $(addprefix $(SRC_DIR)/, $(SOURCE_FILES))
-TESTS_SOURCE_FILES = test/tests.c $(SOURCE_FILES)
+TESTS_SOURCE_FILES = tests/tests.c $(addprefix $(SRC_DIR)/, $(SOURCE_FILES))
 TESTS_OBJ_FILES = $(addprefix $(OBJ_DIR)/, $(TESTS_SOURCE_FILES:.c=.o))
 PROG_OBJ_FILES = $(addprefix $(OBJ_DIR)/, $(PROG_SOURCE_FILES:.c=.o))
 

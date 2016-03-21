@@ -18,7 +18,7 @@
 /**
  * @brief    liste de Snake
  */
-typedef struct maillon_snake *ListeSnake;
+//typedef struct maillon_snake *ListeSnake;
 
 typedef struct snake Snake;
 /**
@@ -45,16 +45,16 @@ int coord_egales(Coord c1, Coord c2);
 /*Fonctions de base de ListeSnake*/
 
 
-ListeSnake cons_liste_snake_debut(Coord c, ListeSnake liste);
-ListeSnake cons_liste_snake_fin(Coord c, ListeSnake liste);
-void free_liste_snake(ListeSnake liste);
-void print_liste_snake(ListeSnake liste);
-
-Coord liste_snake_coord(ListeSnake l);
-ListeSnake liste_snake_suivant(ListeSnake liste);
-ListeSnake liste_snake_precedent(ListeSnake liste);
-
-int coord_is_in_liste_snake( Coord c,ListeSnake liste);
+//ListeSnake cons_liste_snake_debut(Coord c, ListeSnake liste);
+//ListeSnake cons_liste_snake_fin(Coord c, ListeSnake liste);
+//void free_liste_snake(ListeSnake liste);
+//void print_liste_snake(ListeSnake liste);
+//
+//Coord liste_snake_coord(ListeSnake l);
+//ListeSnake liste_snake_suivant(ListeSnake liste);
+//ListeSnake liste_snake_precedent(ListeSnake liste);
+//
+//int coord_is_in_liste_snake( Coord c,ListeSnake liste);
 
 
 /* Fonctions de base de Snake */
@@ -75,5 +75,7 @@ void snake_set_liste(Snake *snake, List *ls);
 void snake_forward(Snake *snake);
 
 void snake_increase(Snake *snake);
+
+
 
 #endif

@@ -29,7 +29,7 @@ struct _list
 /**
  * @brief   Alloue la mémoire nécessaire à un nœud de List.
  *
- * @param[in]       elt   L'élément à ajouter.
+ * @param[in]       elt   L'élément à ajouter au débuts.
  * @param[in,out]   node  Le successeur.
  *
  * @return  Le nœud créé.
@@ -108,7 +108,7 @@ void free_list_fn(List *list, void (*fn)(void *))
 
 
 /**
- * @brief   Ajoute un élément à la fin d'une liste.
+ * @brief   Ajoute un élément au début d'une liste.
  *
  * @param[in]    list   La liste à laquelle l'élément sera ajouté.
  * @param[in]    elt    L'élément à ajouter.
@@ -128,7 +128,7 @@ void list_add_first(List *list, void *elt)
 
 
 /**
- * @brief   Ajoute un élément au début d'une liste.
+ * @brief   Ajoute un élément à la fin d'une liste.
  *
  * @param[in]    list   La liste à laquelle l'élément sera ajouté.
  * @param[in]    elt    L'élément à ajouter.
@@ -214,6 +214,9 @@ int list_is_empty(List *list)
 }
 
 
+/**
+ * @brief   Retourne la taille de la liste
+ */
 int list_size(List * list)
 {
     Node cur = list_first_node(list);
@@ -295,3 +298,15 @@ void *list_get_first(List *list)
     return node_elt(list_first_node(list));
 }
 
+
+int egalite_node(Node n1,Node n2)
+{
+    int res=1;
+
+    if (n1->elt != n2->elt || n1->next != n2-> next || n1->prev != n2->prev )
+    {
+        res=0;
+    }
+
+    return res;
+}
