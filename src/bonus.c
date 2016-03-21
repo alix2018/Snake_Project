@@ -19,6 +19,14 @@ struct _bouf_actor
     ClutterColor *color;
 };
 
+/**
+ * @brief   Genere un élèment de type bouf
+ *
+ * @param[in]    x  largeur de la map
+ * @param[in]    y  hauteur de la mao
+ *
+ * @return La bouf initialisé
+ */
 Bouf *bouf_new(int x, int y)
 {
     srand(time(NULL));
@@ -27,16 +35,41 @@ Bouf *bouf_new(int x, int y)
     return new;
 }
 
+/**
+ * @brief   Change les coordonnés de la bouf
+ *
+ * @param[in]   bouf la bouf à rafraichir
+ * @param[in]   x  largeur de la map
+ * @param[in]   y  hauteur de la mao
+ *
+ * @return La bouf avec de nouvelles coordonnés
+ */
 void bouf_update(Bouf *bouf, int x, int y)
 {
     bouf->coord = coord_from_xy(rand()%x, rand()%y);
 }
 
+/**
+ * @brief   Permet d'acceder au coord de la bouf
+ *
+ * @param[in]   bouf la bouf dont on veut les coord
+ *
+ * @return Les coord de la bouf
+ */
 Coord bouf_coord(Bouf *bouf)
 {
     return bouf->coord;
 }
 
+/**
+ * @brief   Génère une BoufActor
+ *
+ * @param[in]   parent Le parent du nouveau BoufActor
+ * @param[in]   b  la bouf à afficher
+ * @param[in]   color  la couleur de la bouf
+ *
+ * @return Le nouveau BoufActor initialisé
+ */
 BoufActor *create_bouf_actor(ClutterActor *parent, Bouf *b, ClutterColor *color)
 {
     BoufActor *res;
@@ -63,11 +96,23 @@ BoufActor *create_bouf_actor(ClutterActor *parent, Bouf *b, ClutterColor *color)
     return res;
 }
 
+/**
+ * @brief   Permet d'acceder à la bouf d'un BoufActor
+ *
+ * @param[in]   bouf_actor Le BoufActor
+ *
+ * @return La bouf du bouf_actor
+ */
 Bouf *bouf_actor_bouf(BoufActor *bouf_actor)
 {
     return bouf_actor->bouf;
 }
 
+/**
+ * @brief   Rafraichie la bouf d'un BoufActor
+ *
+ * @param[in]   ba Le BoufActor à rafraichir
+ */
 void bouf_actor_update(BoufActor *ba)
 {
     clutter_actor_set_position(ba->bouf_c_actor, ba->bouf->coord.x * GRID_SIZE, ba->bouf->coord.y * GRID_SIZE);

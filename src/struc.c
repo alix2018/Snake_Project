@@ -338,6 +338,12 @@ int snake_longueur(Snake *snake)
 }
 
 
+/**
+ * @brief      Retourne la liste du snake
+ *
+ * @param      snake  le snake 
+ * @return  Retourne la liste du snake
+ */
 List *snake_liste_snake(Snake *snake)
 {
     return snake->liste_snake;
@@ -432,6 +438,11 @@ void snake_forward(Snake *snake)
     list_add_first(snake->liste_snake, coord_tete);
 }
 
+/**
+ * @brief      Augement la taille du snake
+ *
+ * @param[in]      snake  le snake à augmenter
+ */
 void snake_increase(Snake *snake)
 {
     Coord *c = malloc(sizeof(Coord));

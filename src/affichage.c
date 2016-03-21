@@ -32,7 +32,15 @@ struct _uplet_actor
     BoufActor  *bouf;
 };
 
-
+/**
+ * @brief   Fonction qui génère un UpletActor, utile pour la fonction timeout
+ *
+ * @param[in]    a1  un premier snake
+ * @param[in]    a2  un deuxieme snake
+ * @param[in]    bouf   la bouf
+ *
+ * @return Le UpletActor initialisé
+ */
 UpletActor uplet_actor_new(SnakeActor *a1, SnakeActor *a2, BoufActor *bouf)
 {
     UpletActor new;
@@ -244,9 +252,13 @@ int snake_border_snake(SnakeActor *sa,SnakeActor *sa_ia)
     return res;
 }
 
-/**
-    Renvoie 1 si et seulement si les coords de la te et de la queue sont égales
-*/
+/*
+ * @brief Indique si le snake mange la bouf
+ *
+ * @param[in]    s   un snake
+ * @param[in]    s   un snake
+ * return   1 si et seulement si la tete du snake est au même endroit que la bouf
+ */
 int snake_eat(Snake *s, Bouf *b)
 {
     if(coord_egales(snake_pos(s), bouf_coord(b)))
@@ -345,8 +357,8 @@ SnakeActor *create_snake_actor(ClutterActor *parent, Snake *s, ClutterColor *col
 
 
 /**
- * Fonction appliquée à chaque élément de la liste des acteurs de SnakeActor
- * lors de la suppression de cette liste.
+ * @brief Fonction appliquée à chaque élément de la liste des acteurs de SnakeActor lors de la suppression de cette liste.
+ * @param[in]   elt     Le ClutterActor à suprimer
  */
 static void free_clutter_actor_fn(void * elt)
 {
@@ -357,7 +369,7 @@ static void free_clutter_actor_fn(void * elt)
 
 
 /**
- * Libère la mémoire consommée par un SnakeActor.
+ * @brief Libère la mémoire consommée par un SnakeActor.
  *
  * @param[in]    sa     Le SnakeActor à libérer.
  */
@@ -597,6 +609,11 @@ void snake_actor_update(SnakeActor *sa)
     }
 }
 
+/**
+ * @brief   Charge une image
+ * @param[in] filename  nom de l'image à importer
+ * @return  Un ClutterContent avec l'image chargé
+ */
 ClutterContent *generate_image(char * filename)
 {
 
@@ -618,8 +635,10 @@ ClutterContent *generate_image(char * filename)
     return image;
 }
 
-
-
+/**
+ * @brief   Crée un élèment de type SnakeImage
+ * @return  Le SnakeImage initialisé.
+ */
 SnakeImage *snake_generate_image()
 {
     SnakeImage *res;
