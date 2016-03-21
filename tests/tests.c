@@ -125,11 +125,13 @@ void fct_snake()
 
 
 	/* Test de la fonction snake_dernier */
-	g_assert_cmpint(egalite_node(list_last_node(snake_liste_snake(nvSnake)),snake_dernier(nvSnake)),==,1);
+	g_assert_cmpint(node_egalite(list_last_node(snake_liste_snake(nvSnake)),
+                                 snake_dernier(nvSnake)), ==, 1);
 
 
 	/* Test de la fonction snake_premier */
-	g_assert_cmpint(egalite_node(list_first_node(snake_liste_snake(nvSnake)),snake_premier(nvSnake)),==,1);
+	g_assert_cmpint(node_egalite(list_first_node(snake_liste_snake(nvSnake)),
+                                 snake_premier(nvSnake)), ==, 1);
 
 
 	/* Test de la fonction snake_direction */
@@ -253,7 +255,7 @@ void fct_list()
 	g_assert_cmpint(comp3->y,==,comp4->y);
 
 
-	/* Test de la fonction egalite_node */
+	/* Test de la fonction node_egalite */
     i = malloc(sizeof(int));
     *i = 1;
 	Node node3 = cons_node(i,NULL);
@@ -261,7 +263,7 @@ void fct_list()
     *i = 1;
 	Node node4 = cons_node(i,NULL);
 
-	g_assert_true(egalite_node(node3,node4));
+	g_assert_true(node_egalite(node3, node4));
 
     free(node_elt(node3));
     free(node_elt(node4));

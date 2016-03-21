@@ -49,6 +49,12 @@ Node cons_node(void *elt, Node node)
 }
 
 
+int node_egalite(Node n1, Node n2)
+{
+    return n1->elt != n2->elt || n1->next != n2-> next || n1->prev != n2->prev;
+}
+
+
 /**
  * @brief   Crée une liste vide.
  *
@@ -148,7 +154,6 @@ void list_add_last(List *list, void *elt)
     }
 }
 
-
 /**
  * @brief   Applique la fonction `fn` en lui passant le paramètre `data`
  *          à une liste.
@@ -204,6 +209,7 @@ Node list_last_node(List *list)
 {
     return list->last;
 }
+
 
 /**
  * @brief   Retourne 1 si la liste est vide, 0 sinon.
@@ -273,7 +279,6 @@ void *list_pop_first(List *list)
     return res;
 }
 
-
 /**
  * @brief   Retourne le dernier élément d'une liste sans le supprimer.
  *
@@ -286,6 +291,7 @@ void *list_get_last(List *list)
     return node_elt(list_last_node(list));
 }
 
+
 /**
  * @brief   Retourne le premier élément d'une liste sans le supprimer.
  *
@@ -296,17 +302,4 @@ void *list_get_last(List *list)
 void *list_get_first(List *list)
 {
     return node_elt(list_first_node(list));
-}
-
-
-int egalite_node(Node n1,Node n2)
-{
-    int res=1;
-
-    if (n1->elt != n2->elt || n1->next != n2-> next || n1->prev != n2->prev )
-    {
-        res=0;
-    }
-
-    return res;
 }

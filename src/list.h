@@ -18,24 +18,24 @@ Node cons_node(void *elt, Node node);
 void *node_elt(Node node);
 Node node_next(Node node);
 Node node_prev(Node node);
+int node_egalite(Node n1, Node n2);
 
 List *create_list();
 void free_list(List *list);
-void free_list_fn(List *list, void (*fn)(void *));
 
+void free_list_fn(List *list, void (*fn)(void *));
 void list_add_first(List *list, void *elt);
 void list_add_last(List *list, void *elt);
 Node list_first_node(List *list);
 Node list_last_node(List *list);
 int list_is_empty(List *list);
-int list_size(List * list);
 
+int list_size(List * list);
 void *list_pop_last(List *list);
 void *list_pop_first(List *list);
 void *list_get_last(List *list);
-void *list_get_first(List *list);
 
+void *list_get_first(List *list);
 void list_foreach(List *list, void (*fn)(void *, void *), void *data);
-int egalite_node(Node n1,Node n2);
 
 #endif //ALPHA_SNAKE_ACTOR_LIST_H
