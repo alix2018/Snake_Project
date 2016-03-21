@@ -271,12 +271,25 @@ void *list_pop_first(List *list)
 }
 
 
+/**
+ * @brief   Retourne le dernier élément d'une liste sans le supprimer.
+ *
+ * @param[in]    list   Une liste.
+ *
+ * @return  Le dernier élément de la liste.
+ */
 void *list_get_last(List *list)
 {
     return node_elt(list_last_node(list));
 }
 
-
+/**
+ * @brief   Retourne le premier élément d'une liste sans le supprimer.
+ *
+ * @param[in]    list   Une liste.
+ *
+ * @return  Le premier élément de la liste.
+ */
 void *list_get_first(List *list)
 {
     return node_elt(list_first_node(list));

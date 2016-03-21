@@ -33,6 +33,13 @@ struct _Affichage
     ClutterScript *ui;
 };
 
+
+/**
+ * @brief   Crée un nouvel affichage. Il faut appeler init_affichage pour
+ *          l'initialiser.
+ *
+ * @return L'affichage qui a été alloué.
+ */
 Affichage *create_affichage()
 {
     Affichage *res;
@@ -44,6 +51,9 @@ Affichage *create_affichage()
     return res;
 }
 
+/**
+ * @brief   Fonction auxiliaire de free_affichage.
+ */
 static void free_affichage_snake_actors(void *elt)
 {
     SnakeActor *sa = elt;
@@ -51,12 +61,25 @@ static void free_affichage_snake_actors(void *elt)
     free_snake_actor(sa);
 }
 
+/**
+ * @brief   Libère la mémoire consommée par un affichage.
+ *
+ * @param[in]    affichage  L'affichage à supprimer.
+ */
 void free_affichage(Affichage * affichage)
 {
     free_list_fn(affichage->snake_actors, free_affichage_snake_actors);
     free(affichage);
 }
 
+
+/**
+ * @brief   Retourne le ClutterScript associé à un affichage.
+ *
+ * @param[in]    affichage  Un affichage.
+ *
+ * @return Le ClutterScript de Affichage.
+ */
 ClutterScript *affichage_ui(Affichage *affichage)
 {
     return affichage->ui;
@@ -590,6 +613,14 @@ SnakeImage *snake_generate_image()
     return res;
 }
 
+
+/**
+ * @brief   Ajoute un Snake à un affichage.
+ *
+ * @param[in]    affichage  Un affichage.
+ * @param[in]    snake      Le snake à ajouter.
+ * @param[in]    color      La couleur du snake.
+ */
 void affichage_add_snake(Affichage *affichage, Snake *snake,
                          ClutterColor *color)
 {
@@ -604,6 +635,14 @@ void affichage_add_snake(Affichage *affichage, Snake *snake,
     list_add_last(affichage->snake_actors, sa);
 }
 
+
+/**
+ * @brief   Ajoute un bonus à un affichage.
+ *
+ * @param[in]    affichage  Un affichage.
+ * @param[in]    bonus      Le bonus à ajouter.
+ * @param[in]    color      La couleur du bonus.
+ */
 void affichage_add_bonus(Affichage *affichage, Bouf *bonus,
                          ClutterColor *color)
 {
@@ -616,7 +655,11 @@ void affichage_add_bonus(Affichage *affichage, Bouf *bonus,
     list_add_last(affichage->bonus, ba);
 }
 
-
+/**
+ * @brief   Met à jour un affichage.
+ *
+ * @param[in]    affichage  L'affichage à mettre à jour.
+ */
 void affichage_update(Affichage *affichage)
 {
     SnakeActor *sa;

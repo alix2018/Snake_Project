@@ -30,6 +30,15 @@ struct _Partie
     Map *map;
 };
 
+
+/**
+ * @brief   Crée le plateau d'une partie.
+ *
+ * @param[in]    width  La largeur du plateau en cases.
+ * @param[in]    height La hauteur du plateau en cases.
+ *
+ * @return  Le plateau alloué.
+ */
 Map *create_map(int width, int height)
 {
     Map *res;
@@ -41,26 +50,52 @@ Map *create_map(int width, int height)
     return res;
 }
 
+/**
+ * @brief   Libère la mémoire consommée par un plateau.
+ *
+ * @param[in]    map    Le plateau à libérer.
+ */
 void free_map(Map *map)
 {
     free(map);
 }
 
+/**
+ * @brief   Permet d'obtenir la largeur d'un plateau.
+ *
+ * @param[in]    map    Un plateau.
+ *
+ * @return  La largeur du plateau.
+ */
 int map_width(Map *map)
 {
     return map->width;
 }
 
+/**
+ * @brief   Permet d'obtenir la hauteur d'un plateau.
+ *
+ * @param[in]    map    Un plateau.
+ *
+ * @return  La hauteur du plateau.
+ */
 int map_height(Map *map)
 {
     return map->height;
 }
 
+
+/**
+ * @brief   Crée une partie. Il faut appeler init_partie pour initaliser la
+ *          partie.
+ *
+ * @return  La partie allouée.
+ */
 Partie *create_partie()
 {
     Partie *res;
 
-    res = malloc(sizeof(struct _Partie));
+    res = malloc(sizeof(Partie));
     res->snake = NULL;
     res->schlanga = NULL;
     res->nourriture = NULL;
@@ -71,6 +106,12 @@ Partie *create_partie()
     return res;
 }
 
+
+/**
+ * @brief   Libère la mémoire consommée par une partie.
+ *
+ * @param[in]    partie La partie à supprimer.
+ */
 void free_partie(Partie *partie)
 {
     free(partie->nourriture);
@@ -79,11 +120,28 @@ void free_partie(Partie *partie)
     free(partie);
 }
 
+
+/**
+ * @brief   Permet d'obtenir le plateau d'une partie.
+ *
+ * @param[in]   partie  Une partie.
+ *
+ * @return  Le plateau de la partie.
+ */
 Map *partie_map(Partie *partie)
 {
     return partie->map;
 }
 
+
+/**
+ * @brief   Fonction callback appelée quand un Snake entre en collision avec
+ *          un Snake.
+ *
+ * @param[in]    snake  Le coupable.
+ * @param[in]    obj2   La victime.
+ * @param[in]    data   Un pointeur vers la partie en cours.
+ */
 static void collision_snake_vers_snake(Snake *snake, void *obj2, void *data)
 {
     Partie *partie = data;
@@ -109,6 +167,14 @@ static void collision_snake_vers_snake(Snake *snake, void *obj2, void *data)
     clutter_actor_restore_easing_state(fin_partie);
 }
 
+/**
+ * @brief   Fonction callback appelée quand un Snake entre en collision avec
+ *          la nourriture.
+ *
+ * @param[in]    snake  Le coupable.
+ * @param[in]    obj2   La victime.
+ * @param[in]    data   Un pointeur vers la partie en cours.
+ */
 static void collision_snake_vers_nourriture(Snake *snake, void *obj2, void *data)
 {
     Bouf *nourriture = obj2;
@@ -118,6 +184,15 @@ static void collision_snake_vers_nourriture(Snake *snake, void *obj2, void *data
     bouf_update(nourriture, partie->map->width, partie->map->height);
 }
 
+
+/**
+ * @brief   Initialise une partie déjà allouée.
+ *
+ * @param[in]    partie Une partie.
+ * @param[in]    ui     Le ClutterScript de la fenêtre.
+ * @param[in]    width  La largeur du plateau.
+ * @param[in]    height La hauteur du plateau.
+ */
 void init_partie(Partie *partie, ClutterScript *ui, int width, int height)
 {
     Snake *snake;

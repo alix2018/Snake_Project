@@ -195,6 +195,12 @@ static void check_collisions_for_bonus(CollisionObject *obj)
     }
 }
 
+/**
+ * @brief Vérifie les collisions activées  pour un CollisionObject de type
+ *        map.
+ *
+ * @param[in]    obj    Le CollisionObject dont il faut vérifier les collisions.
+ */
 static void check_collisions_for_map(CollisionObject *obj)
 {
     Map *map = obj->obj2;
