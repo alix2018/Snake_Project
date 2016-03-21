@@ -6,87 +6,6 @@
 #include "../src/ia.h"
 #include "../src/bonus.h"
 
-
-void fct_affichage()
-{
-	/* Test de la fonction create_snake_actor */
-
-	/** Les constant non définie **/
-	SnakeActor * sa;
-	ClutterActor * zone_snake;
-	Snake *s;
-	ClutterColor *color;
-	SnakeImage *imgs;
-
-	/** On défini les constant avec beaucoup d'autres fonction */
-	Coord coordSnake = coord_from_xy(0,0);
-	s = create_snake(2,coordSnake,GAUCHE);
-
-	ClutterScript* ui = clutter_script_new();
-	clutter_script_load_from_file(ui, "src/gui/stage.json", NULL);
-	clutter_script_connect_signals(ui, ui);
-	zone_snake = CLUTTER_ACTOR(clutter_script_get_object(ui, "zone_snake"));
-
-	//clutter_stage_set_key_focus(CLUTTER_STAGE(stage), zone_snake);
-
-	sa = create_snake_actor(zone_snake,s,color,imgs);
-
-
-	// TODO LES TEST !
-
-	//snake_border_map(sa);
-
-
-
-}
-
-void fct_ia()
-{
-	// Test de la fonction snake_forward_ia1
-	Coord coordSnake = coord_from_xy(2,2);
-	Snake* s = create_snake(2,coordSnake,BAS);
-	Coord coordSnake_ia = coord_from_xy(0,2);
-	Snake* s_ia = create_snake(2,coordSnake_ia,GAUCHE);
-	Coord bouf = coord_from_xy(0,0);
-	// Schema simple
-	//  b . . .
-	//	. . . .				// Schema p = player
-	//	i . p .				// i = ia et b = bonus
-	//  i . p .
-	snake_forward_ia1(s_ia,s,bouf);
-
-	// TODO les fonctions
-}
-
-
-void fct_bonus()
-{
-
-	/* Test de la fonction bouf_new et bouf_coord */
-	Coord coord;
-	int x,y;
-	Bouf * bouf = bouf_new(x,y);
-	coord = bouf_coord(bouf);
-	// On test si le bonus est dans le cadre
-	g_assert_cmpint(coord.x,<=,x);
-	g_assert_cmpint(coord.x,>=,0);
-	g_assert_cmpint(coord.y,<=,y);
-	g_assert_cmpint(coord.y,>=,0);
-
-	// Test de la fonction bouf_update
-
-	int x1,y1;
-	bouf_update(bouf,x1,y1);
-	Coord coord1 = bouf_coord(bouf);
-	// On test si le bonus est dans le cadre
-	g_assert_cmpint(coord1.x,<=,x1);
-	g_assert_cmpint(coord1.x,>=,0);
-	g_assert_cmpint(coord1.y,<=,y1);
-	g_assert_cmpint(coord1.y,>=,0);
-
-
- 	//TODO actor test
-}
 void fct_snake()
 {
 	/* Test de la fonction coord_from_xy */
@@ -205,8 +124,6 @@ void fct_list()
 	g_assert_cmpint(c4->y,==,4);
 
 
-	/* Test de la fonction list_foreach */
-
 	/* Test de la fonction node_next */
 	Node nvNode = node_next(node1);
 	Coord *c5 = node_elt(nvNode);
@@ -229,13 +146,14 @@ void fct_list()
 
 	/* Test de la fonction list_pop_last */
 	Coord *co1 = list_pop_last(nvList);
-
 	g_assert_cmpint(list_size(nvList),==,1);
 
+	list_add_first(nvList,coord);
 
-	/* Test de la fonction list_pop_first ?*/
-	//Coord *co2 = list_pop_first(nvList);
-	//g_assert_cmpint(list_size(nvList),==,0);
+	
+	/* Test de la fonction list_pop_first */
+	Coord *co2 = list_pop_first(nvList);
+	g_assert_cmpint(list_size(nvList),==,1);
 
 
 
@@ -259,14 +177,10 @@ void fct_list()
     i = malloc(sizeof(int));
     *i = 1;
 	Node node3 = cons_node(i,NULL);
-    i = malloc(sizeof(int));
-    *i = 1;
-	Node node4 = cons_node(i,NULL);
 
-	g_assert_true(node_egalite(node3, node4));
+	g_assert_cmpint(node_egalite(node3, node3),==,1);
 
     free(node_elt(node3));
-    free(node_elt(node4));
 
 	free_list(nvList);
 
@@ -280,7 +194,6 @@ int main(int argc, char **argv)
 	/* ajouter fonctions par catégorie de tests unitaires */
 	g_test_add_func("/struc/fct_snake", fct_snake);
 	g_test_add_func("/list/fct_list", fct_list);
-	g_test_add_func("/bonus/fct_bonus", fct_bonus);
 
 	return g_test_run();
 }

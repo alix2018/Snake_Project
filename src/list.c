@@ -59,7 +59,7 @@ Node cons_node(void *elt, Node node)
  */
 int node_egalite(Node n1, Node n2)
 {
-    return n1->elt == n2->elt && n1->next == n2-> next && n1->prev == n2->prev;
+    return n1->elt == n2->elt && n1->next == n2->next && n1->prev == n2->prev;
 }
 
 
