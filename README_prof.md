@@ -20,8 +20,15 @@ Ouvrir un terminal et taper :
 Autres cibles définies dans le Makefile :
 
  - `make clean` : supprime les fichiers objet générés par le compilateur.
+ - `make maintainer-clean` : supprime tous les fichiers générés par make et 
+                             autoconf.
+ - `make tests` : compile les tests unitaires.
 
 Exécution
 ---------
 
     ./bin/alpha-snake
+    
+Pour les tests :
+
+    ./bin/tests
