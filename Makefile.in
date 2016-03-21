@@ -23,6 +23,9 @@ DIST_DIRS = src \
 DIST_FILES = configure \
              Makefile.in
 
+VERSION = @PACKAGE_VERSION@
+TARNAME = @PACKAGE_TARNAME@-$(VERSION)
+
 CC = @CC@
 CFLAGS = @CFLAGS@
 
@@ -55,10 +58,10 @@ maintainer-clean: clean
 	-rm -v projet-ipi-jalon1.tar.bz2
 	
 dist-bzip:
-	mkdir -p projet-ipi-jalon1
-	@cp -rv $(DIST_DIRS) projet-ipi-jalon1
-	@cp -v $(DIST_FILES) projet-ipi-jalon1
-	@cp -v README_prof.md projet-ipi-jalon1/README.md
-	tar -cvjSf projet-ipi-jalon1.tar.bz2 projet-ipi-jalon1
-	@rm -rv projet-ipi-jalon1
+	mkdir -p $(TARNAME)
+	@cp -rv $(DIST_DIRS) $(TARNAME)
+	@cp -v $(DIST_FILES) $(TARNAME)
+	@cp -v README_prof.md $(TARNAME)/README.md
+	tar -cvjSf $(TARNAME).tar.bz2 $(TARNAME)
+	@rm -rv $(TARNAME)
 
