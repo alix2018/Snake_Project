@@ -57,6 +57,11 @@ void free_affichage(Affichage * affichage)
     free(affichage);
 }
 
+ClutterScript *affichage_ui(Affichage *affichage)
+{
+    return affichage->ui;
+}
+
 /**
  * @brief   Fonction callback appelée lorsqu'une touche du clavier est appuyée.
  *

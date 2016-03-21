@@ -87,8 +87,26 @@ Map *partie_map(Partie *partie)
 static void collision_snake_vers_snake(Snake *snake, void *obj2, void *data)
 {
     Partie *partie = data;
+    ClutterScript *ui = affichage_ui(partie->affichage);
+    ClutterActor *fin_partie;
 
     partie->en_cours = FALSE;
+
+    clutter_text_set_text(
+        CLUTTER_TEXT(clutter_script_get_object(ui, "fin_partie_texte")),
+        (snake == partie->schlanga) ? "Gagné !" : "Perdu !"
+    );
+
+    fin_partie = CLUTTER_ACTOR(clutter_script_get_object(ui, "fin_partie"));
+    clutter_actor_add_child(
+        CLUTTER_ACTOR(clutter_script_get_object(ui, "stage")),
+        fin_partie
+    );
+
+    clutter_actor_save_easing_state(fin_partie);
+    clutter_actor_set_easing_duration(fin_partie, 250);
+    clutter_actor_set_opacity(fin_partie, 255);
+    clutter_actor_restore_easing_state(fin_partie);
 }
 
 static void collision_snake_vers_nourriture(Snake *snake, void *obj2, void *data)
