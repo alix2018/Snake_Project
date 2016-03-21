@@ -1,15 +1,30 @@
 //
 // Created by thibaut on 16/03/16.
-//
+#include <clutter/clutter.h>
+#include "struc.h"
+#include "bonus.h"
+#include "affichage.h"
+
 
 #ifndef ALPHA_SNAKE_PARTIE_H
 #define ALPHA_SNAKE_PARTIE_H
 
-#include "struc.h"
 
+
+typedef struct _Map Map;
 typedef struct _Partie Partie;
 
-Partie *create_partie(Snake *snake, Snake *schlanga, Coord coord_bouf);
+Map *create_map(int width, int height);
+void free_map(Map *map);
+int map_width(Map *map);
+int map_height(Map *map);
+
+Partie *create_partie();
 void free_partie(Partie *partie);
+Map *partie_map(Partie *partie);
+
+void init_partie(Partie *partie, ClutterScript *ui, int width, int height);
+
+gboolean timeout_tick_cb(gpointer data);
 
 #endif //ALPHA_SNAKE_PARTIE_H

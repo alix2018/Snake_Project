@@ -25,29 +25,36 @@ struct _snake_image
     ClutterContent *turndark;
 };
 
-struct _uplet_actor
+struct _Affichage
 {
-    SnakeActor *sa;
-    SnakeActor *sa_ia;
-    BoufActor  *bouf;
+    List *snake_actors;
+    List *bonus;
+    SnakeImage *images;
+    ClutterScript *ui;
 };
 
-/**
- * @brief   Fonction qui génère un UpletActor, utile pour la fonction timeout
- *
- * @param[in]    a1  un premier snake
- * @param[in]    a2  un deuxieme snake
- * @param[in]    bouf   la bouf
- *
- * @return Le UpletActor initialisé
- */
-UpletActor uplet_actor_new(SnakeActor *a1, SnakeActor *a2, BoufActor *bouf)
+Affichage *create_affichage()
 {
-    UpletActor new;
-    new.sa = a1;
-    new.sa_ia = a2;
-    new.bouf = bouf;
-    return(new);
+    Affichage *res;
+
+    res = malloc(sizeof(Affichage));
+    res->snake_actors = create_list();
+    res->bonus = create_list();
+
+    return res;
+}
+
+static void free_affichage_snake_actors(void *elt)
+{
+    SnakeActor *sa = elt;
+
+    free_snake_actor(sa);
+}
+
+void free_affichage(Affichage * affichage)
+{
+    free_list_fn(affichage->snake_actors, free_affichage_snake_actors);
+    free(affichage);
 }
 
 /**
@@ -85,12 +92,13 @@ gboolean zone_snake_key_press_cb(ClutterActor *actor, ClutterEvent *event, gpoin
             break;
     }
 
-    return TRUE;
+    return CLUTTER_EVENT_STOP;
 }
 
 
 /**
- * @brief      Renvoie true si le snake est contre un mur et veux avancer dans le mur. Appelé dans la fonction timeout_tich_cb
+ * @brief      Renvoie true si le snake est contre un mur et veux avancer dans
+ *             le mur. Appelé dans la fonction timeout_tich_cb
  *
  * @param[in]  c1  coord à vérifier
  * @param[in]  c2  coord à vérifier
@@ -263,57 +271,12 @@ int snake_eat(Snake *s, Bouf *b)
 {
     if(coord_egales(snake_pos(s), bouf_coord(b)))
     {
-        return 1;
+        return 1; // O_o
     }
     else
     {
         return 0;
     }
-}
-
-/**
- * @brief Fonction callback appelée à intervalles réguliers.
- *
- * @param[in]    data   Le SnakeActor du snake.
- */
-gboolean timeout_tick_cb(gpointer data)
-{
-    UpletActor *ua = data;
-    SnakeActor *sa = ua->sa;
-    SnakeActor *sa_ia = ua->sa_ia;
-    BoufActor  *bouf = ua->bouf;
-
-    float w, h;
-
-    clutter_actor_get_size(sa->parent, &w, &h);
-    int l_w = (int) w/GRID_SIZE;
-    int l_h = (int) h/GRID_SIZE;
-
-
-    if(!snake_border_map(sa) && !snake_border_snake(sa,sa_ia))
-    {
-        snake_forward(sa->snake);
-        snake_actor_update(sa);
-        snake_forward_ia1(sa_ia->snake, sa->snake, bouf_coord(bouf_actor_bouf(bouf)));
-        snake_actor_update(sa_ia);
-        if(snake_eat(sa->snake, bouf_actor_bouf(bouf)))
-        {
-            snake_increase(sa->snake);
-            bouf_update(bouf_actor_bouf(bouf), l_w, l_h);
-            bouf_actor_update(bouf);
-            printf("Snake eat!\n");
-        }
-        if(snake_eat(sa_ia->snake, bouf_actor_bouf(bouf)))
-        {
-            snake_increase(sa_ia->snake);
-            bouf_update(bouf_actor_bouf(bouf), l_w, l_h);
-            bouf_actor_update(bouf);
-            printf("Snake ia eat!\n");
-
-        }
-    }
-
-    return G_SOURCE_CONTINUE;
 }
 
 /**
@@ -325,9 +288,6 @@ gboolean timeout_tick_cb(gpointer data)
  */
 void stage_destroy_cb(ClutterActor *actor, gpointer data)
 {
-    SnakeActor *sa = data;
-
-    free_snake_actor(sa);
     clutter_main_quit();
 }
 
@@ -471,30 +431,22 @@ void snake_actor_update(SnakeActor *sa)
             if(cnext->x == c->x && c->y < cnext->y)
             {
                 // TODO tête droite (pas de rotation)
-
             }
             else if (cnext->x == c->x && c->y > cnext->y)
             {
-
                 clutter_actor_set_rotation_angle(actor,CLUTTER_Z_AXIS,180);
             }
             else if (cnext->y == c->y && c->x > cnext->x )
             {
-
                 clutter_actor_set_rotation_angle(actor,CLUTTER_Z_AXIS,90);
             }
             else if(cnext->y == c->y && c->x < cnext->x)
             {
-
-
                 clutter_actor_set_rotation_angle(actor,CLUTTER_Z_AXIS,-90);
-
             }
-
         }
         else if(node_sa == list_last_node(sa->actors))
         {
-
             cprev = node_elt(node_prev(node_s));
             clutter_actor_set_content(actor,sa->images->queue);
             clutter_actor_set_pivot_point (actor,0.5, 0.5 );
@@ -520,7 +472,6 @@ void snake_actor_update(SnakeActor *sa)
 
                 clutter_actor_set_rotation_angle(actor,CLUTTER_Z_AXIS,90);
             }
-
         }
         else
         {
@@ -538,8 +489,6 @@ void snake_actor_update(SnakeActor *sa)
             }
             else if (c->x == cnext->x && c->x == cprev->x && cnext->y < cprev->y)
             {
-
-
                 clutter_actor_set_rotation_angle(actor,CLUTTER_Z_AXIS,180);
             }
             else if (c->y == cnext->y && c->y == cprev->y && cprev->x < cnext->x)
@@ -548,61 +497,45 @@ void snake_actor_update(SnakeActor *sa)
             }
             else if(c->y == cnext->y && c->y == cprev->y && cprev->x > cnext->x)
             {
-
-
                 clutter_actor_set_rotation_angle(actor,CLUTTER_Z_AXIS,90);
             }
             else if(c->x == cnext->x && c->y < cnext->y && c->y == cprev->y && c->x < cprev->x) // Les turnlight et turndark
             {
-
                 clutter_actor_set_content(actor,sa->images->turnlight);
-
             }
             else if(c->x == cnext->x && c->y < cnext->y && c->y == cprev->y && c->x > cprev->x)
             {
-
                 clutter_actor_set_content(actor, sa->images->turndark);
-
             }
             else if(c->x == cnext->x && c->y > cnext->y && c->y == cprev->y && c->x > cprev->x)
             {
-
                 clutter_actor_set_content(actor,sa->images->turnlight);
                 clutter_actor_set_rotation_angle(actor,CLUTTER_Z_AXIS,180);
             }
             else if(c->x == cnext->x && c->y > cnext->y && c->y == cprev->y && c->x < cprev->x)
             {
-
                 clutter_actor_set_content(actor,sa->images->turndark);
                 clutter_actor_set_rotation_angle(actor,CLUTTER_Z_AXIS,180);
             }
             else if(c->x == cprev->x && c->y > cprev->y && c->y == cnext->y && c->x < cnext->x)
             {
-
                 clutter_actor_set_rotation_angle(actor,CLUTTER_Z_AXIS,-90);
                 clutter_actor_set_content(actor,sa->images->turnlight);
-
             }
             else if(c->x == cprev->x && c->y > cprev->y && c->y == cnext->y && c->x > cnext->x)
             {
-
                 clutter_actor_set_rotation_angle(actor,CLUTTER_Z_AXIS,90);
                 clutter_actor_set_content(actor,sa->images->turndark);
-
             }
             else if(c->x == cprev->x && c->y < cprev->y && c->y == cnext->y && c->x > cnext->x)
             {
-
                 clutter_actor_set_content(actor,sa->images->turnlight);
                 clutter_actor_set_rotation_angle(actor,CLUTTER_Z_AXIS,90);
-
             }
             else if(c->x == cprev->x && c->y < cprev->y && c->y == cnext->y && c->x < cnext->x)
             {
-
                 clutter_actor_set_content(actor,sa->images->turndark);
                 clutter_actor_set_rotation_angle(actor,CLUTTER_Z_AXIS,-90);
-
             }
         }
 
@@ -652,20 +585,68 @@ SnakeImage *snake_generate_image()
     return res;
 }
 
+void affichage_add_snake(Affichage *affichage, Snake *snake,
+                         ClutterColor *color)
+{
+    SnakeActor *sa;
+
+    sa  = create_snake_actor(
+        CLUTTER_ACTOR(clutter_script_get_object(affichage->ui, "zone_snake")),
+        snake,
+        clutter_color_new(0, 0, 255, 255),
+        affichage->images
+    );
+    list_add_last(affichage->snake_actors, sa);
+}
+
+void affichage_add_bonus(Affichage *affichage, Bouf *bonus,
+                         ClutterColor *color)
+{
+    BoufActor *ba;
+    ba = create_bouf_actor(
+        CLUTTER_ACTOR(clutter_script_get_object(affichage->ui, "zone_snake")),
+        bonus,
+        clutter_color_new(0, 255, 0, 255)
+    );
+    list_add_last(affichage->bonus, ba);
+}
+
+
+void affichage_update(Affichage *affichage)
+{
+    SnakeActor *sa;
+    BoufActor *ba;
+    Node cur;
+
+    for (cur = list_first_node(affichage->snake_actors);
+         cur != NULL;
+         cur = node_next(cur))
+    {
+        sa = node_elt(cur);
+
+        snake_actor_update(sa);
+    }
+
+    for (cur = list_first_node(affichage->bonus);
+         cur != NULL;
+         cur = node_next(cur))
+    {
+        ba = node_elt(cur);
+
+        bouf_actor_update(ba);
+    }
+}
+
 
 /**
  * @brief   Crée la fenêtre du snake.
  *
+ * @param[in]    partie     La partie affichée.
  * @param[in]    ui         Le fichier ui contenant la déclaration de
  *                          la fenêtre du Snake.
- * @param[in]    width      La largeur de la fenêtre en nombre de cases de la
- *                          grille.
- * @param[in]    height     La hauteur de la fenêtre.
- * @param[in]    direction  La direction de départ du snake.
- * @param[in]    size       La longueur du snake.
- * @param[in]    pos        La position de départ du snake.
  */
-void init_view(ClutterScript *ui, int width, int height, Direction direction, int size, Coord pos)
+void init_affichage(Affichage *affichage, ClutterScript *ui, Snake *snake,
+                    int width, int height)
 {
     ClutterActor *zone_snake;
     ClutterActor *stage;
@@ -674,50 +655,22 @@ void init_view(ClutterScript *ui, int width, int height, Direction direction, in
     Bouf *bouf;
     BoufActor *ba;
 
+    affichage->ui = ui;
 
     stage = CLUTTER_ACTOR(clutter_script_get_object(ui, "stage"));
-    clutter_actor_set_size(stage, width * GRID_SIZE, height * GRID_SIZE);
-    //clutter_actor_set_position (stage, 600,500);
-
-    snk = create_snake(
-        size,
-        pos,
-        direction
-    );
-
-    snk_ia = create_snake(
-        size,
-        coord_from_xy(pos.x, pos.y+5),//L'ia commence 5 case en dessous du snake de base
-        direction
-    );
-
-
-    bouf = bouf_new(width, height);
+    clutter_actor_set_size(stage, width * GRID_SIZE,
+                           height * GRID_SIZE);
 
     zone_snake = CLUTTER_ACTOR(clutter_script_get_object(ui, "zone_snake"));
     clutter_stage_set_key_focus(CLUTTER_STAGE(stage), zone_snake);
-    SnakeImage *simages = snake_generate_image();
-    sa = create_snake_actor(zone_snake, snk, clutter_color_new (0, 0, 255, 255),simages);
-    sa_ia = create_snake_actor(zone_snake, snk_ia, clutter_color_new (255, 0,0, 255),simages);
-    ba = create_bouf_actor(zone_snake, bouf, clutter_color_new (0, 255, 0, 255));
+    affichage->images = snake_generate_image();
 
-    snake_actor_update(sa);
-    snake_actor_update(sa_ia);
-    bouf_actor_update(ba);
-
-    g_signal_connect(zone_snake, "key-press-event", G_CALLBACK(zone_snake_key_press_cb), snk);
-    g_signal_connect(stage, "destroy", G_CALLBACK(stage_destroy_cb), sa);
-
-    UpletActor ua = uplet_actor_new(sa, sa_ia, ba);
-    g_timeout_add(150, timeout_tick_cb, &ua);
+    g_signal_connect(zone_snake, "key-press-event", G_CALLBACK(zone_snake_key_press_cb), snake);
+    g_signal_connect(stage, "destroy", G_CALLBACK(stage_destroy_cb), NULL);
 
     // SET IMAGE BACKGROUND
-    ClutterContent *image = generate_image(BACKGROUND_IMAGE_SRC );
+    ClutterContent *image = generate_image(BACKGROUND_IMAGE_SRC);
     clutter_actor_set_content(zone_snake,image);
 
     clutter_actor_show(stage);
-
-    clutter_main();
-
-    free_snake(snk);
 }

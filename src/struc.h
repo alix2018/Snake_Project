@@ -6,12 +6,14 @@
  * @brief      Toutes les fonctions permetant d'utiliser la structure et de jouer
  * @details    --- 
  */
-#ifndef _STRUCT_
-#define _STRUCT_
 
 #include <stdio.h>
 #include <stdlib.h>
 #include "list.h"
+
+#ifndef _STRUCT_
+#define _STRUCT_
+
 
 /**
  * @brief    liste de Snake

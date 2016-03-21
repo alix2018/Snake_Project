@@ -132,11 +132,28 @@ void gestion_collision_remove_object(GestionCollisions *gc, void *obj)
  */
 static void check_collisions_for_snake(CollisionObject *obj) {
     int i;
-    List *liste_snake = snake_liste_snake((Snake *) obj->obj2);
+    Snake *snake = (Snake *) obj->obj2;
+    List *liste_snake = snake_liste_snake(snake);
     Node cur;
     Coord *cur_coord;
 
-    for (cur = list_first_node(liste_snake);
+    cur = list_first_node(liste_snake);
+    for (i = 0; i < obj->nb_collisions; i++)
+    {
+        cur_coord = node_elt(cur);
+        for (i = 0; i < obj->nb_collisions; i++)
+        {
+            if (obj->collisions[i]->obj1 != snake
+                && obj->collisions[i]->enabled
+                && coord_egales(*cur_coord,
+                                snake_pos(obj->collisions[i]->obj1)))
+            {
+                collision_trigger(obj->collisions[i]);
+            }
+        }
+    }
+
+    for (cur = node_next(cur);
          cur != NULL;
          cur = node_next(cur))
     {

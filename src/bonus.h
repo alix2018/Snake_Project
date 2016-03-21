@@ -1,12 +1,10 @@
-//
-// Created by thibaut on 14/03/16.
-//
+
+#include <clutter/clutter.h>
+#include "struc.h"
 
 #ifndef ALPHA_SNAKE_BONUS_H
 #define ALPHA_SNAKE_BONUS_H
 
-#include <clutter/clutter.h>
-#include "struc.h"
 
 typedef struct _bouf Bouf;
 typedef struct _bouf_actor BoufActor;

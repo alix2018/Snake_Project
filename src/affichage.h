@@ -2,6 +2,7 @@
 #include "struc.h"
 #include "bonus.h"
 
+
 #ifndef ALPHA_SNAKE_AFFICHAGE_H
 #define ALPHA_SNAKE_AFFICHAGE_H
 
@@ -14,16 +15,16 @@
 #define TURNDARK_IMAGE_SRC "data/corpsturndarkside.png"
 #define POMME_IMAGE "data/pommeapple.png"
 
+typedef struct _Affichage Affichage;
+
 /**
  * Cette structure contient les ClutterActor nécessaires à l'affichage du snake.
  */
 typedef struct _snake_actor SnakeActor;
 typedef struct _snake_image SnakeImage;
 
-typedef struct _uplet_actor UpletActor;
-
-//Génère un 3-uplet, utile pour la fonction timeout
-UpletActor uplet_actor_new(SnakeActor *a1, SnakeActor *a2, BoufActor *bouf);
+Affichage *create_affichage();
+void free_affichage(Affichage * affichage);
 
 //???
 gboolean zone_snake_key_press_cb(ClutterActor *actor, ClutterEvent *event, gpointer data);
@@ -37,9 +38,6 @@ int snake_border_snake(SnakeActor *sa,SnakeActor * sa_ia);
 //Renvoie 1 si et seulement si les coords de la te et de la queue sont égales
 int snake_eat(Snake *s, Bouf *b);
 
-//Fonction appelé en boule, on doit lui passer un arg de type UpletActor
-gboolean timeout_tick_cb(gpointer data);
-
 //Libere mémoir
 void stage_destroy_cb(ClutterActor *actor, gpointer data);
 
@@ -52,6 +50,14 @@ void snake_actor_update(SnakeActor *sa);
 ClutterContent *generate_image(char * filename);
 SnakeImage *snake_generate_image();
 
-void init_view(ClutterScript *ui, int width, int height, Direction direction, int size, Coord pos);
+void affichage_add_snake(Affichage *affichage, Snake *snake,
+                         ClutterColor *color);
+void affichage_add_bonus(Affichage *affichage, Bouf *bonus,
+                         ClutterColor *color);
+
+void affichage_update(Affichage *affichage);
+
+void init_affichage(Affichage *affichage, ClutterScript *ui, Snake *snake,
+                    int width, int height);
 
 #endif //ALPHA_SNAKE_AFFICHAGE_H
