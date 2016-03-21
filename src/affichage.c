@@ -363,6 +363,7 @@ static void free_clutter_actor_fn(void * elt)
 void free_snake_actor(SnakeActor *sa)
 {
     free_list_fn(sa->actors, free_clutter_actor_fn);
+    clutter_color_free(sa->color);
     free(sa);
 }
 

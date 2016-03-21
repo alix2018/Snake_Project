@@ -101,11 +101,13 @@ Snake *create_snake(int longueur, Coord c, Direction dir)
     res->direction = dir;
     res->liste_snake = ls;
 
-    cur = malloc(sizeof(Coord));
-    *cur = c;
+    cur = &c;
 
 	for (i = 0; i < longueur; i++)
 	{
+		tmp = cur;
+		cur = malloc(sizeof(Coord));
+		*cur = *tmp;
 		switch (dir)
 		{
 			case GAUCHE:
@@ -127,9 +129,6 @@ Snake *create_snake(int longueur, Coord c, Direction dir)
 			default:
                 list_add_last(ls, cur);
 		}
-        tmp = cur;
-        cur = malloc(sizeof(Coord));
-        *cur = *tmp;
 	}
 
 	return res;
