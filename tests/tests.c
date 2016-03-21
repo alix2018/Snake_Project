@@ -163,6 +163,7 @@ void fct_list()
 	/* Test de la focntion cons_node & node_elt */
 	Coord c = coord_from_xy(3,4);
 	Coord *coord = malloc(sizeof(Coord));
+    int *i;
 	*coord = c;
 
 	Node node = cons_node(coord,NULL);
@@ -253,10 +254,17 @@ void fct_list()
 
 
 	/* Test de la fonction egalite_node */
-	Node node3 = cons_node(1,NULL);
-	Node node4 = cons_node(1,NULL);
+    i = malloc(sizeof(int));
+    *i = 1;
+	Node node3 = cons_node(i,NULL);
+    i = malloc(sizeof(int));
+    *i = 1;
+	Node node4 = cons_node(i,NULL);
 
-	g_assert_cmpint(egalite_node(node3,node4),==,1);
+	g_assert_true(egalite_node(node3,node4));
+
+    free(node_elt(node3));
+    free(node_elt(node4));
 
 	free_list(nvList);
 
