@@ -2,6 +2,8 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include "collisions.h"
+#include "partie.h"
+#include "struc.h"
 
 struct _CollisionObject
 {
@@ -193,6 +195,26 @@ static void check_collisions_for_bonus(CollisionObject *obj)
     }
 }
 
+static void check_collisions_for_map(CollisionObject *obj)
+{
+    Map *map = obj->obj2;
+    int i;
+
+    for (i = 0; i < obj->nb_collisions; i++)
+    {
+        if (obj->collisions[i]->enabled)
+        {
+            Coord coord = snake_pos(obj->collisions[i]->obj1);
+            if (coord.x > map_width(map)
+                || coord.y > map_height(map)
+                || coord.x < 0
+                || coord.y < 0)
+            {
+                collision_trigger(obj->collisions[i]);
+            }
+        }
+    }
+}
 
 /**
  * @brief Vérifie toutes les collisions activées pour tous les CollisionObject
@@ -218,6 +240,9 @@ void gestion_collisions_check(GestionCollisions *collisions)
                     break;
                 case COLLISION_BONUS:
                     check_collisions_for_bonus(obj);
+                    break;
+                case COLLISION_MAP:
+                    check_collisions_for_map(obj);
                     break;
             }
         }

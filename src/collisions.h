@@ -9,7 +9,8 @@
 typedef enum
 {
     COLLISION_SNAKE,
-    COLLISION_BONUS
+    COLLISION_BONUS,
+    COLLISION_MAP
 } CollisionType;
 
 typedef void (*CollisionCb)(Snake *obj1, void *obj2, void *data);

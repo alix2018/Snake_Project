@@ -127,6 +127,7 @@ void init_partie(Partie *partie, ClutterScript *ui, int width, int height)
     CollisionObject *co_snake;
     CollisionObject *co_schlanga;
     CollisionObject *co_nourriture;
+    CollisionObject *co_map;
 
     partie->map = create_map(width, height);
     partie->en_cours = TRUE;
@@ -155,6 +156,8 @@ void init_partie(Partie *partie, ClutterScript *ui, int width, int height)
     co_nourriture = gestion_collision_add_object(partie->collisions,
                                                  partie->nourriture,
                                                  COLLISION_BONUS);
+    co_map = gestion_collision_add_object(partie->collisions, partie->map,
+                                          COLLISION_MAP);
 
     collision_object_add_collision(
         co_snake,
@@ -181,6 +184,15 @@ void init_partie(Partie *partie, ClutterScript *ui, int width, int height)
     collision_object_add_collision(
         co_nourriture,
         create_collision(partie->schlanga, collision_snake_vers_nourriture, partie)
+    );
+
+    collision_object_add_collision(
+        co_map,
+        create_collision(partie->snake, collision_snake_vers_snake, partie)
+    );
+    collision_object_add_collision(
+        co_map,
+        create_collision(partie->schlanga, collision_snake_vers_snake, partie)
     );
 
     partie->affichage = create_affichage();
