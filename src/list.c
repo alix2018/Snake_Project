@@ -108,7 +108,7 @@ void free_list_fn(List *list, void (*fn)(void *))
 
 
 /**
- * @brief   Ajoute un élément à la fin d'une liste.
+ * @brief   Ajoute un élément au début d'une liste.
  *
  * @param[in]    list   La liste à laquelle l'élément sera ajouté.
  * @param[in]    elt    L'élément à ajouter.
@@ -128,7 +128,7 @@ void list_add_first(List *list, void *elt)
 
 
 /**
- * @brief   Ajoute un élément au début d'une liste.
+ * @brief   Ajoute un élément à la fin d'une liste.
  *
  * @param[in]    list   La liste à laquelle l'élément sera ajouté.
  * @param[in]    elt    L'élément à ajouter.
@@ -214,6 +214,9 @@ int list_is_empty(List *list)
 }
 
 
+/**
+ * @brief   Retourne la taille de la liste
+ */
 int list_size(List * list)
 {
     Node cur = list_first_node(list);

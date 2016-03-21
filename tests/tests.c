@@ -51,9 +51,11 @@ void fct_snake()
 	/* Test de la fonction snake_direction */
 	g_assert_cmpint(snake_direction(nvSnake),==,180);
 
+
 	/* Test de la fonction snake_set_direction */
 	snake_set_direction(nvSnake,BAS);
 	g_assert_cmpint(snake_direction(nvSnake),==,270);
+
 
 	/* Test de la fonction snake_set_liste */
 	List *liste = create_list();
@@ -74,18 +76,106 @@ void fct_snake()
 
 void fct_list()
 {
-	/* Test de la focntion cons_node */
+	/* Test de la focntion cons_node & node_elt */
 	Coord c = coord_from_xy(3,4);
 	Coord *coord = malloc(sizeof(Coord));
 	*coord = c;
 
 	Node node = cons_node(coord,NULL);
+
 	Coord *c1 = node_elt(node);
 
 	g_assert_null(node_next(node));
 	g_assert_null(node_prev(node));
 	g_assert_cmpint(c1->x,==,3);
 	g_assert_cmpint(c1->y,==,4);
+
+
+	/* Test de la fonction create_list & list_is_empty */
+	List *nvList = create_list();
+
+	g_assert_cmpint(list_is_empty(nvList),==,1);
+
+
+	/* Test de la fonction list_add_first & list_first_node */
+	Coord c2 = coord_from_xy(2,5);
+	Coord *coord1 = malloc(sizeof(Coord));
+	*coord1 = c2;
+	list_add_first(nvList,coord1);
+	Node node1 = list_first_node(nvList);
+	Coord *c3 = node_elt(node1);
+
+	g_assert_cmpint(c3->x,==,2);
+	g_assert_cmpint(c3->y,==,5);
+
+
+	/* Test de la fonction list_add_last & list_last_node */
+	list_add_last(nvList,coord);
+	Node node2 = list_last_node(nvList);
+	Coord *c4 = node_elt(node2);
+
+	g_assert_cmpint(c4->x,==,3);
+	g_assert_cmpint(c4->y,==,4);
+
+
+	/* Test de la fonction list_foreach */
+
+	/* Test de la fonction node_next */
+	Node nvNode = node_next(node1);
+	Coord *c5 = node_elt(nvNode);
+
+	g_assert_cmpint(c5->x,==,3);
+	g_assert_cmpint(c5->y,==,4);
+
+
+	/* Test de la fonction node_prev */
+	Node nvNode2 = node_prev(node2);
+	Coord *c6 = node_elt(nvNode2);
+
+	g_assert_cmpint(c6->x,==,2);
+	g_assert_cmpint(c6->y,==,5);
+
+
+	/* Test de la fonction list_size */
+	g_assert_cmpint(list_size(nvList),==,2);
+
+
+	/* Test de la fonction list_pop_last */
+	Coord *co1 = list_pop_last(nvList);
+
+	g_assert_cmpint(list_size(nvList),==,1);
+
+
+	/* Test de la fonction list_pop_first ?*/
+	//Coord *co2 = list_pop_first(nvList);
+	//g_assert_cmpint(list_size(nvList),==,0);
+
+
+
+	/* Test de la fonction list_get_last */
+	Coord *comp1 = node_elt(list_last_node(nvList));
+	Coord *comp2 = list_get_last(nvList);
+
+	g_assert_cmpint(comp1->x,==,comp2->x);
+	g_assert_cmpint(comp1->y,==,comp2->y);
+
+
+	/* Test de la fonction list_get_first */
+	Coord *comp3 = node_elt(list_last_node(nvList));
+	Coord *comp4 = list_get_last(nvList);
+
+	g_assert_cmpint(comp3->x,==,comp4->x);
+	g_assert_cmpint(comp3->y,==,comp4->y);
+
+
+	/* Test de la fonction egalite_node */
+	Node node3 = cons_node(1,NULL);
+	Node node4 = cons_node(1,NULL);
+
+	g_assert_cmpint(egalite_node(node3,node4),==,1);
+
+	free_list(nvList);
+
 
 }
 
