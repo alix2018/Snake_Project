@@ -448,4 +448,5 @@ void snake_increase(Snake *snake)
     Coord *c = malloc(sizeof(Coord));
     *c = *((Coord *) list_get_last(snake->liste_snake));
     list_add_last(snake->liste_snake, c);
+	snake->longueur++;
 }
