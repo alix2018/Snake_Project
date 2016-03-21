@@ -13,7 +13,6 @@ Compilation
 
 Ouvrir un terminal et taper :
 
-    autoreconf
     ./configure
     make
     

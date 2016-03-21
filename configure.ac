@@ -1,4 +1,4 @@
-AC_INIT([Alpha snake], [0.1])
+AC_INIT([Alpha snake], [jalon2])
 
 AC_CONFIG_SRCDIR([src/main.c])
 
