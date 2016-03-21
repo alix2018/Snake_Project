@@ -9,11 +9,11 @@
 
 
 /**
- * @brief   verifie que la direction désigné par snake_forward_ia1 est pertinante et la corrige sinon
+ * @brief   verifie que la direction désignée par snake_forward_ia1 est pertinente et la corrige sinon
  *
- * @param[in]   snake_ia Schlanglà
- * @param[in]   snake  Le joueur
- * @param[in]   futurdir  La direction qui va être appliqué à snake_ia
+ * @param[in]   snake_ia   Schlanglà
+ * @param[in]   snake      Le joueur
+ * @param[in]   futurdir   La direction qui va être appliquée à snake_ia
  *
  */
 static void snake_verif_ia(Snake *snake_ia,Snake *snake,Direction futurdir) // TODO déplacement défensif
@@ -207,11 +207,12 @@ static void snake_verif_ia(Snake *snake_ia,Snake *snake,Direction futurdir) // T
 }
 
 /**
- * @brief   Fait avancé le Schlanglà : determine la direction logique à prendre pour acceder à la bouf, l'applique et appel snake_forward
+ * @brief   Fait avancer le Schlanglà : déetermine la direction logique à prendre 
+            pour accéder à la bouf, l'applique et appelle snake_forward
  *
  * @param[in]   snake_ia Le Schlanglà
- * @param[in]   snake  Le joueur
- * @param[in]   bouf  La bouf
+ * @param[in]   snake    Le joueur
+ * @param[in]   bouf     La bouf
  */
 void snake_forward_ia1(struct snake *snake_ia, struct snake *snake, Coord bouf)
 {

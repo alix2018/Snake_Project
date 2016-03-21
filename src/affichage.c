@@ -10,9 +10,9 @@ struct _snake_actor
     List *actors;           /// La liste des ClutterActor du snake.
     ClutterActor *parent;   /// Le ClutterActor qui contient les acteurs du snake.
     Snake *snake;           /// Le Snake affiché par le SnakeActor.
-    ClutterColor *color;    /// La couleur
+    ClutterColor *color;    /// La couleur.
     SnakeImage *images;
-    int cur_size;           /// La taille du snake _affiché_ (peut être différente de la taille du Snake)
+    int cur_size;           /// La taille du snake _affiché_ (peut être différente de la taille du Snake).
 
 };
 
@@ -126,7 +126,7 @@ gboolean zone_snake_key_press_cb(ClutterActor *actor, ClutterEvent *event, gpoin
 
 /**
  * @brief      Renvoie true si le snake est contre un mur et veux avancer dans
- *             le mur. Appelé dans la fonction timeout_tich_cb
+ *             le mur. Appelée dans la fonction timeout_tich_cb
  *
  * @param[in]  c1  coord à vérifier
  * @param[in]  c2  coord à vérifier
@@ -165,8 +165,8 @@ int snake_border_map(SnakeActor *sa)
 }
 
 /**
-    Renvoie 0 si le snake essaie de se mordre la queu, 1 sinon
-    Appelé dans la fonction timeout_tich_cb
+    Renvoie 0 si le snake essaie de se mordre la queue, 1 sinon
+    Appelée dans la fonction timeout_tich_cb
 */
 int snake_border_snake(SnakeActor *sa,SnakeActor *sa_ia)
 {
@@ -292,8 +292,7 @@ int snake_border_snake(SnakeActor *sa,SnakeActor *sa_ia)
  * @brief Indique si le snake mange la bouf
  *
  * @param[in]    s   un snake
- * @param[in]    s   un snake
- * return   1 si et seulement si la tete du snake est au même endroit que la bouf
+ * return   1 si et seulement si la tête du snake est au même endroit que la bouf
  */
 int snake_eat(Snake *s, Bouf *b)
 {
@@ -346,7 +345,7 @@ SnakeActor *create_snake_actor(ClutterActor *parent, Snake *s, ClutterColor *col
 
 /**
  * @brief Fonction appliquée à chaque élément de la liste des acteurs de SnakeActor lors de la suppression de cette liste.
- * @param[in]   elt     Le ClutterActor à suprimer
+ * @param[in]   elt     Le ClutterActor à suprimer.
  */
 static void free_clutter_actor_fn(void * elt)
 {
@@ -572,8 +571,8 @@ void snake_actor_update(SnakeActor *sa)
 
 /**
  * @brief   Charge une image
- * @param[in] filename  nom de l'image à importer
- * @return  Un ClutterContent avec l'image chargé
+ * @param[in] filename  Nom de l'image à importer.
+ * @return  Un ClutterContent avec l'image chargée.
  */
 ClutterContent *generate_image(char * filename)
 {
@@ -597,7 +596,7 @@ ClutterContent *generate_image(char * filename)
 }
 
 /**
- * @brief   Crée un élèment de type SnakeImage
+ * @brief   Crée un élément de type SnakeImage
  * @return  Le SnakeImage initialisé.
  */
 SnakeImage *snake_generate_image()

@@ -14,13 +14,13 @@
 
 
 /**
- * @brief      la structure du snake 
+ * @brief      La structure du snake 
  * 
  * @use Snake
- * @param[in]  tete    		   la tête de la liste
- * @param[in]  dernier  	   le dernier élément de la liste
- * @param[in]  longueur  	   la longueur de la liste
- * @param[in]  direction  	   la direction du snake
+ * @param[in]  tete    		   La tête de la liste
+ * @param[in]  dernier  	   Le dernier élément de la liste
+ * @param[in]  longueur  	   La longueur de la liste
+ * @param[in]  direction  	   La direction du snake
  */
 struct snake
 {
@@ -36,10 +36,10 @@ struct snake
 /**
  * @brief      A partir de deux integer renvoie un couple de type coordonnée
  *
- * @param[in]  x     l'integer représentant l'axe des abscisse 
- * @param[in]  y     l'integer représentant l'axe des ordonnée
+ * @param[in]  x     L'integer représentant l'axe des abscisses 
+ * @param[in]  y     L'integer représentant l'axe des ordonnées
  *
- * @return     renvoie un couple de type coordonnée 
+ * @return     Renvoie un couple de type coordonnée 
  */
 Coord coord_from_xy(int x, int y)
 {
@@ -79,7 +79,8 @@ int coord_egales(Coord c1, Coord c2)
 /* Fonctions de base de Snake */
 
 /**
- * @brief      Génère un snake de différente taille avec une position initiale et un angle de direction
+ * @brief       Génère un snake de différentes tailles avec une position initiale
+				et un angle de direction
  *
  * @param[in]  longueur  la taille du snake initiale
  * @param[in]  c         la position initiale
@@ -156,7 +157,7 @@ static void print_coord_elt(void *coord_elt, void *data)
 /**
  * @brief      Affiche un snake sur la console sous la forme L : #longeur - Direction : - La liste
  *
- * @param      snake  le snake à afficher
+ * @param      snake  Le snake à afficher
  */
 void print_snake(Snake *snake)
 {
@@ -183,7 +184,7 @@ Coord snake_pos(Snake *snake)
 /**
  * @brief      Récupère la longueur d'un snake
  *
- * @param      snake  le snake avec une taille
+ * @param      snake  Le snake avec une taille
  *
  * @return     Renvoie un integer représentant la longueur du snake
  */
@@ -196,7 +197,7 @@ int snake_longueur(Snake *snake)
 /**
  * @brief      Récupère la liste du snake
  *
- * @param      snake  le snake avec une taille
+ * @param      snake  Le snake avec une taille
  *
  * @return     Renvoie la liste représentant le corps du snake
  */
@@ -219,7 +220,7 @@ Node snake_dernier(Snake *snake)
 }
 
 /**
- * @brief      Récupère tout la liste en partant de la tête
+ * @brief      Récupère toutE la liste en partant de la tête
  *
  * @param      snake  le snake
  *
@@ -305,7 +306,7 @@ void snake_forward(Snake *snake)
 /**
  * @brief      Augmente le snake d'un noeud
  *
- * @param      snake  le snake à agrandir
+ * @param      snake  Le snake à agrandir
  */
 void snake_increase(Snake *snake)
 {

@@ -20,10 +20,10 @@ struct _bouf_actor
 };
 
 /**
- * @brief   Genere un élèment de type bouf
+ * @brief   Génère un élèment de type bouf
  *
  * @param[in]    x  largeur de la map
- * @param[in]    y  hauteur de la mao
+ * @param[in]    y  hauteur de la map
  *
  * @return La bouf initialisé
  */
@@ -38,11 +38,11 @@ Bouf *bouf_new(int x, int y)
 /**
  * @brief   Change les coordonnés de la bouf
  *
- * @param[in]   bouf la bouf à rafraichir
- * @param[in]   x  largeur de la map
- * @param[in]   y  hauteur de la mao
+ * @param[in]   bouf  La bouf à rafraichir
+ * @param[in]   x     Largeur de la map
+ * @param[in]   y     Hauteur de la map
  *
- * @return La bouf avec de nouvelles coordonnés
+ * @return La bouf avec de nouvelles coordonnées
  */
 void bouf_update(Bouf *bouf, int x, int y)
 {
@@ -50,11 +50,11 @@ void bouf_update(Bouf *bouf, int x, int y)
 }
 
 /**
- * @brief   Permet d'acceder au coord de la bouf
+ * @brief   Permet d'accéder au coordonnées de la bouf
  *
- * @param[in]   bouf la bouf dont on veut les coord
+ * @param[in]   bouf  La bouf dont on veut les coordonnées
  *
- * @return Les coord de la bouf
+ * @return Les coordonnées de la bouf
  */
 Coord bouf_coord(Bouf *bouf)
 {
@@ -64,9 +64,9 @@ Coord bouf_coord(Bouf *bouf)
 /**
  * @brief   Génère une BoufActor
  *
- * @param[in]   parent Le parent du nouveau BoufActor
- * @param[in]   b  la bouf à afficher
- * @param[in]   color  la couleur de la bouf
+ * @param[in]   parent  Le parent du nouveau BoufActor
+ * @param[in]   b       La bouf à afficher
+ * @param[in]   color   La couleur de la bouf
  *
  * @return Le nouveau BoufActor initialisé
  */
@@ -97,7 +97,7 @@ BoufActor *create_bouf_actor(ClutterActor *parent, Bouf *b, ClutterColor *color)
 }
 
 /**
- * @brief   Permet d'acceder à la bouf d'un BoufActor
+ * @brief   Permet d'accéder à la bouf d'un BoufActor
  *
  * @param[in]   bouf_actor Le BoufActor
  *
@@ -109,9 +109,9 @@ Bouf *bouf_actor_bouf(BoufActor *bouf_actor)
 }
 
 /**
- * @brief   Rafraichie la bouf d'un BoufActor
+ * @brief   Rafraîchit la bouf d'un BoufActor
  *
- * @param[in]   ba Le BoufActor à rafraichir
+ * @param[in]   ba   Le BoufActor à rafraichir
  */
 void bouf_actor_update(BoufActor *ba)
 {

@@ -29,7 +29,7 @@ struct _list
 /**
  * @brief   Alloue la mémoire nécessaire à un nœud de List.
  *
- * @param[in]       elt   L'élément à ajouter au débuts.
+ * @param[in]       elt   L'élément à ajouter au début.
  * @param[in,out]   node  Le successeur.
  *
  * @return  Le nœud créé.
@@ -49,6 +49,14 @@ Node cons_node(void *elt, Node node)
 }
 
 
+/**
+ * @brief   Compare 2 noeuds.
+ *
+ * @param[in]       node1   Noeud à comparer.
+ * @param[in]       node2   Noeud à comparer.
+ *
+ * @return  1 si les noeuds son égaux, 0 sinon.
+ */
 int node_egalite(Node n1, Node n2)
 {
     return n1->elt == n2->elt && n1->next == n2-> next && n1->prev == n2->prev;
