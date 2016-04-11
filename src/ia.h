@@ -3,6 +3,7 @@
 //
 
 #include "struc.h"
+#include "list.h"
 
 #ifndef ALPHA_SNAKE_IA_H
 #define ALPHA_SNAKE_IA_H

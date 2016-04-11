@@ -211,20 +211,20 @@ void init_partie(Partie *partie, ClutterScript *ui, int width, int height)
         10,
         coord_from_xy(22, 2),
         DROITE
-    );
+    );// struc.c
     partie->snake = snake;
     schlanga = create_snake(
         10,
         coord_from_xy(22, 7),//L'ia commence 5 case en dessous du snake de base
         DROITE
-    );
+    );// struc.c
     partie->schlanga = schlanga;
-    bouf = bouf_new(width, height);
+    bouf = bouf_new(width, height);// bonus.c
     partie->nourriture = bouf;
 
-    partie->collisions = create_gestion_collisions();
+    partie->collisions = create_gestion_collisions();// collisions.c
     co_snake = gestion_collision_add_object(partie->collisions, partie->snake,
-                                            COLLISION_SNAKE);
+                                            COLLISION_SNAKE);// collisions.c
     co_schlanga = gestion_collision_add_object(partie->collisions,
                                                partie->schlanga,
                                                COLLISION_SNAKE);
@@ -236,8 +236,8 @@ void init_partie(Partie *partie, ClutterScript *ui, int width, int height)
 
     collision_object_add_collision(
         co_snake,
-        create_collision(partie->snake, collision_snake_vers_snake, partie)
-    );
+        create_collision(partie->snake, collision_snake_vers_snake, partie)// collisions.c
+    );// collisions.c
     collision_object_add_collision(
         co_snake,
         create_collision(partie->schlanga, collision_snake_vers_snake, partie)
@@ -270,10 +270,10 @@ void init_partie(Partie *partie, ClutterScript *ui, int width, int height)
         create_collision(partie->schlanga, collision_snake_vers_snake, partie)
     );
 
-    partie->affichage = create_affichage();
-    init_affichage(partie->affichage, ui, snake, width, height);
+    partie->affichage = create_affichage();// affichage.c
+    init_affichage(partie->affichage, ui, snake, width, height);// affichage.c
 
-    affichage_add_snake(partie->affichage, snake, CLUTTER_COLOR_Red);
+    affichage_add_snake(partie->affichage, snake, CLUTTER_COLOR_Red);// affichage.c
     affichage_add_snake(partie->affichage, schlanga, CLUTTER_COLOR_Blue);
     affichage_add_bonus(partie->affichage, bouf, CLUTTER_COLOR_Green);
 
@@ -289,9 +289,9 @@ gboolean timeout_tick_cb(gpointer data)
 {
     Partie *partie = data;
 
-    snake_forward(partie->snake);
+    snake_forward(partie->snake);// struct.c
     snake_forward_ia1(partie->schlanga, partie->snake,
-                      bouf_coord(partie->nourriture));
+                      bouf_coord(partie->nourriture));// ia.c
 
     gestion_collisions_check(partie->collisions);
 

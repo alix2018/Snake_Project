@@ -13,8 +13,8 @@ int main(int argc, char **argv)
     clutter_script_load_from_file(ui, "src/gui/stage.json", NULL);
     clutter_script_connect_signals(ui, ui);
 
-    partie = create_partie();
-    init_partie(partie, ui, 30, 30);
+    partie = create_partie();// partie.c
+    init_partie(partie, ui, 30, 30);// partie.c
 
     clutter_main();
 
