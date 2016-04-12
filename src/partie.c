@@ -273,9 +273,9 @@ void init_partie(Partie *partie, ClutterScript *ui, int width, int height)
     partie->affichage = create_affichage();// affichage.c
     init_affichage(partie->affichage, ui, snake, width, height);// affichage.c
 
-    affichage_add_snake(partie->affichage, snake, CLUTTER_COLOR_Red);// affichage.c
-    affichage_add_snake(partie->affichage, schlanga, CLUTTER_COLOR_Blue);
-    affichage_add_bonus(partie->affichage, bouf, CLUTTER_COLOR_Green);
+    affichage_add_snake(partie->affichage, snake,  clutter_color_new(0,0,255,255));// affichage.c
+    affichage_add_snake(partie->affichage, schlanga,  clutter_color_new(255,0,0,255));
+    affichage_add_bonus(partie->affichage, bouf,  clutter_color_new(0,255,0,255));
 
     g_timeout_add(150, timeout_tick_cb, partie);
 }
