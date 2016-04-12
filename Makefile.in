@@ -44,7 +44,7 @@ alpha-snake: $(PROG_OBJ_FILES)
 	@echo CCLD $^
 	@test -d $(BUILD_DIR) || mkdir -p $(BUILD_DIR)
 	@$(CC) $^ -o $(BUILD_DIR)/$@ $(CLUTTER_LDFLAGS)
-	$(DOXYGEN) Doxyfile
+	
 
 tests: $(TESTS_OBJ_FILES)
 	@test -d $(BUILD_DIR) || mkdir -p $(BUILD_DIR)
@@ -58,7 +58,11 @@ maintainer-clean: clean
 	-rm -rv Makefile configure config.status autom4te.cache aclocal.m4 config.log
 	-rm -rv projet-ipi-jalon1
 	-rm -v projet-ipi-jalon1.tar.bz2
-	-rm -rv doc/html doc/latex
+	-rm -rv doc/
+
+doc :
+	@test -d doc || mkdir -p doc
+	$(DOXYGEN) Doxyfile
 	
 dist-bzip:
 	mkdir -p $(TARNAME)
