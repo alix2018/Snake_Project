@@ -390,7 +390,9 @@ void snake_actor_update(SnakeActor *sa)
             actor = clutter_actor_new();
             g_object_ref(actor);
             clutter_actor_set_size(actor, GRID_SIZE, GRID_SIZE);
-           // clutter_actor_set_background_color(actor, sa->color);
+           // clutter_actor_set_background_color(actor,sa->color );
+
+            clutter_actor_add_effect (actor, clutter_colorize_effect_new (sa->color));
 
             clutter_actor_set_easing_duration(actor, 0);
             //clutter_actor_set_easing_mode(actor,CLUTTER_EASE_IN_QUART);
@@ -625,11 +627,13 @@ void affichage_add_snake(Affichage *affichage, Snake *snake,
                          ClutterColor *color)
 {
     SnakeActor *sa;
-
+    // change l'alpha :
+    ClutterColor * rcolor= clutter_color_new(255,255,255,255);
+    clutter_color_shade (color,1.6,rcolor);
     sa  = create_snake_actor(
         CLUTTER_ACTOR(clutter_script_get_object(affichage->ui, "zone_snake")),
         snake,
-        clutter_color_new(0, 0, 255, 255),
+        rcolor,
         affichage->images
     );
     list_add_last(affichage->snake_actors, sa);

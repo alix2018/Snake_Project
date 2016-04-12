@@ -290,8 +290,10 @@ gboolean timeout_tick_cb(gpointer data)
     Partie *partie = data;
 
     snake_forward(partie->snake);// struct.c
-    snake_forward_ia1(partie->schlanga, partie->snake,
-                      bouf_coord(partie->nourriture));// ia.c
+
+    snake_set_direction_ia(partie->schlanga, partie->snake,
+                      bouf_coord(partie->nourriture),"ia1");// ia.c
+    snake_forward(partie->schlanga);
 
     gestion_collisions_check(partie->collisions);
 

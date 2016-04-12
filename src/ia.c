@@ -4,6 +4,7 @@
 
 #include <stdio.h>
 #include <time.h>
+#include <string.h>
 #include "ia.h"
 #include "struc.h"
 
@@ -445,7 +446,33 @@ void snake_forward_ia1(struct snake *snake_ia, struct snake *snake, Coord bouf)
 		}
 	}
 
-	snake_forward(snake_ia);
+
 
 	printf("dir  : %d\n\n", snake_direction(snake_ia));
+}
+
+/**
+ * @brief   Change la direction de l'ia en fonction de l'IA demandé
+ *
+ * @param[in]   snake_ia Le Schlanglà
+ * @param[in]   snake    Le joueur
+ * @param[in]   bouf     La bouf
+ * @param[in]   ia_name  Le nom de l'ia
+ */
+void snake_set_direction_ia(struct snake *snake_ia, struct snake *snake, Coord bouf,char * ia_name)
+{
+    if(strcmp(ia_name,"ia1") == 0)
+    {
+        snake_forward_ia1(snake_ia, snake, bouf);
+    }
+    else if(strcmp(ia_name,"ia2") == 0)
+    {
+        // TODO ia2
+    }
+    else
+    {
+        // L'IA de base est l'ia1
+        snake_forward_ia1(snake_ia,snake,bouf);
+    }
+
 }
