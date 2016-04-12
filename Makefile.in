@@ -10,6 +10,7 @@ SOURCE_FILES = struc.c \
 SRC_DIR = src
 OBJ_DIR = build
 BUILD_DIR = bin
+DOXYGEN = doxygen
 
 PROG_SOURCE_FILES = $(SRC_DIR)/main.c $(addprefix $(SRC_DIR)/, $(SOURCE_FILES))
 TESTS_SOURCE_FILES = tests/tests.c $(addprefix $(SRC_DIR)/, $(SOURCE_FILES))
@@ -43,6 +44,7 @@ alpha-snake: $(PROG_OBJ_FILES)
 	@echo CCLD $^
 	@test -d $(BUILD_DIR) || mkdir -p $(BUILD_DIR)
 	@$(CC) $^ -o $(BUILD_DIR)/$@ $(CLUTTER_LDFLAGS)
+	$(DOXYGEN) Doxyfile
 
 tests: $(TESTS_OBJ_FILES)
 	@test -d $(BUILD_DIR) || mkdir -p $(BUILD_DIR)
@@ -56,6 +58,7 @@ maintainer-clean: clean
 	-rm -rv Makefile configure config.status autom4te.cache aclocal.m4 config.log
 	-rm -rv projet-ipi-jalon1
 	-rm -v projet-ipi-jalon1.tar.bz2
+	-rm -rv doc/html doc/latex
 	
 dist-bzip:
 	mkdir -p $(TARNAME)
