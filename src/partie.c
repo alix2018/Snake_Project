@@ -166,6 +166,11 @@ static void collision_snake_vers_snake(Snake *snake, void *obj2, void *data)
         score_enregistre(partie->snake, 'P');
     }
 
+    List *tab_scores = get_table_scores();
+    List *tab_trie = tri_max(tab_scores);
+    afficher_score_console(tab_trie);
+    free_table_scores(tab_trie);
+
     clutter_text_set_text(
         CLUTTER_TEXT(clutter_script_get_object(ui, "fin_partie_texte")),
         out->str

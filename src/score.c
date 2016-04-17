@@ -68,7 +68,15 @@ Score *new_score(char *pseudo, int score, char gagnant)
 {
 	Score *res = (Score *)malloc(sizeof(struct _score));
 	res->score = score;
-	res->pseudo = pseudo;
+
+	char *ps =(char *)malloc(sizeof(pseudo));
+	int i;
+	for(i=0; i<sizeof(pseudo)/sizeof(char); i++)
+	{
+		ps[i]=pseudo[i];
+	}
+	
+	res->pseudo = ps;
 	res->gagnant = gagnant;
 	return res;
 }
@@ -81,11 +89,6 @@ char *get_pseudo(Score *s)
 int get_score(Score *s)
 {
 	return s->score;
-}
-
-void free_score(Score *s)
-{
-	free(s);
 }
 
 List *get_table_scores()
@@ -107,13 +110,54 @@ List *get_table_scores()
 	return res;
 }
 
+void free_score(void *data)
+{
+	struct _score *s = data;
+	free(s->pseudo);
+	free(s);
+}
+
+void free_table_scores(List *l)
+{
+	free_list_fn(l, (void *)free_score);
+}
+
 void afficher_score_console(List *tab_s)
 {
 	Score *s;
 	Node n;
-	for(n = list_get_first(tab_s); n!=NULL; n=node_next(n))
+	for(n = list_first_node(tab_s); n!=NULL; n=node_next(n))
 	{
 		s = (Score *)node_elt(n);
 		printf("%d : %s\n", get_score(s), get_pseudo(s));
 	}
+}
+
+void *elt_max(List *l)
+{
+	Node n_max = list_first_node(l);
+	void *max = node_elt(n_max);
+	Node n;
+	for(n = list_first_node(l); n != NULL; n = node_next(n))
+	{
+		if(((struct _score *)max)->score < ((struct _score *)node_elt(n))->score)
+		{
+			n_max = n;
+			max = node_elt(n_max);
+		}
+	}
+	list_delete_node(l, n_max);
+	return max;
+}
+
+List *tri_max(List *l)
+{
+	List *res=create_list();
+	Node m = NULL;
+	while(list_first_node(l) != NULL)
+	{
+		list_add_last(res, elt_max(l));
+	}
+	free(l);
+	return res;
 }

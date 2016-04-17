@@ -16,6 +16,7 @@ typedef struct _list List;
 
 Node cons_node(void *elt, Node node);
 void *node_elt(Node node);
+void node_set_elt(Node node, void *elt);
 Node node_next(Node node);
 Node node_prev(Node node);
 int node_egalite(Node n1, Node n2);
@@ -26,6 +27,7 @@ void free_list(List *list);
 void free_list_fn(List *list, void (*fn)(void *));
 void list_add_first(List *list, void *elt);
 void list_add_last(List *list, void *elt);
+void list_delete_node(List *list, Node n);
 Node list_first_node(List *list);
 Node list_last_node(List *list);
 int list_is_empty(List *list);
