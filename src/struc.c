@@ -27,6 +27,7 @@ struct snake
 	List *liste_snake;
 	int longueur;
 	Direction direction;
+	char *pseudo;
 };
 
 
@@ -264,6 +265,17 @@ void snake_set_liste(Snake *snake, List *ls)
 {
 	snake->liste_snake = ls;
 }
+
+char *snake_pseudo(Snake *snake)
+{
+	return snake->pseudo;
+}
+
+void snake_set_pseudo(Snake *snake, char *pseudo)
+{
+	snake->pseudo = pseudo;
+}
+
 
 /**
  * @brief      Déplace l'intégralité du snake

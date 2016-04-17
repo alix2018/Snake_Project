@@ -5,7 +5,8 @@ SOURCE_FILES = struc.c \
                bonus.c \
                ia.c \
                partie.c \
-               collisions.c
+               collisions.c \
+               score.c
 
 SRC_DIR = src
 OBJ_DIR = build

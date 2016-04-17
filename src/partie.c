@@ -8,6 +8,9 @@
 #include "affichage.h"
 #include "ia.h"
 #include "collisions.h"
+#include "score.h"
+#include <string.h>
+#include <glib.h>
 
 struct _Map
 {
@@ -150,9 +153,22 @@ static void collision_snake_vers_snake(Snake *snake, void *obj2, void *data)
 
     partie->en_cours = FALSE;
 
+    GString *out = g_string_new(snake_pseudo(partie->snake));
+
+    if(snake == partie->schlanga)
+    {
+        g_string_append(out, " Gagné !");
+        score_enregistre(partie->snake, 'G');
+    }
+    else
+    {
+        g_string_append(out, " Perdu !");
+        score_enregistre(partie->snake, 'P');
+    }
+
     clutter_text_set_text(
         CLUTTER_TEXT(clutter_script_get_object(ui, "fin_partie_texte")),
-        (snake == partie->schlanga) ? "Gagné !" : "Perdu !"
+        out->str
     );
 
     fin_partie = CLUTTER_ACTOR(clutter_script_get_object(ui, "fin_partie"));
@@ -208,7 +224,7 @@ void init_partie(Partie *partie, ClutterScript *ui, int width, int height)
     partie->en_cours = TRUE;
 
     snake = create_snake(
-        10,
+        15,
         coord_from_xy(22, 2),
         DROITE
     );// struc.c
@@ -278,6 +294,18 @@ void init_partie(Partie *partie, ClutterScript *ui, int width, int height)
     affichage_add_bonus(partie->affichage, bouf,  clutter_color_new(0,255,0,255));
 
     g_timeout_add(150, timeout_tick_cb, partie);
+}
+
+void init_pseudo(Partie *p, int argc, char **argv)
+{
+    if(argc == 2)
+    {
+        snake_set_pseudo(p->snake, argv[1]); 
+    }
+    else
+    {
+        snake_set_pseudo(p->snake, "Anonyme");
+    }
 }
 
 /**
