@@ -91,6 +91,11 @@ int get_score(Score *s)
 	return s->score;
 }
 
+char get_gagnant(Score *s)
+{
+	return s->gagnant;
+}
+
 List *get_table_scores()
 {
 	List *res = create_list();

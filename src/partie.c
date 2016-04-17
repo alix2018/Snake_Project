@@ -136,6 +136,39 @@ Map *partie_map(Partie *partie)
     return partie->map;
 }
 
+GString *get_gstring_score()
+{
+    GString *res = g_string_new("\n\n === Top 10 === \n");
+    List *tab_scores = get_table_scores();
+    List *tab_trie = tri_max(tab_scores);
+    Node n;
+    void *s;
+    char c_sc[100];
+    char c_ligne[10];
+    char c[2];
+    int i=0;
+    for(n = list_first_node(tab_trie); n != NULL && i<10; n = node_next(n))
+    {
+        sprintf(c_ligne, "%d) ", i+1);
+        g_string_append(res, c_ligne);
+
+        s = (Score *)node_elt(n);
+        sprintf(c_sc, "%d", get_score(s));
+        g_string_append(res, c_sc);
+        g_string_append(res, " ");
+
+        g_string_append(res, get_pseudo(s));
+        g_string_append(res, " ");
+
+        c[0] = get_gagnant(s);
+        c[1] = '\0';
+        g_string_append(res, c);
+        g_string_append(res, "\n");
+        i ++;
+    }
+    free_table_scores(tab_trie);
+    return res;
+}
 
 /**
  * @brief   Fonction callback appelée quand un Snake entre en collision avec
@@ -157,19 +190,17 @@ static void collision_snake_vers_snake(Snake *snake, void *obj2, void *data)
 
     if(snake == partie->schlanga)
     {
-        g_string_append(out, " Gagné !");
+        g_string_append(out, "\n Gagné !");
         score_enregistre(partie->snake, 'G');
     }
     else
     {
-        g_string_append(out, " Perdu !");
+        g_string_append(out, "\n Perdu !");
         score_enregistre(partie->snake, 'P');
     }
 
-    List *tab_scores = get_table_scores();
-    List *tab_trie = tri_max(tab_scores);
-    afficher_score_console(tab_trie);
-    free_table_scores(tab_trie);
+    GString *gscore = get_gstring_score();
+    g_string_append(out, gscore->str);
 
     clutter_text_set_text(
         CLUTTER_TEXT(clutter_script_get_object(ui, "fin_partie_texte")),
