@@ -116,20 +116,16 @@ gboolean zone_snake_key_press_cb(ClutterActor *actor, ClutterEvent *event, gpoin
     switch (key_symbol)
     {
         case CLUTTER_KEY_Up:
-            if (snake_direction(s) != BAS)
-                snake_set_direction(s, HAUT);
+            snake_set_direction(s, HAUT);
             break;
         case CLUTTER_KEY_Down:
-            if (snake_direction(s) != HAUT)
-                snake_set_direction(s, BAS);
+            snake_set_direction(s, BAS);
             break;
         case CLUTTER_KEY_Left:
-            if (snake_direction(s) != DROITE)
-                snake_set_direction(s, GAUCHE);
+            snake_set_direction(s, GAUCHE);
             break;
         case CLUTTER_KEY_Right:
-            if (snake_direction(s) != GAUCHE)
-                snake_set_direction(s, DROITE);
+            snake_set_direction(s, DROITE);
         default:
             break;
     }
