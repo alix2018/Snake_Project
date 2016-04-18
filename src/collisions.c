@@ -78,7 +78,7 @@ void free_gestion_collisions(GestionCollisions *collisions)
  *          CollisionObject qui gère obj si obj est déjà géré par gc.
  */
 CollisionObject *gestion_collision_add_object(GestionCollisions *gc, void *obj,
-                                               CollisionType type)
+                                              CollisionType type)
 {
     int i;
 

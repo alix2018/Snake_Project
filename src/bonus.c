@@ -83,6 +83,7 @@ BoufActor *create_bouf_actor(ClutterActor *parent, Bouf *b, ClutterColor *color)
 
     ClutterContent *imgpomme = generate_image(POMME_IMAGE );
     clutter_actor_set_content(bouf_c_actor,imgpomme);
+    g_object_unref(imgpomme);
 
     clutter_actor_add_child(parent, bouf_c_actor);
     clutter_actor_set_position(bouf_c_actor, b->coord.x * GRID_SIZE, b->coord.y * GRID_SIZE);
@@ -94,6 +95,12 @@ BoufActor *create_bouf_actor(ClutterActor *parent, Bouf *b, ClutterColor *color)
     res->bouf = b;
 
     return res;
+}
+
+void free_bouf_actor(BoufActor *b)
+{
+    clutter_color_free(b->color);
+    free(b);
 }
 
 /**

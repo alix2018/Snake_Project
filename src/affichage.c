@@ -61,14 +61,28 @@ static void free_affichage_snake_actors(void *elt)
     free_snake_actor(sa);
 }
 
+static void free_affichage_bonus_actor(void *elt)
+{
+    BoufActor *actor = elt;
+
+    free_bouf_actor(actor);
+}
+
 /**
  * @brief   Libère la mémoire consommée par un affichage.
  *
  * @param[in]    affichage  L'affichage à supprimer.
  */
-void free_affichage(Affichage * affichage)
+void free_affichage(Affichage *affichage)
 {
+    g_object_unref(affichage->images->tete);
+    g_object_unref(affichage->images->corps);
+    g_object_unref(affichage->images->queue);
+    g_object_unref(affichage->images->turndark);
+    g_object_unref(affichage->images->turnlight);
+    free(affichage->images);
     free_list_fn(affichage->snake_actors, free_affichage_snake_actors);
+    free_list_fn(affichage->bonus, free_affichage_bonus_actor);
     free(affichage);
 }
 
@@ -577,16 +591,16 @@ void snake_actor_update(SnakeActor *sa)
  * @param[in] filename  Nom de l'image à importer.
  * @return  Un ClutterContent avec l'image chargée.
  */
-ClutterContent *generate_image(char * filename)
+ClutterContent *generate_image(char *filename)
 {
 
-    ClutterContent *image = clutter_image_new ();
+    ClutterContent *image = clutter_image_new();
 
-    GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file (filename, NULL);
+    GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file(filename, NULL);
 
-    clutter_image_set_data (CLUTTER_IMAGE (image),
-                            gdk_pixbuf_get_pixels (pixbuf),
-                            gdk_pixbuf_get_has_alpha (pixbuf)
+    clutter_image_set_data (CLUTTER_IMAGE(image),
+                            gdk_pixbuf_get_pixels(pixbuf),
+                            gdk_pixbuf_get_has_alpha(pixbuf)
                               ? COGL_PIXEL_FORMAT_RGBA_8888
                               : COGL_PIXEL_FORMAT_RGB_888,
                             gdk_pixbuf_get_width (pixbuf),
@@ -594,7 +608,7 @@ ClutterContent *generate_image(char * filename)
                             gdk_pixbuf_get_rowstride (pixbuf),
                             NULL);
 
-    g_object_unref (pixbuf);
+    g_object_unref(pixbuf);
     return image;
 }
 
@@ -723,6 +737,7 @@ void init_affichage(Affichage *affichage, ClutterScript *ui, Snake *snake,
     // SET IMAGE BACKGROUND
     ClutterContent *image = generate_image(BACKGROUND_IMAGE_SRC);
     clutter_actor_set_content(zone_snake,image);
+    g_object_unref(image);
 
     clutter_actor_show(stage);
 }

@@ -145,6 +145,9 @@ void free_partie(Partie *partie)
     free(partie->nourriture);
     free_affichage(partie->affichage);
     free_map(partie->map);
+    free_gestion_collisions(partie->collisions);
+    free_snake(partie->snake);
+    free_snake(partie->schlanga);
     free(partie);
 }
 
@@ -351,8 +354,8 @@ void init_partie(Partie *partie, ClutterScript *ui, int width, int height)
     init_affichage(partie->affichage, ui, snake, width, height);// affichage.c
 
     affichage_add_snake(partie->affichage, snake,  CLUTTER_COLOR_Blue);// affichage.c
-    affichage_add_snake(partie->affichage, schlanga,  CLUTTER_COLOR_Green);
-    affichage_add_bonus(partie->affichage, bouf,  clutter_color_new(0,255,0,255));
+    affichage_add_snake(partie->affichage, schlanga,  CLUTTER_COLOR_Red);
+    affichage_add_bonus(partie->affichage, bouf,  CLUTTER_COLOR_Green);
 
     g_timeout_add(150, timeout_tick_cb, partie);
 }
