@@ -23,7 +23,8 @@ DIST_DIRS = src \
              data
         
 DIST_FILES = configure \
-             Makefile.in
+             Makefile.in \
+             Doxyfile
 
 VERSION = @PACKAGE_VERSION@
 TARNAME = @PACKAGE_TARNAME@-$(VERSION)
