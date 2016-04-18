@@ -164,6 +164,11 @@ Map *partie_map(Partie *partie)
     return partie->map;
 }
 
+/**
+ * @brief   Retourne le GStrind à afficher lorsqu'on demande les scores
+ *
+ * @return  etourne le GStrind à afficher lorsqu'on demande les scores
+ */
 GString *get_gstring_score()
 {
     GString *res = g_string_new("\n\n === Top 10 === \n");
