@@ -33,6 +33,31 @@ struct _Partie
     Map *map;
 };
 
+Snake * partie_snake(Partie *p)
+{
+    return p->snake;
+}
+void partie_set_snake(Partie *p,Snake *s)
+{
+    p->snake = s;
+}
+Snake * partie_schlanga(Partie *p)
+{
+    return p->schlanga;
+}
+void partie_set_schlanga(Partie *p,Snake *s)
+{
+    p->schlanga = s;
+}
+
+Bouf * partie_bouf(Partie *p)
+{
+    return p->nourriture;
+}
+void partie_set_bouf(Partie *p,Bouf *s)
+{
+    p->nourriture = s;
+}
 
 /**
  * @brief   Crée le plateau d'une partie.
@@ -260,7 +285,7 @@ void init_partie(Partie *partie, ClutterScript *ui, int width, int height)
     partie->en_cours = TRUE;
 
     snake = create_snake(
-        15,
+        10,
         coord_from_xy(22, 2),
         DROITE
     );// struc.c
@@ -355,8 +380,7 @@ gboolean timeout_tick_cb(gpointer data)
 
     snake_forward(partie->snake);// struct.c
 
-    snake_set_direction_ia(partie->schlanga, partie->snake,
-                      bouf_coord(partie->nourriture),"ia1");// ia.c
+    snake_set_direction_ia(partie,"ia1");// ia.c
     snake_forward(partie->schlanga);
 
     gestion_collisions_check(partie->collisions);

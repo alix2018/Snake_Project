@@ -18,7 +18,8 @@ add_executable(tests
         src/list.c src/list.h
         src/ia.c src/ia.h
         src/affichage.c src/affichage.h
-        src/bonus.c src/bonus.h)
+        src/bonus.c src/bonus.h
+        src/score.c src/score.h)
 
 target_link_libraries(alpha-snake ${CLUTTER_LIBRARIES})
 include_directories(alpha-snake ${CLUTTER_INCLUDE_DIRS})
