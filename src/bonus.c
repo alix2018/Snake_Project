@@ -74,9 +74,14 @@ BoufActor *create_bouf_actor(ClutterActor *parent, Bouf *b, ClutterColor *color)
 {
     BoufActor *res;
     ClutterActor *bouf_c_actor;
+    ClutterTransition *transition_x;
+    ClutterTransition *transition_y;
+    ClutterTransition *transitions;
 
     bouf_c_actor = clutter_actor_new();
     clutter_actor_set_size(bouf_c_actor, GRID_SIZE, GRID_SIZE);
+    clutter_actor_set_pivot_point(bouf_c_actor, 0.5, 0.5);
+    clutter_actor_set_scale(bouf_c_actor, 0.8, 0.8);
     //clutter_actor_set_background_color(bouf_c_actor, color);
 
     // SET IMAGE POMME/BOUF/bonus
@@ -84,6 +89,34 @@ BoufActor *create_bouf_actor(ClutterActor *parent, Bouf *b, ClutterColor *color)
     ClutterContent *imgpomme = generate_image(POMME_IMAGE );
     clutter_actor_set_content(bouf_c_actor,imgpomme);
     g_object_unref(imgpomme);
+
+    transition_x = clutter_property_transition_new("scale-x");
+    g_object_set(
+        transition_x,
+        "duration", 1000,
+        "auto-reverse", TRUE,
+        "repeat-count", -1,
+        "progress-mode", CLUTTER_EASE_IN_OUT_SINE,
+        NULL
+    );
+    clutter_transition_set_from(transition_x, G_TYPE_DOUBLE, 0.8);
+    clutter_transition_set_to(transition_x, G_TYPE_DOUBLE, 1.2);
+    clutter_actor_add_transition(bouf_c_actor, "tr-scale-x", transition_x);
+    g_object_unref(transition_x);
+
+    transition_y = clutter_property_transition_new("scale-y");
+    g_object_set(
+        transition_x,
+        "duration", 1000,
+        "auto-reverse", TRUE,
+        "repeat-count", -1,
+        "progress-mode", CLUTTER_EASE_IN_OUT_SINE,
+        NULL
+    );
+    clutter_transition_set_from(transition_y, G_TYPE_DOUBLE, 0.8);
+    clutter_transition_set_to(transition_y, G_TYPE_DOUBLE, 1.2);
+    clutter_actor_add_transition(bouf_c_actor, "tr-scale-y", transition_y);
+    g_object_unref(transition_y);
 
     clutter_actor_add_child(parent, bouf_c_actor);
     clutter_actor_set_position(bouf_c_actor, b->coord.x * GRID_SIZE, b->coord.y * GRID_SIZE);
