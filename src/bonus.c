@@ -76,7 +76,6 @@ BoufActor *create_bouf_actor(ClutterActor *parent, Bouf *b, ClutterColor *color)
     ClutterActor *bouf_c_actor;
     ClutterTransition *transition_x;
     ClutterTransition *transition_y;
-    ClutterTransition *transitions;
 
     bouf_c_actor = clutter_actor_new();
     clutter_actor_set_size(bouf_c_actor, GRID_SIZE, GRID_SIZE);
@@ -106,7 +105,7 @@ BoufActor *create_bouf_actor(ClutterActor *parent, Bouf *b, ClutterColor *color)
 
     transition_y = clutter_property_transition_new("scale-y");
     g_object_set(
-        transition_x,
+        transition_y,
         "duration", 1000,
         "auto-reverse", TRUE,
         "repeat-count", -1,
