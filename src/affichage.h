@@ -52,9 +52,9 @@ ClutterContent *generate_image(char * filename);
 SnakeImage *snake_generate_image();
 
 void affichage_add_snake(Affichage *affichage, Snake *snake,
-                         ClutterColor *color);
+                         const ClutterColor *color);
 void affichage_add_bonus(Affichage *affichage, Bouf *bonus,
-                         ClutterColor *color);
+                         const ClutterColor *color);
 
 void affichage_update(Affichage *affichage);
 

@@ -624,12 +624,12 @@ SnakeImage *snake_generate_image()
  * @param[in]    color      La couleur du snake.
  */
 void affichage_add_snake(Affichage *affichage, Snake *snake,
-                         ClutterColor *color)
+                         const ClutterColor *color)
 {
     SnakeActor *sa;
     // change l'alpha :
-    ClutterColor * rcolor= clutter_color_new(255,255,255,255);
-    clutter_color_shade (color,1.6,rcolor);
+    ClutterColor *rcolor= clutter_color_alloc();
+    clutter_color_shade(color, 1.6, rcolor);
     sa  = create_snake_actor(
         CLUTTER_ACTOR(clutter_script_get_object(affichage->ui, "zone_snake")),
         snake,
@@ -648,7 +648,7 @@ void affichage_add_snake(Affichage *affichage, Snake *snake,
  * @param[in]    color      La couleur du bonus.
  */
 void affichage_add_bonus(Affichage *affichage, Bouf *bonus,
-                         ClutterColor *color)
+                         const ClutterColor *color)
 {
     BoufActor *ba;
     ba = create_bouf_actor(
