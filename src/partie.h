@@ -32,6 +32,7 @@ void free_partie(Partie *partie);
 Map *partie_map(Partie *partie);
 
 void init_partie(Partie *partie, ClutterScript *ui, int width, int height);
+void init_pseudo(Partie *p, int argc, char **argv);
 
 gboolean timeout_tick_cb(gpointer data);
 
