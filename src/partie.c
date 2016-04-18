@@ -393,7 +393,8 @@ gboolean timeout_tick_cb(gpointer data)
 
     gestion_collisions_check(partie->collisions);
 
-    affichage_update(partie->affichage);
+    if (partie->en_cours)
+        affichage_update(partie->affichage);
 
     return partie->en_cours;
 }
