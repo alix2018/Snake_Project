@@ -463,7 +463,6 @@ void snake_forward_ia1(Partie *p)
     int indic = 1;
 	Coord tete = snake_pos(snake_ia);
 
-	printf("dir debut : %d\n", snake_direction(snake_ia));
 	if(tete.x < bouf.x)
 	{
 		if(snake_direction(snake_ia) == GAUCHE)
@@ -559,7 +558,6 @@ void snake_forward_ia1(Partie *p)
 
 
 
-	printf("dir  : %d\n\n", snake_direction(snake_ia));
 }
 
 
