@@ -14,7 +14,7 @@ int main(int argc, char **argv)
     clutter_script_connect_signals(ui, ui);
 
     partie = create_partie();// partie.c
-    init_partie(partie, ui, 30, 30);// partie.c
+    init_partie(partie, ui,2, 30, 30);// partie.c
     init_pseudo(partie, argc, argv);
     clutter_main();
 

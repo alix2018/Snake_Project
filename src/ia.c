@@ -7,9 +7,6 @@
 #include <string.h>
 #include <glib.h>
 #include "ia.h"
-#include "struc.h"
-#include "bonus.h"
-#include "partie.h"
 
 /**
  * @brief   verifie que la direction désignée par snake_forward_ia1 est pertinente et la corrige sinon
@@ -449,25 +446,25 @@ void snake_verif_wall(Snake *snake_ia, Snake *snake, Direction futurdir,Map *m)
 }
 /**
  * @brief   Fait avancer le Schlanglà : déetermine la direction logique à prendre 
-            pour accéder à la bouf, l'applique et appelle snake_forward
+            pour accéder à la bonus, l'applique et appelle snake_forward
  *
  * @param[in]   snake_ia Le Schlanglà
  * @param[in]   snake    Le joueur
- * @param[in]   bouf     La bouf
+ * @param[in]   bonus     La bonus
  */
 void snake_forward_ia1(Partie *p)
 {
     Snake *snake_ia = partie_schlanga(p);
     Snake *snake = partie_snake(p);
-    Coord bouf =bouf_coord(partie_bouf(p));
+    Coord bonus =bonus_coord(partie_bonus(p));
     int indic = 1;
 	Coord tete = snake_pos(snake_ia);
 
-	if(tete.x < bouf.x)
+	if(tete.x < bonus.x)
 	{
 		if(snake_direction(snake_ia) == GAUCHE)
 		{
-			if(tete.y < bouf.y)
+			if(tete.y < bonus.y)
 			{
 				snake_set_direction(snake_ia, BAS);
                 indic = 0;
@@ -487,11 +484,11 @@ void snake_forward_ia1(Partie *p)
 			snake_verif_ia(snake_ia, snake, DROITE, 0);
 		}
 	}
-	if(tete.x > bouf.x)
+	if(tete.x > bonus.x)
 	{
 		if(snake_direction(snake_ia) == DROITE)
 		{
-			if(tete.y < bouf.y)
+			if(tete.y < bonus.y)
 			{
 				snake_set_direction(snake_ia, BAS);
                 indic = 0;
@@ -512,11 +509,11 @@ void snake_forward_ia1(Partie *p)
 		}
 	}
 
-	if(tete.y < bouf.y && indic)
+	if(tete.y < bonus.y && indic)
 	{
 		if(snake_direction(snake_ia) == HAUT)
 		{
-			if(tete.x < bouf.x)
+			if(tete.x < bonus.x)
 			{
 				snake_set_direction(snake_ia, DROITE);
 				snake_verif_ia(snake_ia, snake, DROITE, 0);
@@ -534,11 +531,11 @@ void snake_forward_ia1(Partie *p)
 		}
 	}
 
-	if(tete.y > bouf.y && indic)
+	if(tete.y > bonus.y && indic)
 	{
 		if(snake_direction(snake_ia) == BAS)
 		{
-			if(tete.x < bouf.x)
+			if(tete.x < bonus.x)
 			{
 				snake_set_direction(snake_ia, DROITE);
 				snake_verif_ia(snake_ia, snake, DROITE, 0);
@@ -564,17 +561,17 @@ void snake_forward_ia1(Partie *p)
 
 /**
  * @brief   Fait avancer le Schlanglà : déetermine la direction aleatoire
-            pour accéder à la bouf, l'applique et appelle snake_forward
+            pour accéder à la bonus, l'applique et appelle snake_forward
  *
  * @param[in]   snake_ia Le Schlanglà
  * @param[in]   snake    Le joueur
- * @param[in]   bouf     La bouf
+ * @param[in]   bonus     La bonus
  */
 void snake_forward_ia2(Partie *p)
 {
     Snake *snake_ia = partie_schlanga(p);
     Snake *snake = partie_snake(p);
-    Coord bouf =bouf_coord(partie_bouf(p));
+    Coord bonus =bonus_coord(partie_bonus(p));
     GRand * r = g_rand_new();
     gint32  rint = g_rand_int_range(r,0,4);
     Direction rdir;
@@ -606,7 +603,7 @@ void snake_forward_ia2(Partie *p)
  *
  * @param[in]   snake_ia Le Schlanglà
  * @param[in]   snake    Le joueur
- * @param[in]   bouf     La bouf
+ * @param[in]   bonus     La bonus
  * @param[in]   ia_name  Le nom de l'ia
  */
 void snake_set_direction_ia(Partie *p,char * ia_name)

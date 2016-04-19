@@ -3,7 +3,7 @@
 //
 
 #include "partie.h"
-#include "struc.h"
+
 #include "bonus.h"
 #include "affichage.h"
 #include "ia.h"
@@ -22,7 +22,10 @@ struct _Partie
 {
     Snake *snake;
     Snake *schlanga;
-    Bouf *nourriture;
+
+    Bonus *nourriture;
+
+    TabSnakes *tab;
 
     GestionCollisions *collisions;
 
@@ -50,11 +53,11 @@ void partie_set_schlanga(Partie *p,Snake *s)
     p->schlanga = s;
 }
 
-Bouf * partie_bouf(Partie *p)
+Bonus * partie_bonus(Partie *p)
 {
     return p->nourriture;
 }
-void partie_set_bouf(Partie *p,Bouf *s)
+void partie_set_bonus(Partie *p,Bonus *s)
 {
     p->nourriture = s;
 }
@@ -127,6 +130,7 @@ Partie *create_partie()
     res->snake = NULL;
     res->schlanga = NULL;
     res->nourriture = NULL;
+    res->tab = NULL;
     res->map = NULL;
     res->affichage = NULL;
     res->collisions = NULL;
@@ -146,8 +150,9 @@ void free_partie(Partie *partie)
     free_affichage(partie->affichage);
     free_map(partie->map);
     free_gestion_collisions(partie->collisions);
-    free_snake(partie->snake);
-    free_snake(partie->schlanga);
+    //free_snake(partie->snake);
+    //free_snake(partie->schlanga);
+    free_tab_snakes(partie->tab);
     free(partie);
 }
 
@@ -262,11 +267,11 @@ static void collision_snake_vers_snake(Snake *snake, void *obj2, void *data)
  */
 static void collision_snake_vers_nourriture(Snake *snake, void *obj2, void *data)
 {
-    Bouf *nourriture = obj2;
+    Bonus *nourriture = obj2;
     Partie *partie = data;
 
     snake_increase(snake);
-    bouf_update(nourriture, partie->map->width, partie->map->height);
+    bonus_update(nourriture, partie->map->width, partie->map->height);
 }
 
 
@@ -278,89 +283,102 @@ static void collision_snake_vers_nourriture(Snake *snake, void *obj2, void *data
  * @param[in]    width  La largeur du plateau.
  * @param[in]    height La hauteur du plateau.
  */
-void init_partie(Partie *partie, ClutterScript *ui, int width, int height)
+void init_partie(Partie *partie, ClutterScript *ui,int nb_snakes,  int width, int height)
 {
-    Snake *snake;
-    Snake *schlanga;
-    Bouf *bouf;
+
+    Bonus *bonus;
+    Snake **ts;
+
+    CollisionObject **co_snakes = malloc(nb_snakes*sizeof(CollisionObject *));//TODO faire un free ?
 
     CollisionObject *co_snake;
     CollisionObject *co_schlanga;
     CollisionObject *co_nourriture;
     CollisionObject *co_map;
 
+
     partie->map = create_map(width, height);
     partie->en_cours = TRUE;
+    // Initialisation du tableau de snake
+    partie->tab = create_tab_snakes();
+    ts = partie->tab->snakes;
+    int i;
+    for (i = 0; i < nb_snakes; ++i)
+    {
+        Snake * snk  = create_snake(
+                    10,
+                    coord_from_xy(22, 2+5*i),
+                    DROITE
+                );
+        tab_snakes_add_object(partie->tab,snk);
 
-    snake = create_snake(
-        10,
-        coord_from_xy(22, 2),
-        DROITE
-    );// struc.c
-    partie->snake = snake;
-    schlanga = create_snake(
-        10,
-        coord_from_xy(22, 7),//L'ia commence 5 case en dessous du snake de base
-        DROITE
-    );// struc.c
-    partie->schlanga = schlanga;
-    bouf = bouf_new(width, height);// bonus.c
-    partie->nourriture = bouf;
+    }
+
+    // TODO delete le code suivant pour l'instant il sert juste à faire pas de bug
+    partie->snake  = partie->tab->snakes[0];
+    partie->schlanga = partie->tab->snakes[1];
+
+
+
+
+    bonus = bonus_new(width, height);// bonus.c
+    partie->nourriture = bonus;
 
     partie->collisions = create_gestion_collisions();// collisions.c
-    co_snake = gestion_collision_add_object(partie->collisions, partie->snake,
-                                            COLLISION_SNAKE);// collisions.c
-    co_schlanga = gestion_collision_add_object(partie->collisions,
-                                               partie->schlanga,
-                                               COLLISION_SNAKE);
+
+    for (i = 0; i < partie->tab->nb_snakes ; ++i)
+    {
+        co_snakes[i] = gestion_collision_add_object(partie->collisions, ts[i],
+                                                    COLLISION_SNAKE);
+    }
+
+
+    // TODO plusieurs nourriture
     co_nourriture = gestion_collision_add_object(partie->collisions,
                                                  partie->nourriture,
                                                  COLLISION_BONUS);
     co_map = gestion_collision_add_object(partie->collisions, partie->map,
                                           COLLISION_MAP);
 
-    collision_object_add_collision(
-        co_snake,
-        create_collision(partie->snake, collision_snake_vers_snake, partie)// collisions.c
-    );// collisions.c
-    collision_object_add_collision(
-        co_snake,
-        create_collision(partie->schlanga, collision_snake_vers_snake, partie)
-    );
+    int j;
+    for (i = 0; i < partie->tab->nb_snakes ; ++i)
+    {
+        for (j = 0; j < partie->tab->nb_snakes ; ++j)
+        {
+            collision_object_add_collision(
+                    co_snakes[i],
+                    create_collision(ts[j], collision_snake_vers_snake, partie)// collisions.c
+            );
 
-    collision_object_add_collision(
-        co_schlanga,
-        create_collision(partie->snake, collision_snake_vers_snake, partie)
-    );
-    collision_object_add_collision(
-        co_schlanga,
-        create_collision(partie->schlanga, collision_snake_vers_snake, partie)
-    );
+        }
+        // TODO faire un boucle pour généraliser les nourritures
+        collision_object_add_collision(
+                co_nourriture,
+                create_collision(ts[i], collision_snake_vers_nourriture, partie)
+        );
+        collision_object_add_collision(
+                co_map,
+                create_collision(ts[i], collision_snake_vers_snake, partie)
+        );
+    }
 
-    collision_object_add_collision(
-        co_nourriture,
-        create_collision(partie->snake, collision_snake_vers_nourriture, partie)
-    );
-    collision_object_add_collision(
-        co_nourriture,
-        create_collision(partie->schlanga, collision_snake_vers_nourriture, partie)
-    );
-
-    collision_object_add_collision(
-        co_map,
-        create_collision(partie->snake, collision_snake_vers_snake, partie)
-    );
-    collision_object_add_collision(
-        co_map,
-        create_collision(partie->schlanga, collision_snake_vers_snake, partie)
-    );
 
     partie->affichage = create_affichage();// affichage.c
-    init_affichage(partie->affichage, ui, snake, width, height);// affichage.c
+    init_affichage(partie->affichage, ui, partie, width, height);// affichage.c
 
-    affichage_add_snake(partie->affichage, snake,  CLUTTER_COLOR_Blue);// affichage.c
-    affichage_add_snake(partie->affichage, schlanga,  CLUTTER_COLOR_Red);
-    affichage_add_bonus(partie->affichage, bouf,  CLUTTER_COLOR_Green);
+    // On choisit une couleur
+    GRand * randg = g_rand_new();
+    gint32  r = g_rand_int_range(randg,0,360);
+    int pas = 360/(partie->tab->nb_snakes);
+    for (i = 0; i < partie->tab->nb_snakes ; ++i)
+    {
+        ClutterColor * color = clutter_color_alloc();
+        clutter_color_from_hls(color,(r+pas*i)%360,0.4,1); // Puis le couleurs sont complémentaires
+        affichage_add_snake(partie->affichage, ts[i], color);// affichage.c
+    }
+
+    //TODO generaliser les bonus
+    affichage_add_bonus(partie->affichage, bonus,  CLUTTER_COLOR_Green);
 
     g_timeout_add(150, timeout_tick_cb, partie);
 }

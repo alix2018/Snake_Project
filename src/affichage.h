@@ -15,6 +15,7 @@
 #define TURNDARK_IMAGE_SRC "data/corpsturndarkside.png"
 #define POMME_IMAGE "data/pommeapple.png"
 
+#include "partie.h"
 typedef struct _Affichage Affichage;
 
 /**
@@ -37,7 +38,7 @@ int snake_border_map(SnakeActor *sa);
 int snake_border_snake(SnakeActor *sa,SnakeActor * sa_ia);
 
 //Renvoie 1 si et seulement si les coords de la te et de la queue sont égales
-int snake_eat(Snake *s, Bouf *b);
+int snake_eat(Snake *s, Bonus *b);
 
 //Libere mémoir
 void stage_destroy_cb(ClutterActor *actor, gpointer data);
@@ -53,12 +54,12 @@ SnakeImage *snake_generate_image();
 
 void affichage_add_snake(Affichage *affichage, Snake *snake,
                          const ClutterColor *color);
-void affichage_add_bonus(Affichage *affichage, Bouf *bonus,
+void affichage_add_bonus(Affichage *affichage, Bonus *bonus,
                          const ClutterColor *color);
 
 void affichage_update(Affichage *affichage);
 
-void init_affichage(Affichage *affichage, ClutterScript *ui, Snake *snake,
+void init_affichage(Affichage *affichage, ClutterScript *ui, Partie *p,
                     int width, int height);
 
 #endif //ALPHA_SNAKE_AFFICHAGE_H

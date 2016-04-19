@@ -6,22 +6,22 @@
 #define ALPHA_SNAKE_BONUS_H
 
 
-typedef struct _bouf Bouf;
-typedef struct _bouf_actor BoufActor;
+typedef struct _bonus Bonus;
+typedef struct _bonus_actor BonusActor;
 
-//Créé un nouvelle emplacement mémoir pour la bouf
-Bouf *bouf_new(int x, int y);
+//Créé un nouvelle emplacement mémoir pour la bonus
+Bonus *bonus_new(int x, int y);
 
-//Créé les coordonnés de la bouf sur la map
-void bouf_update(Bouf *bouf, int x, int y);
-Coord bouf_coord(Bouf *bouf);
+//Créé les coordonnés de la bonus sur la map
+void bonus_update(Bonus *bonus, int x, int y);
+Coord bonus_coord(Bonus *bonus);
 
-//Créé le BoufActor
-BoufActor *create_bouf_actor(ClutterActor *parent, Bouf *b, ClutterColor *color);
-void free_bouf_actor(BoufActor *b);
-Bouf *bouf_actor_bouf(BoufActor *bouf_actor);
+//Créé le BonusActor
+BonusActor *create_bonus_actor(ClutterActor *parent, Bonus *b, ClutterColor *color);
+void free_bonus_actor(BonusActor *b);
+Bonus *bonus_actor_bonus(BonusActor *bonus_actor);
 
 //Met à jour les coord du clutteractor
-void bouf_actor_update(BoufActor *ba);
+void bonus_actor_update(BonusActor *ba);
 
 #endif //ALPHA_SNAKE_BONUS_H

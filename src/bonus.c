@@ -3,90 +3,90 @@
 //
 
 #include "bonus.h"
-#include "struc.h"
+
 #include "affichage.h"
 
-struct _bouf
+struct _bonus
 {
     Coord coord;
 };
 
-struct _bouf_actor
+struct _bonus_actor
 {
     ClutterActor *parent;
-    ClutterActor *bouf_c_actor;
-    Bouf *bouf;
+    ClutterActor *bonus_c_actor;
+    Bonus *bonus;
     ClutterColor *color;
 };
 
 /**
- * @brief   Génère un élèment de type bouf
+ * @brief   Génère un élèment de type bonus
  *
  * @param[in]    x  largeur de la map
  * @param[in]    y  hauteur de la map
  *
- * @return La bouf initialisé
+ * @return La bonus initialisé
  */
-Bouf *bouf_new(int x, int y)
+Bonus *bonus_new(int x, int y)
 {
     srand(time(NULL));
-    Bouf *new = malloc(sizeof(Bouf *));
+    Bonus *new = malloc(sizeof(Bonus));
     new->coord = coord_from_xy(rand()%x, rand()%y);
     return new;
 }
 
 /**
- * @brief   Change les coordonnés de la bouf
+ * @brief   Change les coordonnés de la bonus
  *
- * @param[in]   bouf  La bouf à rafraichir
+ * @param[in]   bonus  La bonus à rafraichir
  * @param[in]   x     Largeur de la map
  * @param[in]   y     Hauteur de la map
  *
- * @return La bouf avec de nouvelles coordonnées
+ * @return La bonus avec de nouvelles coordonnées
  */
-void bouf_update(Bouf *bouf, int x, int y)
+void bonus_update(Bonus *bonus, int x, int y)
 {
-    bouf->coord = coord_from_xy(rand()%x, rand()%y);
+    bonus->coord = coord_from_xy(rand()%x, rand()%y);
 }
 
 /**
- * @brief   Permet d'accéder au coordonnées de la bouf
+ * @brief   Permet d'accéder au coordonnées de la bonus
  *
- * @param[in]   bouf  La bouf dont on veut les coordonnées
+ * @param[in]   bonus  La bonus dont on veut les coordonnées
  *
- * @return Les coordonnées de la bouf
+ * @return Les coordonnées de la bonus
  */
-Coord bouf_coord(Bouf *bouf)
+Coord bonus_coord(Bonus *bonus)
 {
-    return bouf->coord;
+    return bonus->coord;
 }
 
 /**
- * @brief   Génère une BoufActor
+ * @brief   Génère une BonusActor
  *
- * @param[in]   parent  Le parent du nouveau BoufActor
- * @param[in]   b       La bouf à afficher
- * @param[in]   color   La couleur de la bouf
+ * @param[in]   parent  Le parent du nouveau BonusActor
+ * @param[in]   b       La bonus à afficher
+ * @param[in]   color   La couleur de la bonus
  *
- * @return Le nouveau BoufActor initialisé
+ * @return Le nouveau BonusActor initialisé
  */
-BoufActor *create_bouf_actor(ClutterActor *parent, Bouf *b, ClutterColor *color)
+BonusActor *create_bonus_actor(ClutterActor *parent, Bonus *b, ClutterColor *color)
 {
-    BoufActor *res;
-    ClutterActor *bouf_c_actor;
+    BonusActor *res;
+    ClutterActor *bonus_c_actor;
     ClutterTransition *transition_x;
     ClutterTransition *transition_y;
 
-    bouf_c_actor = clutter_actor_new();
-    clutter_actor_set_size(bouf_c_actor, GRID_SIZE, GRID_SIZE);
-    clutter_actor_set_pivot_point(bouf_c_actor, 0.5, 0.5);
-    clutter_actor_set_scale(bouf_c_actor, 0.8, 0.8);
-    //clutter_actor_set_background_color(bouf_c_actor, color);
+    bonus_c_actor = clutter_actor_new();
+    clutter_actor_set_size(bonus_c_actor, GRID_SIZE, GRID_SIZE);
+    clutter_actor_set_pivot_point(bonus_c_actor, 0.5, 0.5);
+    clutter_actor_set_scale(bonus_c_actor, 0.8, 0.8);
+    //clutter_actor_set_background_color(bonus_c_actor, color);
 
     // SET IMAGE POMME/BOUF/bonus
 
     ClutterContent *imgpomme = generate_image(POMME_IMAGE );
-    clutter_actor_set_content(bouf_c_actor,imgpomme);
+    clutter_actor_set_content(bonus_c_actor,imgpomme);
     g_object_unref(imgpomme);
 
     transition_x = clutter_property_transition_new("scale-x");
@@ -100,7 +100,7 @@ BoufActor *create_bouf_actor(ClutterActor *parent, Bouf *b, ClutterColor *color)
     );
     clutter_transition_set_from(transition_x, G_TYPE_DOUBLE, 0.8);
     clutter_transition_set_to(transition_x, G_TYPE_DOUBLE, 1.2);
-    clutter_actor_add_transition(bouf_c_actor, "tr-scale-x", transition_x);
+    clutter_actor_add_transition(bonus_c_actor, "tr-scale-x", transition_x);
     g_object_unref(transition_x);
 
     transition_y = clutter_property_transition_new("scale-y");
@@ -114,45 +114,45 @@ BoufActor *create_bouf_actor(ClutterActor *parent, Bouf *b, ClutterColor *color)
     );
     clutter_transition_set_from(transition_y, G_TYPE_DOUBLE, 0.8);
     clutter_transition_set_to(transition_y, G_TYPE_DOUBLE, 1.2);
-    clutter_actor_add_transition(bouf_c_actor, "tr-scale-y", transition_y);
+    clutter_actor_add_transition(bonus_c_actor, "tr-scale-y", transition_y);
     g_object_unref(transition_y);
 
-    clutter_actor_add_child(parent, bouf_c_actor);
-    clutter_actor_set_position(bouf_c_actor, b->coord.x * GRID_SIZE, b->coord.y * GRID_SIZE);
+    clutter_actor_add_child(parent, bonus_c_actor);
+    clutter_actor_set_position(bonus_c_actor, b->coord.x * GRID_SIZE, b->coord.y * GRID_SIZE);
 
-    res = malloc(sizeof(BoufActor));
+    res = malloc(sizeof(BonusActor));
     res->parent = parent;
-    res->bouf_c_actor = bouf_c_actor;
+    res->bonus_c_actor = bonus_c_actor;
     res->color = color;
-    res->bouf = b;
+    res->bonus = b;
 
     return res;
 }
 
-void free_bouf_actor(BoufActor *b)
+void free_bonus_actor(BonusActor *b)
 {
     clutter_color_free(b->color);
     free(b);
 }
 
 /**
- * @brief   Permet d'accéder à la bouf d'un BoufActor
+ * @brief   Permet d'accéder à la bonus d'un BonusActor
  *
- * @param[in]   bouf_actor Le BoufActor
+ * @param[in]   bonus_actor Le BonusActor
  *
- * @return La bouf du bouf_actor
+ * @return La bonus du bonus_actor
  */
-Bouf *bouf_actor_bouf(BoufActor *bouf_actor)
+Bonus *bonus_actor_bonus(BonusActor *bonus_actor)
 {
-    return bouf_actor->bouf;
+    return bonus_actor->bonus;
 }
 
 /**
- * @brief   Rafraîchit la bouf d'un BoufActor
+ * @brief   Rafraîchit la bonus d'un BonusActor
  *
- * @param[in]   ba   Le BoufActor à rafraichir
+ * @param[in]   ba   Le BonusActor à rafraichir
  */
-void bouf_actor_update(BoufActor *ba)
+void bonus_actor_update(BonusActor *ba)
 {
-    clutter_actor_set_position(ba->bouf_c_actor, ba->bouf->coord.x * GRID_SIZE, ba->bouf->coord.y * GRID_SIZE);
+    clutter_actor_set_position(ba->bonus_c_actor, ba->bonus->coord.x * GRID_SIZE, ba->bonus->coord.y * GRID_SIZE);
 }

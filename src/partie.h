@@ -1,7 +1,7 @@
 //
 // Created by thibaut on 16/03/16.
 #include <clutter/clutter.h>
-#include "struc.h"
+
 #include "bonus.h"
 #include "affichage.h"
 
@@ -19,8 +19,8 @@ Snake * partie_snake(Partie *p);
 void partie_set_snake(Partie *p,Snake *s);
 Snake * partie_schlanga(Partie *p);
 void partie_set_schlanga(Partie *p,Snake *s);
-Bouf * partie_bouf(Partie *p);
-void partie_set_bouf(Partie *p,Bouf *s);
+Bonus * partie_bonus(Partie *p);
+void partie_set_bonus(Partie *p,Bonus *s);
 Map *create_map(int width, int height);
 void free_map(Map *map);
 int map_width(Map *map);
@@ -31,7 +31,7 @@ Partie *create_partie();
 void free_partie(Partie *partie);
 Map *partie_map(Partie *partie);
 
-void init_partie(Partie *partie, ClutterScript *ui, int width, int height);
+void init_partie(Partie *partie, ClutterScript *ui, int nb_snakes, int width, int height);
 void init_pseudo(Partie *p, int argc, char **argv);
 
 gboolean timeout_tick_cb(gpointer data);

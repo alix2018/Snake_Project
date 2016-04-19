@@ -63,9 +63,9 @@ static void free_affichage_snake_actors(void *elt)
 
 static void free_affichage_bonus_actor(void *elt)
 {
-    BoufActor *actor = elt;
+    BonusActor *actor = elt;
 
-    free_bouf_actor(actor);
+    free_bonus_actor(actor);
 }
 
 /**
@@ -299,14 +299,14 @@ int snake_border_snake(SnakeActor *sa,SnakeActor *sa_ia)
 }
 
 /*
- * @brief Indique si le snake mange la bouf
+ * @brief Indique si le snake mange la bonus
  *
  * @param[in]    s   un snake
- * return   1 si et seulement si la tête du snake est au même endroit que la bouf
+ * return   1 si et seulement si la tête du snake est au même endroit que la bonus
  */
-int snake_eat(Snake *s, Bouf *b)
+int snake_eat(Snake *s, Bonus *b)
 {
-    if(coord_egales(snake_pos(s), bouf_coord(b)))
+    if(coord_egales(snake_pos(s), bonus_coord(b)))
     {
         return 1; // O_o
     }
@@ -657,11 +657,11 @@ void affichage_add_snake(Affichage *affichage, Snake *snake,
  * @param[in]    bonus      Le bonus à ajouter.
  * @param[in]    color      La couleur du bonus.
  */
-void affichage_add_bonus(Affichage *affichage, Bouf *bonus,
+void affichage_add_bonus(Affichage *affichage, Bonus *bonus,
                          const ClutterColor *color)
 {
-    BoufActor *ba;
-    ba = create_bouf_actor(
+    BonusActor *ba;
+    ba = create_bonus_actor(
         CLUTTER_ACTOR(clutter_script_get_object(affichage->ui, "zone_snake")),
         bonus,
         clutter_color_new(0, 255, 0, 255)
@@ -677,7 +677,7 @@ void affichage_add_bonus(Affichage *affichage, Bouf *bonus,
 void affichage_update(Affichage *affichage)
 {
     SnakeActor *sa;
-    BoufActor *ba;
+    BonusActor *ba;
     Node cur;
 
     for (cur = list_first_node(affichage->snake_actors);
@@ -695,7 +695,7 @@ void affichage_update(Affichage *affichage)
     {
         ba = node_elt(cur);
 
-        bouf_actor_update(ba);
+        bonus_actor_update(ba);
     }
 }
 
@@ -707,15 +707,15 @@ void affichage_update(Affichage *affichage)
  * @param[in]    ui         Le fichier ui contenant la déclaration de
  *                          la fenêtre du Snake.
  */
-void init_affichage(Affichage *affichage, ClutterScript *ui, Snake *snake,
+void init_affichage(Affichage *affichage, ClutterScript *ui, Partie *p,
                     int width, int height)
 {
     ClutterActor *zone_snake;
     ClutterActor *stage;
     Snake *snk, *snk_ia;
     SnakeActor *sa, *sa_ia;
-    Bouf *bouf;
-    BoufActor *ba;
+    Bonus *bonus;
+    BonusActor *ba;
 
     affichage->ui = ui;
 
@@ -727,7 +727,7 @@ void init_affichage(Affichage *affichage, ClutterScript *ui, Snake *snake,
     clutter_stage_set_key_focus(CLUTTER_STAGE(stage), zone_snake);
     affichage->images = snake_generate_image();
 
-    g_signal_connect(zone_snake, "key-press-event", G_CALLBACK(zone_snake_key_press_cb), snake);
+    g_signal_connect(zone_snake, "key-press-event", G_CALLBACK(zone_snake_key_press_cb), partie_snake(p)); // TODO génraliser
     g_signal_connect(stage, "destroy", G_CALLBACK(stage_destroy_cb), NULL);
 
     // SET IMAGE BACKGROUND

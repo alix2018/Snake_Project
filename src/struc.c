@@ -11,7 +11,7 @@
 #include <time.h>
 #include "struc.h"
 #include "list.h"
-
+#include "ia.h"
 
 /**
  * @brief      La structure du snake 
@@ -22,18 +22,136 @@
  * @param[in]  longueur  	   La longueur de la liste
  * @param[in]  direction  	   La direction du snake
  */
-struct snake
+struct _snake
 {
 	List *liste_snake;
 	int longueur;
 	Direction direction;
 	char *pseudo;
+	int bot;
+	void(*script)(void *);
 };
 
 
 
-/* Fonctions de base de coord */
+/*********************************/
+/* Fonctions de base de tabsnake */
+/********************************/
+/**
+ * @brief   Crée un tableau de snake.
+ *
+ * @return  Le tableau de snake.
+ */
+TabSnakes *create_tab_snakes()
+{
+	TabSnakes *res;
 
+	res = malloc(sizeof(TabSnakes));
+	res->nb_snakes = 0;
+	res->taille_snakes = 2;
+	res->snakes = malloc(res->taille_snakes * sizeof(TabSnakes *));
+	return res;
+}
+
+
+/**
+ * @brief   Libère la mémoire le tableau de snake.
+ *
+ * @param[in]    ts  Le tableau de snake à supprimer.
+ */
+void free_tab_snakes(TabSnakes *ts)
+{
+	int i;
+
+	for (i = 0; i < ts->nb_snakes; i++)
+	{
+		free_snake(ts->snakes[i]);
+	}
+
+	free(ts->snakes);
+	free(ts);
+}
+
+
+
+/**
+ * @brief   Ajoute d'un snake dans le tableau de snake
+ *
+ * @param[in]    ts     Le gestionnaire de collisions.
+ * @param[in]    obj    L'objet à ajouter.
+ *
+ * @return  Le Snake crée lors de l'ajout de obj, ou le
+ *          Snake qui gère obj si obj est déjà géré par gc.
+ */
+Snake *tab_snakes_add_object(TabSnakes *ts, Snake *obj)
+{
+	int i;
+
+	for (i = 0; i < ts->nb_snakes; i++)
+	{
+		if (ts->snakes[i] == obj) // pas de duplicat
+			return ts->snakes[i];
+	}
+
+	ts->nb_snakes++;
+	if (ts->nb_snakes > ts->taille_snakes)
+	{
+		ts->taille_snakes *= 2;
+		ts->snakes = realloc(ts->snakes,
+						   ts->taille_snakes * sizeof(Snake *));
+	}
+
+	ts->snakes[ts->nb_snakes - 1] = obj;
+
+	return ts->snakes[ts->nb_snakes - 1];
+}
+
+
+/**
+ * @brief   Supprime le snake dans le tableau de snakes.
+ *
+ * @param[in]    ts     Le gestionnaire de collisions.
+ * @param[in]    obj    L'objet à supprimer.
+ */
+void tab_snakes_remove_object(TabSnakes *ts, Snake *obj)
+{
+	int i = 0;
+
+	while (i < ts->nb_snakes)
+	{
+		if (ts->snakes[i] == obj)
+		{
+			free_snake(ts->snakes[i]);
+			ts->snakes[i] = ts->snakes[ts->nb_snakes - 1];
+			ts->snakes[ts->nb_snakes - 1] = NULL;
+			ts->nb_snakes--;
+			return;
+		}
+	}
+}
+/**
+ * @brief   Le nombre de snakes (obselete)
+ *
+ * @param[in]    ts    le tableau de snake.
+ */
+int tab_snakes_length(TabSnakes *ts)
+{
+	return ts->nb_snakes;
+}
+/**
+ * @brief   La place en mémoire (obselete).
+ *
+ * @param[in]    ts    le tableau de snake.
+ */
+int tab_snakes_memory_length(TabSnakes *ts)
+{
+	return ts->taille_snakes;
+}
+
+
+/********************************/
+/* Fonctions de base de coord */
+/********************************/
 /**
  * @brief      A partir de deux integer renvoie un couple de type coordonnée
  *
@@ -101,6 +219,8 @@ Snake *create_snake(int longueur, Coord c, Direction dir)
     res->longueur = longueur;
     res->direction = dir;
     res->liste_snake = ls;
+	res->bot = 0;
+	res->script = NULL;
 
     cur = &c;
 
@@ -132,6 +252,15 @@ Snake *create_snake(int longueur, Coord c, Direction dir)
 		}
 	}
 
+	return res;
+}
+
+
+Snake *create_snake_bot(int longueur, Coord c, Direction dir,void(*script)(void *))
+{
+	Snake * res = create_snake(longueur,c,dir);
+	res->script = script;
+	res->bot = 1;
 	return res;
 }
 

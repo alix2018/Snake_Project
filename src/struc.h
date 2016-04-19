@@ -20,10 +20,27 @@
  */
 //typedef struct maillon_snake *ListeSnake;
 
-typedef struct snake Snake;
+
+
+typedef struct _snake Snake;
+typedef struct _tabsnakes TabSnakes;
+
 /**
- * 
+ * @brief      La structure de tabsnake
+ *
+ * @use Snake
+ * @param[in]  snakes 		    Le tableau de tout les snakes
+ * @param[in]  nb_snakes  	    Le nombre de snake
+ * @param[in]  taille_snakes	La taille en mémoire
  */
+struct _tabsnakes
+{
+	Snake **snakes; // pour acceder au tableau de snake ts->snakes
+	int nb_snakes;
+	int taille_snakes;
+};
+
+
 typedef struct
 {
 	int x;
@@ -42,24 +59,23 @@ Coord coord_from_xy(int x,int y);
 void print_coord(Coord c);
 int coord_egales(Coord c1, Coord c2);
 
-/*Fonctions de base de ListeSnake*/
+/*Fonctions de base de TabSnakes*/
 
 
-//ListeSnake cons_liste_snake_debut(Coord c, ListeSnake liste);
-//ListeSnake cons_liste_snake_fin(Coord c, ListeSnake liste);
-//void free_liste_snake(ListeSnake liste);
-//void print_liste_snake(ListeSnake liste);
-//
-//Coord liste_snake_coord(ListeSnake l);
-//ListeSnake liste_snake_suivant(ListeSnake liste);
-//ListeSnake liste_snake_precedent(ListeSnake liste);
-//
-//int coord_is_in_liste_snake( Coord c,ListeSnake liste);
+TabSnakes *create_tab_snakes();
 
+
+TabSnakes *create_tab_snakes();
+void free_tab_snakes(TabSnakes *ts);
+Snake *tab_snakes_add_object(TabSnakes *ts, Snake *obj);
+void tab_snakes_remove_object(TabSnakes *ts, Snake *obj);
+int tab_snakes_length(TabSnakes *ts);
+int tab_snakes_memory_length(TabSnakes *ts);
 
 /* Fonctions de base de Snake */
 
 Snake *create_snake(int longueur, Coord c, Direction dir);
+Snake *create_snake_bot(int longueur, Coord c, Direction dir,void(*script)(void *));
 void free_snake(Snake *snake);
 void print_snake(Snake *snake);
 

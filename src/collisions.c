@@ -181,13 +181,13 @@ static void check_collisions_for_snake(CollisionObject *obj) {
  */
 static void check_collisions_for_bonus(CollisionObject *obj)
 {
-    Bouf *bonus = obj->obj2;
+    Bonus *bonus = obj->obj2;
     int i;
 
     for (i = 0; i < obj->nb_collisions; i++)
     {
         if (obj->collisions[i]->enabled
-            && coord_egales(bouf_coord(bonus),
+            && coord_egales(bonus_coord(bonus),
                          snake_pos(obj->collisions[i]->obj1)))
         {
             collision_trigger(obj->collisions[i]);
