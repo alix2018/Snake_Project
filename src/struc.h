@@ -69,8 +69,10 @@ List *snake_liste_snake(Snake *snake);
 Node snake_dernier(Snake *snake);
 Node snake_premier(Snake *snake);
 Direction snake_direction(Snake *snake);
-void snake_set_direction(Snake *snake, Direction dir);
+int snake_set_direction(Snake *snake, Direction dir);
 void snake_set_liste(Snake *snake, List *ls);
+char *snake_pseudo(Snake *snake);
+void snake_set_pseudo(Snake *snake, char *pseudo);
 
 void snake_forward(Snake *snake);
 

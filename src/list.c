@@ -162,6 +162,37 @@ void list_add_last(List *list, void *elt)
     }
 }
 
+void list_delete_node(List *list, Node n)
+{
+    Node cur;
+    Node prev, next;
+    for (cur = list->first; cur != NULL; cur = cur->next)
+    {  
+        if(node_egalite(cur, n))
+        {
+            prev = cur->prev;
+            next = cur->next;
+
+            if(next != NULL)
+            {
+                next->prev = prev;
+            }
+            else
+            {
+                list->last = prev;
+            }
+            if(prev != NULL)
+            {
+                prev->next = next;
+            }
+            else
+            {
+                list->first = next;
+            }
+        }
+    }
+}
+
 /**
  * @brief   Applique la fonction `fn` en lui passant le paramètre `data`
  *          à une liste.
@@ -184,6 +215,14 @@ void list_foreach(List *list, void (*fn)(void *, void *), void *data)
 void *node_elt(Node node)
 {
     return node->elt;
+}
+
+/**
+ * @brief   Set l'élement du node node
+ */
+void node_set_elt(Node node, void *elt)
+{
+    node->elt = elt;
 }
 
 /**

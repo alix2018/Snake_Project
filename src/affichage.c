@@ -61,14 +61,28 @@ static void free_affichage_snake_actors(void *elt)
     free_snake_actor(sa);
 }
 
+static void free_affichage_bonus_actor(void *elt)
+{
+    BoufActor *actor = elt;
+
+    free_bouf_actor(actor);
+}
+
 /**
  * @brief   Libère la mémoire consommée par un affichage.
  *
  * @param[in]    affichage  L'affichage à supprimer.
  */
-void free_affichage(Affichage * affichage)
+void free_affichage(Affichage *affichage)
 {
+    g_object_unref(affichage->images->tete);
+    g_object_unref(affichage->images->corps);
+    g_object_unref(affichage->images->queue);
+    g_object_unref(affichage->images->turndark);
+    g_object_unref(affichage->images->turnlight);
+    free(affichage->images);
     free_list_fn(affichage->snake_actors, free_affichage_snake_actors);
+    free_list_fn(affichage->bonus, free_affichage_bonus_actor);
     free(affichage);
 }
 
@@ -102,20 +116,16 @@ gboolean zone_snake_key_press_cb(ClutterActor *actor, ClutterEvent *event, gpoin
     switch (key_symbol)
     {
         case CLUTTER_KEY_Up:
-            if (snake_direction(s) != BAS)
-                snake_set_direction(s, HAUT);
+            snake_set_direction(s, HAUT);
             break;
         case CLUTTER_KEY_Down:
-            if (snake_direction(s) != HAUT)
-                snake_set_direction(s, BAS);
+            snake_set_direction(s, BAS);
             break;
         case CLUTTER_KEY_Left:
-            if (snake_direction(s) != DROITE)
-                snake_set_direction(s, GAUCHE);
+            snake_set_direction(s, GAUCHE);
             break;
         case CLUTTER_KEY_Right:
-            if (snake_direction(s) != GAUCHE)
-                snake_set_direction(s, DROITE);
+            snake_set_direction(s, DROITE);
         default:
             break;
     }
@@ -390,7 +400,9 @@ void snake_actor_update(SnakeActor *sa)
             actor = clutter_actor_new();
             g_object_ref(actor);
             clutter_actor_set_size(actor, GRID_SIZE, GRID_SIZE);
-           // clutter_actor_set_background_color(actor, sa->color);
+           // clutter_actor_set_background_color(actor,sa->color );
+
+            clutter_actor_add_effect (actor, clutter_colorize_effect_new (sa->color));
 
             clutter_actor_set_easing_duration(actor, 0);
             //clutter_actor_set_easing_mode(actor,CLUTTER_EASE_IN_QUART);
@@ -575,16 +587,16 @@ void snake_actor_update(SnakeActor *sa)
  * @param[in] filename  Nom de l'image à importer.
  * @return  Un ClutterContent avec l'image chargée.
  */
-ClutterContent *generate_image(char * filename)
+ClutterContent *generate_image(char *filename)
 {
 
-    ClutterContent *image = clutter_image_new ();
+    ClutterContent *image = clutter_image_new();
 
-    GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file (filename, NULL);
+    GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file(filename, NULL);
 
-    clutter_image_set_data (CLUTTER_IMAGE (image),
-                            gdk_pixbuf_get_pixels (pixbuf),
-                            gdk_pixbuf_get_has_alpha (pixbuf)
+    clutter_image_set_data (CLUTTER_IMAGE(image),
+                            gdk_pixbuf_get_pixels(pixbuf),
+                            gdk_pixbuf_get_has_alpha(pixbuf)
                               ? COGL_PIXEL_FORMAT_RGBA_8888
                               : COGL_PIXEL_FORMAT_RGB_888,
                             gdk_pixbuf_get_width (pixbuf),
@@ -592,7 +604,7 @@ ClutterContent *generate_image(char * filename)
                             gdk_pixbuf_get_rowstride (pixbuf),
                             NULL);
 
-    g_object_unref (pixbuf);
+    g_object_unref(pixbuf);
     return image;
 }
 
@@ -622,14 +634,16 @@ SnakeImage *snake_generate_image()
  * @param[in]    color      La couleur du snake.
  */
 void affichage_add_snake(Affichage *affichage, Snake *snake,
-                         ClutterColor *color)
+                         const ClutterColor *color)
 {
     SnakeActor *sa;
-
+    // change l'alpha :
+    ClutterColor *rcolor= clutter_color_alloc();
+    clutter_color_shade(color, 1.6, rcolor);
     sa  = create_snake_actor(
         CLUTTER_ACTOR(clutter_script_get_object(affichage->ui, "zone_snake")),
         snake,
-        clutter_color_new(0, 0, 255, 255),
+        rcolor,
         affichage->images
     );
     list_add_last(affichage->snake_actors, sa);
@@ -644,7 +658,7 @@ void affichage_add_snake(Affichage *affichage, Snake *snake,
  * @param[in]    color      La couleur du bonus.
  */
 void affichage_add_bonus(Affichage *affichage, Bouf *bonus,
-                         ClutterColor *color)
+                         const ClutterColor *color)
 {
     BoufActor *ba;
     ba = create_bouf_actor(
@@ -719,6 +733,7 @@ void init_affichage(Affichage *affichage, ClutterScript *ui, Snake *snake,
     // SET IMAGE BACKGROUND
     ClutterContent *image = generate_image(BACKGROUND_IMAGE_SRC);
     clutter_actor_set_content(zone_snake,image);
+    g_object_unref(image);
 
     clutter_actor_show(stage);
 }

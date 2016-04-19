@@ -27,6 +27,7 @@ struct snake
 	List *liste_snake;
 	int longueur;
 	Direction direction;
+	char *pseudo;
 };
 
 
@@ -243,14 +244,42 @@ Direction snake_direction(Snake *snake)
 }
 
 /**
- * @brief      Change la direction future du snake
+ * @brief      Change la direction du snake si le changement de direction
+ *             n'implique pas que le snake se mange lui-même.
  *
  * @param      snake  le snake à changer
  * @param[in]  dir    La direction du déplacement
+ *
+ * @return  1 si le changement de direction a été possible, 0 sinon.
  */
-void snake_set_direction(Snake *snake, Direction dir)
+int snake_set_direction(Snake *snake, Direction dir)
 {
-	snake->direction = dir;
+    Coord *coord_2eme = node_elt(node_next(list_first_node(snake->liste_snake)));
+    Coord pos = snake_pos(snake);
+    int dx = pos.x - coord_2eme->x;
+    int dy = pos.y - coord_2eme->y;
+
+    if (dx == 0 && dy == -1 && dir == BAS) // HAUT
+    {
+        return 0;
+    }
+    else if (dx == 0 && dy == 1 && dir == HAUT) // BAS
+    {
+        return 0;
+    }
+    else if (dx == -1 && dy == 0 && dir == DROITE) // GAUCHE
+    {
+        return 0;
+    }
+    else if (dx == 1 && dy == 0 && dir == GAUCHE) // DROITE
+    {
+        return 0;
+    }
+    else
+    {
+        snake->direction = dir;
+        return 1;
+    }
 }
 
 
@@ -264,6 +293,17 @@ void snake_set_liste(Snake *snake, List *ls)
 {
 	snake->liste_snake = ls;
 }
+
+char *snake_pseudo(Snake *snake)
+{
+	return snake->pseudo;
+}
+
+void snake_set_pseudo(Snake *snake, char *pseudo)
+{
+	snake->pseudo = pseudo;
+}
+
 
 /**
  * @brief      Déplace l'intégralité du snake

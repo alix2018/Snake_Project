@@ -35,8 +35,9 @@ Ouvrir un terminal et taper :
     
 Autres cibles définies dans le Makefile :
 
- - `make clean` : supprime les fichiers objet générés par le compilateur.
+ - `make clean` : supprime les fichiers objets générés par le compilateur.
  - `make maintainer-clean` : le grand ménage.
+ - `make doc` : génère la documentation Doxygen.
 
 
 Utilisation des branches

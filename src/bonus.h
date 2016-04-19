@@ -18,6 +18,7 @@ Coord bouf_coord(Bouf *bouf);
 
 //Créé le BoufActor
 BoufActor *create_bouf_actor(ClutterActor *parent, Bouf *b, ClutterColor *color);
+void free_bouf_actor(BoufActor *b);
 Bouf *bouf_actor_bouf(BoufActor *bouf_actor);
 
 //Met à jour les coord du clutteractor

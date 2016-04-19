@@ -70,7 +70,7 @@ void free_gestion_collisions(GestionCollisions *collisions)
 /**
  * @brief   Ajoute un objet à un gestionnaire de collisions.
  *
- * @param[in]    gc     Le gestionneire de collisions.
+ * @param[in]    gc     Le gestionnaire de collisions.
  * @param[in]    obj    L'objet à ajouter.
  * @param[in]    type   Le type de l'objet à ajouter.
  *
@@ -78,7 +78,7 @@ void free_gestion_collisions(GestionCollisions *collisions)
  *          CollisionObject qui gère obj si obj est déjà géré par gc.
  */
 CollisionObject *gestion_collision_add_object(GestionCollisions *gc, void *obj,
-                                               CollisionType type)
+                                              CollisionType type)
 {
     int i;
 
@@ -211,8 +211,8 @@ static void check_collisions_for_map(CollisionObject *obj)
         if (obj->collisions[i]->enabled)
         {
             Coord coord = snake_pos(obj->collisions[i]->obj1);
-            if (coord.x > map_width(map)
-                || coord.y > map_height(map)
+            if (coord.x > map_width(map)-1
+                || coord.y > map_height(map)-1
                 || coord.x < 0
                 || coord.y < 0)
             {

@@ -22,11 +22,12 @@ Autres cibles définies dans le Makefile :
  - `make maintainer-clean` : supprime tous les fichiers générés par make et 
                              autoconf.
  - `make tests` : compile les tests unitaires.
+ - `make doc` : Génère la documentation.
 
 Exécution
 ---------
 
-    ./bin/alpha-snake
+    ./bin/alpha-snake [pseudo]
     
 Pour les tests :
 
