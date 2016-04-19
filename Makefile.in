@@ -24,7 +24,8 @@ DIST_DIRS = src \
         
 DIST_FILES = configure \
              Makefile.in \
-             Doxyfile
+             Doxyfile \
+             logo.png
 
 VERSION = @PACKAGE_VERSION@
 TARNAME = @PACKAGE_TARNAME@-$(VERSION)
