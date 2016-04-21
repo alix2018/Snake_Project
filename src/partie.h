@@ -1,13 +1,14 @@
 //
 // Created by thibaut on 16/03/16.
-#include <clutter/clutter.h>
 
-#include "bonus.h"
-#include "affichage.h"
 
 
 #ifndef ALPHA_SNAKE_PARTIE_H
 #define ALPHA_SNAKE_PARTIE_H
+
+#include <clutter/clutter.h>
+#include "struc.h"
+#include "bonus.h"
 
 
 
@@ -15,10 +16,13 @@ typedef struct _Map Map;
 typedef struct _Partie Partie;
 
 
-Snake * partie_snake(Partie *p);
-void partie_set_snake(Partie *p,Snake *s);
-Snake * partie_schlanga(Partie *p);
-void partie_set_schlanga(Partie *p,Snake *s);
+TabSnakes * partie_tab(Partie *p);
+Snake * partie_player(Partie *p);
+void partie_set_player(Partie *p,Snake *s);
+//Snake * partie_snake(Partie *p);
+//void partie_set_snake(Partie *p,Snake *s);
+//Snake * partie_schlanga(Partie *p);
+//void partie_set_schlanga(Partie *p,Snake *s);
 Bonus * partie_bonus(Partie *p);
 void partie_set_bonus(Partie *p,Bonus *s);
 Map *create_map(int width, int height);

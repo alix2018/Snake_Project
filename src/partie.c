@@ -20,11 +20,11 @@ struct _Map
 
 struct _Partie
 {
-    Snake *snake;
-    Snake *schlanga;
+
 
     Bonus *nourriture;
 
+    Snake *player;
     TabSnakes *tab;
 
     GestionCollisions *collisions;
@@ -35,7 +35,7 @@ struct _Partie
 
     Map *map;
 };
-
+/**
 Snake * partie_snake(Partie *p)
 {
     return p->snake;
@@ -44,13 +44,29 @@ void partie_set_snake(Partie *p,Snake *s)
 {
     p->snake = s;
 }
-Snake * partie_schlanga(Partie *p)
+ Snake * partie_schlanga(Partie *p)
 {
     return p->schlanga;
 }
 void partie_set_schlanga(Partie *p,Snake *s)
 {
     p->schlanga = s;
+}
+
+ **/
+
+TabSnakes * partie_tab(Partie *p)
+{
+    return p->tab;
+}
+
+Snake * partie_player(Partie *p)
+{
+    return p->player;
+}
+void partie_set_player(Partie *p,Snake *s)
+{
+    p->player = s;
 }
 
 Bonus * partie_bonus(Partie *p)
@@ -127,8 +143,8 @@ Partie *create_partie()
     Partie *res;
 
     res = malloc(sizeof(Partie));
-    res->snake = NULL;
-    res->schlanga = NULL;
+    //res->snake = NULL;
+    //res->schlanga = NULL;
     res->nourriture = NULL;
     res->tab = NULL;
     res->map = NULL;
@@ -224,17 +240,19 @@ static void collision_snake_vers_snake(Snake *snake, void *obj2, void *data)
 
     partie->en_cours = FALSE;
 
-    GString *out = g_string_new(snake_pseudo(partie->snake));
+    GString *out = g_string_new(snake_pseudo(partie->player));
 
-    if(snake == partie->schlanga)
+
+
+    if(snake == partie->player) // Si le snake en paramètre est le joueur on a perdu
     {
-        g_string_append(out, "\n Gagné !");
-        score_enregistre(partie->snake, 'G');
+        g_string_append(out, "\n Perdu !");
+        score_enregistre(partie->player, 'G');
     }
     else
     {
-        g_string_append(out, "\n Perdu !");
-        score_enregistre(partie->snake, 'P');
+        g_string_append(out, "\n Gagné !");
+        score_enregistre(partie->player, 'P');
     }
 
     GString *gscore = get_gstring_score();
@@ -289,10 +307,8 @@ void init_partie(Partie *partie, ClutterScript *ui,int nb_snakes,  int width, in
     Bonus *bonus;
     Snake **ts;
 
-    CollisionObject **co_snakes = malloc(nb_snakes*sizeof(CollisionObject *));//TODO faire un free ?
+    CollisionObject **co_snakes = malloc(nb_snakes*sizeof(CollisionObject *));
 
-    CollisionObject *co_snake;
-    CollisionObject *co_schlanga;
     CollisionObject *co_nourriture;
     CollisionObject *co_map;
 
@@ -302,22 +318,32 @@ void init_partie(Partie *partie, ClutterScript *ui,int nb_snakes,  int width, in
     // Initialisation du tableau de snake
     partie->tab = create_tab_snakes();
     ts = partie->tab->snakes;
+
+    // on ajoute le 1er snake comme player
+    Snake * snk  = create_snake(
+            10,
+            coord_from_xy(22, 2+5*0),
+            DROITE
+    );
+    tab_snakes_add_object(partie->tab,snk);
     int i;
-    for (i = 0; i < nb_snakes; ++i)
+    for (i = 1; i < nb_snakes; ++i)
     {
-        Snake * snk  = create_snake(
-                    10,
-                    coord_from_xy(22, 2+5*i),
-                    DROITE
-                );
+        snk  = create_snake_bot(
+                10,
+                coord_from_xy(22, 2+5*i),
+                DROITE,
+                "ia1"
+        );
         tab_snakes_add_object(partie->tab,snk);
 
     }
 
     // TODO delete le code suivant pour l'instant il sert juste à faire pas de bug
-    partie->snake  = partie->tab->snakes[0];
-    partie->schlanga = partie->tab->snakes[1];
+    //partie->snake  = partie->tab->snakes[0];
+    //partie->schlanga = partie->tab->snakes[1];
 
+    partie->player = partie->tab->snakes[0]; // On définit le player comme le 1er élément du tableau
 
 
 
@@ -381,17 +407,19 @@ void init_partie(Partie *partie, ClutterScript *ui,int nb_snakes,  int width, in
     affichage_add_bonus(partie->affichage, bonus,  CLUTTER_COLOR_Green);
 
     g_timeout_add(150, timeout_tick_cb, partie);
+
+    free(co_snakes);
 }
 
 void init_pseudo(Partie *p, int argc, char **argv)
 {
     if(argc == 2)
     {
-        snake_set_pseudo(p->snake, argv[1]); 
+        snake_set_pseudo(p->player, argv[1]);
     }
     else
     {
-        snake_set_pseudo(p->snake, "Anonyme");
+        snake_set_pseudo(p->player, "Anonyme");
     }
 }
 
@@ -404,10 +432,22 @@ gboolean timeout_tick_cb(gpointer data)
 {
     Partie *partie = data;
 
-    snake_forward(partie->snake);// struct.c
+    Snake **ts = partie->tab->snakes;
+    int i;
+    for (i = 0; i < partie->tab->nb_snakes; ++i)
+    {
+        if(snake_is_bot(ts[i]))
+        {
+            snake_set_direction_ia(ts[i],partie,snake_script_name(ts[i]));
+            snake_forward(ts[i]);
+        }
+        else
+        {
+            // TODO generaliser les forward ?  la direction se choisit comment ?
+            snake_forward(partie->player);
+        }
+    }
 
-    snake_set_direction_ia(partie,"ia1");// ia.c
-    snake_forward(partie->schlanga);
 
     gestion_collisions_check(partie->collisions);
 

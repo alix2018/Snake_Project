@@ -1,10 +1,10 @@
 
-#include <clutter/clutter.h>
-#include "struc.h"
 
 #ifndef ALPHA_SNAKE_BONUS_H
 #define ALPHA_SNAKE_BONUS_H
 
+#include <clutter/clutter.h>
+#include "struc.h"
 
 typedef struct _bonus Bonus;
 typedef struct _bonus_actor BonusActor;

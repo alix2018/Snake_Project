@@ -1,5 +1,6 @@
 #include <clutter/clutter.h>
 #include "affichage.h"
+#include "partie.h"
 #include "list.h"
 #include "struc.h"
 #include "ia.h"
@@ -727,7 +728,7 @@ void init_affichage(Affichage *affichage, ClutterScript *ui, Partie *p,
     clutter_stage_set_key_focus(CLUTTER_STAGE(stage), zone_snake);
     affichage->images = snake_generate_image();
 
-    g_signal_connect(zone_snake, "key-press-event", G_CALLBACK(zone_snake_key_press_cb), partie_snake(p)); // TODO génraliser
+    g_signal_connect(zone_snake, "key-press-event", G_CALLBACK(zone_snake_key_press_cb), partie_player(p)); // TODO génraliser
     g_signal_connect(stage, "destroy", G_CALLBACK(stage_destroy_cb), NULL);
 
     // SET IMAGE BACKGROUND

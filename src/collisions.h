@@ -1,10 +1,11 @@
 
-#include "struc.h"
-#include "bonus.h"
-#include "struc.h"
 
 #ifndef ALPHA_SNAKE_COLLISIONS_H
 #define ALPHA_SNAKE_COLLISIONS_H
+
+#include "struc.h"
+#include "bonus.h"
+#include "struc.h"
 
 typedef enum
 {

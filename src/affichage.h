@@ -1,10 +1,14 @@
-#include <clutter/clutter.h>
-#include "struc.h"
-#include "bonus.h"
 
 
 #ifndef ALPHA_SNAKE_AFFICHAGE_H
 #define ALPHA_SNAKE_AFFICHAGE_H
+
+#include <clutter/clutter.h>
+#include "partie.h"
+#include "struc.h"
+#include "bonus.h"
+
+
 
 #define GRID_SIZE 23
 #define BACKGROUND_IMAGE_SRC "data/fond.jpg"
@@ -15,7 +19,7 @@
 #define TURNDARK_IMAGE_SRC "data/corpsturndarkside.png"
 #define POMME_IMAGE "data/pommeapple.png"
 
-#include "partie.h"
+
 typedef struct _Affichage Affichage;
 
 /**

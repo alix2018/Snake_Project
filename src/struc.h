@@ -7,13 +7,14 @@
  * @details    --- 
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include "list.h"
+
 
 #ifndef _STRUCT_
 #define _STRUCT_
 
+#include <stdio.h>
+#include <stdlib.h>
+#include "list.h"
 
 /**
  * @brief    liste de Snake
@@ -75,7 +76,7 @@ int tab_snakes_memory_length(TabSnakes *ts);
 /* Fonctions de base de Snake */
 
 Snake *create_snake(int longueur, Coord c, Direction dir);
-Snake *create_snake_bot(int longueur, Coord c, Direction dir,void(*script)(void *));
+Snake *create_snake_bot(int longueur, Coord c, Direction dir,char * str);
 void free_snake(Snake *snake);
 void print_snake(Snake *snake);
 
@@ -95,5 +96,7 @@ void snake_forward(Snake *snake);
 void snake_increase(Snake *snake);
 
 
+int snake_is_bot(Snake *snake);
+char * snake_script_name(Snake * snake);
 
 #endif

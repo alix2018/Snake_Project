@@ -28,8 +28,8 @@ struct _snake
 	int longueur;
 	Direction direction;
 	char *pseudo;
-	int bot;
-	void(*script)(void *);
+	int is_bot;
+	char * script_name;
 };
 
 
@@ -219,8 +219,8 @@ Snake *create_snake(int longueur, Coord c, Direction dir)
     res->longueur = longueur;
     res->direction = dir;
     res->liste_snake = ls;
-	res->bot = 0;
-	res->script = NULL;
+	res->is_bot = 0;
+	res->script_name = NULL;
 
     cur = &c;
 
@@ -256,11 +256,11 @@ Snake *create_snake(int longueur, Coord c, Direction dir)
 }
 
 
-Snake *create_snake_bot(int longueur, Coord c, Direction dir,void(*script)(void *))
+Snake *create_snake_bot(int longueur, Coord c, Direction dir,char * str)
 {
 	Snake * res = create_snake(longueur,c,dir);
-	res->script = script;
-	res->bot = 1;
+	res->script_name = str;
+	res->is_bot = 1;
 	return res;
 }
 
@@ -482,4 +482,16 @@ void snake_increase(Snake *snake)
     *c = *((Coord *) list_get_last(snake->liste_snake));
     list_add_last(snake->liste_snake, c);
 	snake->longueur++;
+}
+
+
+
+int snake_is_bot(Snake *snake)
+{
+	return snake->is_bot;
+}
+
+char * snake_script_name(Snake * snake)
+{
+	return snake->script_name;
 }
