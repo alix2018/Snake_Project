@@ -126,7 +126,8 @@ void gestion_collision_remove_object(GestionCollisions *gc, void *obj)
 }
 
 /**
- * @brief Teste une collision pour un snake.
+ * @brief Teste une collision pour un snake. La fonction callback
+ *        n'est pas appelée.
  * 
  * @param[in]   collision  La collision à tester.
  * 
@@ -205,7 +206,8 @@ static void check_all_collisions_for_snake(CollisionObject *obj) {
 }
 
 /**
- * @brief Teste une collision pour un bonus.
+ * @brief Teste une collision pour un bonus. La fonction callback
+ *        n'est pas appelée.
  * 
  * @param[in]   collision  La collision à tester.
  * 
@@ -236,7 +238,8 @@ static void check_all_collisions_for_bonus(CollisionObject *obj)
 }
 
 /**
- * @brief Teste une collision pour le plateau.
+ * @brief Teste une collision pour le plateau. La fonction callback
+ *        n'est pas appelée.
  * 
  * @param[in]   collision  La collision à tester.
  * 
