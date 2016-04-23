@@ -220,7 +220,7 @@ Node snake_dernier(Snake *snake)
 }
 
 /**
- * @brief      Récupère toutE la liste en partant de la tête
+ * @brief      Récupère toute la liste en partant de la tête
  *
  * @param      snake  le snake
  *

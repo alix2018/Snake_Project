@@ -37,14 +37,17 @@ Snake * partie_snake(Partie *p)
 {
     return p->snake;
 }
+
 void partie_set_snake(Partie *p,Snake *s)
 {
     p->snake = s;
 }
+
 Snake * partie_schlanga(Partie *p)
 {
     return p->schlanga;
 }
+
 void partie_set_schlanga(Partie *p,Snake *s)
 {
     p->schlanga = s;
@@ -54,6 +57,7 @@ Bouf * partie_bouf(Partie *p)
 {
     return p->nourriture;
 }
+
 void partie_set_bouf(Partie *p,Bouf *s)
 {
     p->nourriture = s;

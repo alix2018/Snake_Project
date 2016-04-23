@@ -135,13 +135,12 @@ gboolean zone_snake_key_press_cb(ClutterActor *actor, ClutterEvent *event, gpoin
 
 
 /**
- * @brief      Renvoie true si le snake est contre un mur et veux avancer dans
+ * @brief      Renvoie true si le snake est contre un mur et veut avancer dans
  *             le mur. Appelée dans la fonction timeout_tich_cb
  *
  * @param[in]  c1  coord à vérifier
  * @param[in]  c2  coord à vérifier
  *
- * @return      Renvoie 0 si le snake est contre un mur et veux avancer dans le mur, 1 sinon
  */
 int snake_border_map(SnakeActor *sa)
 {
@@ -354,7 +353,8 @@ SnakeActor *create_snake_actor(ClutterActor *parent, Snake *s, ClutterColor *col
 
 
 /**
- * @brief Fonction appliquée à chaque élément de la liste des acteurs de SnakeActor lors de la suppression de cette liste.
+ * @brief Fonction appliquée à chaque élément de la liste des acteurs
+ * de SnakeActor lors de la suppression de cette liste.
  * @param[in]   elt     Le ClutterActor à suprimer.
  */
 static void free_clutter_actor_fn(void * elt)

@@ -25,7 +25,7 @@ struct _bouf_actor
  * @param[in]    x  largeur de la map
  * @param[in]    y  hauteur de la map
  *
- * @return La bouf initialisé
+ * @return La bouf initialisée
  */
 Bouf *bouf_new(int x, int y)
 {
@@ -36,7 +36,7 @@ Bouf *bouf_new(int x, int y)
 }
 
 /**
- * @brief   Change les coordonnés de la bouf
+ * @brief   Change les coordonnées de la bouf
  *
  * @param[in]   bouf  La bouf à rafraichir
  * @param[in]   x     Largeur de la map
@@ -150,7 +150,7 @@ Bouf *bouf_actor_bouf(BoufActor *bouf_actor)
 /**
  * @brief   Rafraîchit la bouf d'un BoufActor
  *
- * @param[in]   ba   Le BoufActor à rafraichir
+ * @param[in]   ba   Le BoufActor à rafraîchir
  */
 void bouf_actor_update(BoufActor *ba)
 {
