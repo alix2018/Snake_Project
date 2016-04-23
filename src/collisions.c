@@ -125,6 +125,38 @@ void gestion_collision_remove_object(GestionCollisions *gc, void *obj)
     }
 }
 
+/**
+ * @brief Teste une collision pour un snake.
+ * 
+ * @param[in]   collision  La collision à tester.
+ * 
+ * @return    1 si le snake obj1 est en collision avec le snake obj2,
+ *            0 sinon.
+ */
+int check_collision_for_snake(Collision *collision)
+{
+    int i;
+    Coord pos_snake = snake_pos((Snake *) collision->obj1);
+    Node cur_cible = snake_premier((Snake *) collision->obj2);
+    Coord *cur_cible_coord;
+    
+    if (collision->obj1 != collision->obj2) {
+	cur_cible_coord = node_elt(cur_cible);
+	if (coord_egales(pos_snake, *cur_cible_coord))
+	    return 1;
+    }
+    
+    for (cur_cible = node_next(cur_cible);
+	 cur_cible != NULL;
+         cur_cible = node_next(cur_cible))
+    {
+	cur_cible_coord = node_elt(cur_cible);
+	if (coord_egales(pos_snake, *cur_cible_coord))
+	    return 1;
+    }
+    
+    return 0;
+}
 
 /**
  * @brief   Vérifie toutes les collisions activées pour un CollisionObject de
@@ -132,7 +164,7 @@ void gestion_collision_remove_object(GestionCollisions *gc, void *obj)
  *
  * @param[in]    obj    Le CollisionObject dont il faut vérifier les collisions.
  */
-static void check_collisions_for_snake(CollisionObject *obj) {
+static void check_all_collisions_for_snake(CollisionObject *obj) {
     int i;
     Snake *snake = (Snake *) obj->obj2;
     List *liste_snake = snake_liste_snake(snake);
@@ -172,6 +204,19 @@ static void check_collisions_for_snake(CollisionObject *obj) {
     }
 }
 
+/**
+ * @brief Teste une collision pour un bonus.
+ * 
+ * @param[in]   collision  La collision à tester.
+ * 
+ * @return    1 si le snake est en collision avec le bonus, 0 sinon.
+ */
+int check_collision_for_bonus(Collision *collision)
+{
+    Bouf *bonus = collision->obj2;
+    
+    return collision->enabled && coord_egales(bouf_coord(bonus), snake_pos(collision->obj1));
+}
 
 /**
  * @brief Vérifie les collisions activées  pour un CollisionObject de type
@@ -179,20 +224,33 @@ static void check_collisions_for_snake(CollisionObject *obj) {
  *
  * @param[in]    obj    Le CollisionObject dont il faut vérifier les collisions.
  */
-static void check_collisions_for_bonus(CollisionObject *obj)
+static void check_all_collisions_for_bonus(CollisionObject *obj)
 {
-    Bouf *bonus = obj->obj2;
     int i;
 
     for (i = 0; i < obj->nb_collisions; i++)
     {
-        if (obj->collisions[i]->enabled
-            && coord_egales(bouf_coord(bonus),
-                         snake_pos(obj->collisions[i]->obj1)))
-        {
-            collision_trigger(obj->collisions[i]);
-        }
+        if (check_collision_for_bonus(obj->collisions[i]))
+	    collision_trigger(obj->collisions[i]);
     }
+}
+
+/**
+ * @brief Teste une collision pour le plateau.
+ * 
+ * @param[in]   collision  La collision à tester.
+ * 
+ * @return    1 si le snake sort du plateau, 0 sinon.
+ */
+static int check_collision_for_map(Collision *collision)
+{
+    Map *map = collision->obj2;
+    Coord coord = snake_pos((Snake *) collision->obj1);
+    
+    return coord.x > map_width(map)-1
+                || coord.y > map_height(map)-1
+                || coord.x < 0
+                || coord.y < 0;
 }
 
 /**
@@ -201,20 +259,15 @@ static void check_collisions_for_bonus(CollisionObject *obj)
  *
  * @param[in]    obj    Le CollisionObject dont il faut vérifier les collisions.
  */
-static void check_collisions_for_map(CollisionObject *obj)
+static void check_all_collisions_for_map(CollisionObject *obj)
 {
-    Map *map = obj->obj2;
     int i;
 
     for (i = 0; i < obj->nb_collisions; i++)
     {
         if (obj->collisions[i]->enabled)
         {
-            Coord coord = snake_pos(obj->collisions[i]->obj1);
-            if (coord.x > map_width(map)-1
-                || coord.y > map_height(map)-1
-                || coord.x < 0
-                || coord.y < 0)
+            if (check_collision_for_map(obj->collisions[i]))
             {
                 collision_trigger(obj->collisions[i]);
             }
@@ -242,13 +295,13 @@ void gestion_collisions_check(GestionCollisions *collisions)
             switch (obj->type)
             {
                 case COLLISION_SNAKE:
-                    check_collisions_for_snake(obj);
+                    check_all_collisions_for_snake(obj);
                     break;
                 case COLLISION_BONUS:
-                    check_collisions_for_bonus(obj);
+                    check_all_collisions_for_bonus(obj);
                     break;
                 case COLLISION_MAP:
-                    check_collisions_for_map(obj);
+                    check_all_collisions_for_map(obj);
                     break;
             }
         }
