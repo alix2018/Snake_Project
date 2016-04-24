@@ -34,5 +34,10 @@ Collision *create_collision(Snake *snake, CollisionCb cb, void *data);
 void free_collision(Collision *collision);
 void collision_set_enabled(Collision *collision, int enabled);
 void collision_trigger(Collision *collision);
+int check_collision_for_bonus(Collision *collision);
+static int check_collision_for_map(Collision *collision);
+int check_collision_for_snake(Collision *collision);
+
+
 
 #endif //ALPHA_SNAKE_COLLISIONS_H
