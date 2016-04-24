@@ -1,7 +1,7 @@
 #include <gtk/gtk.h>
 #include <clutter/clutter.h>
 #include "partie.h"
-
+#include "menu.h"
 
 static void
 print_quitter (GtkWidget *widget,
@@ -22,6 +22,7 @@ static void
 lancer_snake (GtkWidget *widget,
                gpointer   data)
 {
+
   ClutterScript *ui;
   Partie *partie;
 
@@ -37,7 +38,7 @@ lancer_snake (GtkWidget *widget,
   free_partie(partie);
 }
 
-static void
+ void
 activate (GtkApplication *app,
           gpointer        user_data)
   
@@ -59,7 +60,9 @@ activate (GtkApplication *app,
 
   button1 = gtk_button_new_with_label ("Jouer");
   gtk_box_pack_start(GTK_BOX(box), button1, FALSE, FALSE, 0);
-  g_signal_connect (GTK_BUTTON (button1), "clicked", G_CALLBACK (lancer_snake), G_OBJECT (window));
+
+    g_signal_connect (GTK_BUTTON (button1), "clicked", G_CALLBACK (lancer_snake), G_OBJECT (window));
+   // g_signal_connect_swapped (button1, "clicked", G_CALLBACK (gtk_widget_destroy), window);
 
 
   button3 = gtk_button_new_with_label ("Options");
@@ -76,17 +79,9 @@ activate (GtkApplication *app,
   gtk_widget_show_all (window);
 }
 
-int
+/**int
 main (int    argc,
       char **argv)
 {
-  GtkApplication *app;
-  int status;
 
-  app = gtk_application_new ("org.gtk.example", G_APPLICATION_FLAGS_NONE);
-  g_signal_connect (app, "activate", G_CALLBACK (activate), NULL);
-  status = g_application_run (G_APPLICATION (app), argc, argv);
-  g_object_unref (app);
-
-  return status;
-}
+}**/

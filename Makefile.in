@@ -33,6 +33,11 @@ TARNAME = @PACKAGE_TARNAME@-$(VERSION)
 CC = @CC@
 CFLAGS = @CFLAGS@
 
+
+GTK_CFLAGS = $(shell pkg-config --cflags gtk+-3.0)
+GTK_LDFLAGS = $(shell pkg-config --libs gtk+-3.0)
+
+
 CLUTTER_CFLAGS = @CLUTTER_CFLAGS@
 CLUTTER_LDFLAGS = @CLUTTER_LIBS@
 
@@ -41,18 +46,18 @@ all: alpha-snake
 $(OBJ_DIR)/%.o: %.c
 	@test -d $(@D) || mkdir -p $(@D)
 	@echo CC $<
-	@$(CC) -c $< -o $@ $(CFLAGS) $(CLUTTER_CFLAGS)
+	@$(CC) -c $< -o $@ $(CFLAGS) $(CLUTTER_CFLAGS) $(GTK_CFLAGS)
 
 alpha-snake: $(PROG_OBJ_FILES)
 	@echo CCLD $^
 	@test -d $(BUILD_DIR) || mkdir -p $(BUILD_DIR)
-	@$(CC) $^ -o $(BUILD_DIR)/$@ $(CLUTTER_LDFLAGS)
+	@$(CC) $^ -o $(BUILD_DIR)/$@ $(CLUTTER_LDFLAGS) $(GTK_LDFLAGS)
 	
 
 tests: $(TESTS_OBJ_FILES)
 	@test -d $(BUILD_DIR) || mkdir -p $(BUILD_DIR)
 	@echo CCLD $^
-	@$(CC) $^ -o $(BUILD_DIR)/$@ $(CLUTTER_LDFLAGS)
+	@$(CC) $^ -o $(BUILD_DIR)/$@ $(CLUTTER_LDFLAGS) $(GTK_LDFLAGS)
 
 clean:
 	-rm -rv $(OBJ_DIR)
