@@ -6,7 +6,8 @@ SOURCE_FILES = struc.c \
                ia.c \
                partie.c \
                collisions.c \
-               score.c
+               score.c \
+               menu.c
 
 SRC_DIR = src
 OBJ_DIR = build
