@@ -332,6 +332,7 @@ int snake_longueur(Snake *snake)
  */
 List *snake_liste_snake(Snake *snake)
 {
+
     return snake->liste_snake;
 }
 

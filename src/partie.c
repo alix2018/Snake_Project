@@ -305,7 +305,7 @@ void init_partie(Partie *partie, ClutterScript *ui,int nb_snakes,  int width, in
 {
 
     Bonus *bonus;
-    Snake **ts;
+
 
     CollisionObject **co_snakes = malloc(nb_snakes*sizeof(CollisionObject *));
 
@@ -317,11 +317,10 @@ void init_partie(Partie *partie, ClutterScript *ui,int nb_snakes,  int width, in
     partie->en_cours = TRUE;
     // Initialisation du tableau de snake
     partie->tab = create_tab_snakes();
-    ts = partie->tab->snakes;
 
     // on ajoute le 1er snake comme player
     Snake * snk  = create_snake(
-            10,
+            20,
             coord_from_xy(22, 2+5*0),
             DROITE
     );
@@ -330,7 +329,7 @@ void init_partie(Partie *partie, ClutterScript *ui,int nb_snakes,  int width, in
     for (i = 1; i < nb_snakes; ++i)
     {
         snk  = create_snake_bot(
-                10,
+                20,
                 coord_from_xy(22, 2+5*i),
                 DROITE,
                 "ia1"
@@ -354,7 +353,8 @@ void init_partie(Partie *partie, ClutterScript *ui,int nb_snakes,  int width, in
 
     for (i = 0; i < partie->tab->nb_snakes ; ++i)
     {
-        co_snakes[i] = gestion_collision_add_object(partie->collisions, ts[i],
+
+        co_snakes[i] = gestion_collision_add_object(partie->collisions, partie->tab->snakes[i],
                                                     COLLISION_SNAKE);
     }
 
@@ -373,18 +373,18 @@ void init_partie(Partie *partie, ClutterScript *ui,int nb_snakes,  int width, in
         {
             collision_object_add_collision(
                     co_snakes[i],
-                    create_collision(ts[j], collision_snake_vers_snake, partie)// collisions.c
+                    create_collision(partie->tab->snakes[j], collision_snake_vers_snake, partie)// collisions.c
             );
 
         }
         // TODO faire un boucle pour généraliser les nourritures
         collision_object_add_collision(
                 co_nourriture,
-                create_collision(ts[i], collision_snake_vers_nourriture, partie)
+                create_collision(partie->tab->snakes[i], collision_snake_vers_nourriture, partie)
         );
         collision_object_add_collision(
                 co_map,
-                create_collision(ts[i], collision_snake_vers_snake, partie)
+                create_collision(partie->tab->snakes[i], collision_snake_vers_snake, partie)
         );
     }
 
@@ -400,7 +400,7 @@ void init_partie(Partie *partie, ClutterScript *ui,int nb_snakes,  int width, in
     {
         ClutterColor * color = clutter_color_alloc();
         clutter_color_from_hls(color,(r+pas*i)%360,0.4,1); // Puis le couleurs sont complémentaires
-        affichage_add_snake(partie->affichage, ts[i], color);// affichage.c
+        affichage_add_snake(partie->affichage, partie->tab->snakes[i], color);// affichage.c
     }
 
     //TODO generaliser les bonus
@@ -432,14 +432,13 @@ gboolean timeout_tick_cb(gpointer data)
 {
     Partie *partie = data;
 
-    Snake **ts = partie->tab->snakes;
     int i;
     for (i = 0; i < partie->tab->nb_snakes; ++i)
     {
-        if(snake_is_bot(ts[i]))
+        if(snake_is_bot(partie->tab->snakes[i]))
         {
-            snake_set_direction_ia(ts[i],partie,snake_script_name(ts[i]));
-            snake_forward(ts[i]);
+            snake_set_direction_ia(partie->tab->snakes[i],partie,snake_script_name(partie->tab->snakes[i]));
+            snake_forward(partie->tab->snakes[i]);
         }
         else
         {
