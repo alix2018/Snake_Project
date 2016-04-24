@@ -88,14 +88,15 @@ static void snake_verif_ia(Snake * snake_ia,Partie * p,Direction futurdir, int n
         }
         ls_ia = node_next(ls_ia);
     }
-
+    Snake * snake;
     int i;
     for (i = 0; i < t->nb_snakes; ++i)
     {
-        Snake *snake = t->snakes[i];
+        snake = t->snakes[i];
 
         if (snake_ia != snake)
         {
+
             Node ls = list_first_node(snake_liste_snake(snake));
 
             while (ls != NULL)
