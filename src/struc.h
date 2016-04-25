@@ -62,10 +62,6 @@ int coord_egales(Coord c1, Coord c2);
 
 /*Fonctions de base de TabSnakes*/
 
-
-TabSnakes *create_tab_snakes();
-
-
 TabSnakes *create_tab_snakes();
 void free_tab_snakes(TabSnakes *ts);
 Snake *tab_snakes_add_object(TabSnakes *ts, Snake *obj);

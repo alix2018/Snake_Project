@@ -156,3 +156,119 @@ void bonus_actor_update(BonusActor *ba)
 {
     clutter_actor_set_position(ba->bonus_c_actor, ba->bonus->coord.x * GRID_SIZE, ba->bonus->coord.y * GRID_SIZE);
 }
+
+
+/*********************************/
+/* Fonctions de base de tabbonus */
+/********************************/
+/**
+ * @brief   Crée un tableau de snake.
+ *
+ * @return  Le tableau de snake.
+ */
+TabBonus *create_tab_bonus()
+{
+    TabBonus *res;
+
+    res = malloc(sizeof(TabBonus));
+    res->nb_bonus = 0;
+    res->taille_bonus = 2;
+    res->bonus = malloc(res->taille_bonus * sizeof(TabBonus *));
+    return res;
+}
+
+
+/**
+ * @brief   Libère la mémoire le tableau de snake.
+ *
+ * @param[in]    ts  Le tableau de snake à supprimer.
+ */
+void free_tab_bonus(TabBonus *ts)
+{
+    int i;
+
+    for (i = 0; i < ts->nb_bonus; i++)
+    {
+        free(ts->bonus[i]);
+    }
+
+    free(ts->bonus);
+    free(ts);
+}
+
+
+
+/**
+ * @brief   Ajoute d'un snake dans le tableau de snake
+ *
+ * @param[in]    ts     Le gestionnaire de collisions.
+ * @param[in]    obj    L'objet à ajouter.
+ *
+ * @return  Le Bonus crée lors de l'ajout de obj, ou le
+ *          Bonus qui gère obj si obj est déjà géré par gc.
+ */
+Bonus *tab_bonus_add_object(TabBonus *ts, Bonus *obj)
+{
+    int i;
+
+    for (i = 0; i < ts->nb_bonus; i++)
+    {
+        if (ts->bonus[i] == obj) // pas de duplicat
+            return ts->bonus[i];
+    }
+
+    ts->nb_bonus++;
+    if (ts->nb_bonus > ts->taille_bonus)
+    {
+        ts->taille_bonus *= 2;
+        ts->bonus = realloc(ts->bonus,
+                             ts->taille_bonus * sizeof(Bonus *));
+    }
+
+    ts->bonus[ts->nb_bonus - 1] = obj;
+
+    return ts->bonus[ts->nb_bonus - 1];
+}
+
+
+/**
+ * @brief   Supprime le snake dans le tableau de bonus.
+ *
+ * @param[in]    ts     Le gestionnaire de collisions.
+ * @param[in]    obj    L'objet à supprimer.
+ */
+void tab_bonus_remove_object(TabBonus *ts, Bonus *obj)
+{
+    int i = 0;
+
+    while (i < ts->nb_bonus)
+    {
+        if (ts->bonus[i] == obj)
+        {
+            free(ts->bonus[i]);
+            ts->bonus[i] = ts->bonus[ts->nb_bonus - 1];
+            ts->bonus[ts->nb_bonus - 1] = NULL;
+            ts->nb_bonus--;
+            return;
+        }
+    }
+}
+/**
+ * @brief   Le nombre de bonus (obselete)
+ *
+ * @param[in]    ts    le tableau de snake.
+ */
+int tab_bonus_length(TabBonus *ts)
+{
+    return ts->nb_bonus;
+}
+/**
+ * @brief   La place en mémoire (obselete).
+ *
+ * @param[in]    ts    le tableau de snake.
+ */
+int tab_bonus_memory_length(TabBonus *ts)
+{
+    return ts->taille_bonus;
+}
+
