@@ -52,4 +52,6 @@ Bonus *bonus_actor_bonus(BonusActor *bonus_actor);
 //Met à jour les coord du clutteractor
 void bonus_actor_update(BonusActor *ba);
 
+Bonus * bonus_near_from_snake(TabBonus *tb, Snake * s);
+
 #endif //ALPHA_SNAKE_BONUS_H

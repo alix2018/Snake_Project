@@ -31,6 +31,7 @@ TARNAME = @PACKAGE_TARNAME@-$(VERSION)
 
 CC = @CC@
 CFLAGS = @CFLAGS@
+LDFLAGS = -lm
 
 CLUTTER_CFLAGS = @CLUTTER_CFLAGS@
 CLUTTER_LDFLAGS = @CLUTTER_LIBS@
@@ -45,13 +46,13 @@ $(OBJ_DIR)/%.o: %.c
 alpha-snake: $(PROG_OBJ_FILES)
 	@echo CCLD $^
 	@test -d $(BUILD_DIR) || mkdir -p $(BUILD_DIR)
-	@$(CC) $^ -o $(BUILD_DIR)/$@ $(CLUTTER_LDFLAGS)
+	@$(CC) $^ -o $(BUILD_DIR)/$@ $(CLUTTER_LDFLAGS) $(LDFLAGS)
 	
 
 tests: $(TESTS_OBJ_FILES)
 	@test -d $(BUILD_DIR) || mkdir -p $(BUILD_DIR)
 	@echo CCLD $^
-	@$(CC) $^ -o $(BUILD_DIR)/$@ $(CLUTTER_LDFLAGS)
+	@$(CC) $^ -o $(BUILD_DIR)/$@ $(CLUTTER_LDFLAGS) $(LDFLAGS)
 
 clean:
 	-rm -rv $(OBJ_DIR)

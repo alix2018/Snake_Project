@@ -12,6 +12,7 @@
 #include "struc.h"
 #include "list.h"
 #include "ia.h"
+#include <math.h>
 
 /**
  * @brief      La structure du snake 
@@ -194,6 +195,18 @@ int coord_egales(Coord c1, Coord c2)
 	return c1.x == c2.x && c1.y == c2.y;
 }
 
+/**
+ * @brief      Calcul la distance entre deux coordonnées
+ *
+ * @param[in]  c1  Coord à vérifier
+ * @param[in]  c2  Coord à vérifier
+ *
+ * @return    double de la distance
+ */
+double coord_distance(Coord c1, Coord c2)
+{
+	return sqrt( pow((c1.x - c2.x),2)  + pow(c1.y -  c2.y,2));
+}
 
 /* Fonctions de base de Snake */
 

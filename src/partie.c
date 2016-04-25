@@ -22,10 +22,11 @@ struct _Partie
 {
 
 
-    Bonus *nourriture;
+    //Bonus *nourriture;
+    TabBonus *btab; // pour faire cour b = bonus  mais pas correct visuellement
 
     Snake *player;
-    TabSnakes *tab;
+    TabSnakes *tab; // Il y a un probléme avec ce nom je voulais faire cour pour avoir à faire partie->tab−>snakes
 
     GestionCollisions *collisions;
 
@@ -69,14 +70,18 @@ void partie_set_player(Partie *p,Snake *s)
     p->player = s;
 }
 
-Bonus * partie_bonus(Partie *p)
+TabBonus * partie_tab_bonus(Partie *p)
 {
-    return p->nourriture;
+    return p->btab;
 }
-void partie_set_bonus(Partie *p,Bonus *s)
+
+/**
+
+ void partie_set_bonus(Partie *p,Bonus *s)
 {
     p->nourriture = s;
-}
+}**/
+
 
 /**
  * @brief   Crée le plateau d'une partie.
@@ -145,7 +150,8 @@ Partie *create_partie()
     res = malloc(sizeof(Partie));
     //res->snake = NULL;
     //res->schlanga = NULL;
-    res->nourriture = NULL;
+    //res->nourriture = NULL;
+    res->btab = NULL;
     res->tab = NULL;
     res->map = NULL;
     res->affichage = NULL;
@@ -162,13 +168,14 @@ Partie *create_partie()
  */
 void free_partie(Partie *partie)
 {
-    free(partie->nourriture);
+    //free(partie->nourriture);
     free_affichage(partie->affichage);
     free_map(partie->map);
     free_gestion_collisions(partie->collisions);
     //free_snake(partie->snake);
     //free_snake(partie->schlanga);
     free_tab_snakes(partie->tab);
+    free_tab_bonus(partie->btab);
     free(partie);
 }
 
@@ -304,12 +311,15 @@ static void collision_snake_vers_nourriture(Snake *snake, void *obj2, void *data
 void init_partie(Partie *partie, ClutterScript *ui,int nb_snakes,  int width, int height)
 {
 
-    Bonus *bonus;
+
+
+    int nb_bonus = 5;
 
 
     CollisionObject **co_snakes = malloc(nb_snakes*sizeof(CollisionObject *));
 
-    CollisionObject *co_nourriture;
+    CollisionObject **co_bonus = malloc(nb_bonus*sizeof(CollisionObject *)); // ON DIT QU'Il Y A QU'UN BONUS  TODO à changer
+
     CollisionObject *co_map;
 
 
@@ -320,7 +330,7 @@ void init_partie(Partie *partie, ClutterScript *ui,int nb_snakes,  int width, in
 
     // on ajoute le 1er snake comme player
     Snake * snk  = create_snake(
-            20,
+            5,
             coord_from_xy(22, 2+5*0),
             DROITE
     );
@@ -329,7 +339,7 @@ void init_partie(Partie *partie, ClutterScript *ui,int nb_snakes,  int width, in
     for (i = 1; i < nb_snakes; ++i)
     {
         snk  = create_snake_bot(
-                20,
+                5,
                 coord_from_xy(22, 2+5*i),
                 DROITE,
                 "ia1"
@@ -338,16 +348,19 @@ void init_partie(Partie *partie, ClutterScript *ui,int nb_snakes,  int width, in
 
     }
 
-    // TODO delete le code suivant pour l'instant il sert juste à faire pas de bug
-    //partie->snake  = partie->tab->snakes[0];
-    //partie->schlanga = partie->tab->snakes[1];
+
 
     partie->player = partie->tab->snakes[0]; // On définit le player comme le 1er élément du tableau
 
 
+    partie->btab = create_tab_bonus();
 
-    bonus = bonus_new(width, height);// bonus.c
-    partie->nourriture = bonus;
+    // On crée pour l'instant qu'un bonus !
+    for (i = 0; i < nb_bonus; ++i) {
+           tab_bonus_add_object(partie->btab,bonus_new(width, height));
+    }
+
+
 
     partie->collisions = create_gestion_collisions();// collisions.c
 
@@ -359,10 +372,12 @@ void init_partie(Partie *partie, ClutterScript *ui,int nb_snakes,  int width, in
     }
 
 
-    // TODO plusieurs nourriture
-    co_nourriture = gestion_collision_add_object(partie->collisions,
-                                                 partie->nourriture,
-                                                 COLLISION_BONUS);
+    for (i = 0; i < partie->btab->nb_bonus; ++i) {
+        co_bonus[i] = gestion_collision_add_object(partie->collisions,
+                                                     partie->btab->bonus[i],
+                                                     COLLISION_BONUS);
+    }
+
     co_map = gestion_collision_add_object(partie->collisions, partie->map,
                                           COLLISION_MAP);
 
@@ -377,11 +392,14 @@ void init_partie(Partie *partie, ClutterScript *ui,int nb_snakes,  int width, in
             );
 
         }
-        // TODO faire un boucle pour généraliser les nourritures
-        collision_object_add_collision(
-                co_nourriture,
-                create_collision(partie->tab->snakes[i], collision_snake_vers_nourriture, partie)
-        );
+
+        for (j = 0; j < partie->btab->nb_bonus ; ++j)
+        {
+            collision_object_add_collision(
+                    co_bonus[j],
+                    create_collision(partie->tab->snakes[i], collision_snake_vers_nourriture, partie)
+            );
+        }
         collision_object_add_collision(
                 co_map,
                 create_collision(partie->tab->snakes[i], collision_snake_vers_snake, partie)
@@ -403,12 +421,18 @@ void init_partie(Partie *partie, ClutterScript *ui,int nb_snakes,  int width, in
         affichage_add_snake(partie->affichage, partie->tab->snakes[i], color);// affichage.c
     }
 
-    //TODO generaliser les bonus
-    affichage_add_bonus(partie->affichage, bonus,  CLUTTER_COLOR_Green);
+    int pasb = 360/(partie->btab->nb_bonus);
+    for (i = 0; i < partie->btab->nb_bonus ; ++i)
+    {
+        ClutterColor * color = clutter_color_alloc();
+        clutter_color_from_hls(color,(r+pasb*i)%360,0.4,1);
+        affichage_add_bonus(partie->affichage, partie->btab->bonus[i],  color);
+    }
 
     g_timeout_add(150, timeout_tick_cb, partie);
 
     free(co_snakes);
+    free(co_bonus);
 }
 
 void init_pseudo(Partie *p, int argc, char **argv)

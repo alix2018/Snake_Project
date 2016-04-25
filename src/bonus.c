@@ -30,8 +30,11 @@ struct _bonus_actor
 Bonus *bonus_new(int x, int y)
 {
     srand(time(NULL));
+    GRand * randg = g_rand_new();
+    gint32  rx = g_rand_int_range(randg,0,x-1);
+    gint32  ry = g_rand_int_range(randg,0,y-1);
     Bonus *new = malloc(sizeof(Bonus));
-    new->coord = coord_from_xy(rand()%x, rand()%y);
+    new->coord = coord_from_xy(rx, ry);
     return new;
 }
 
@@ -46,7 +49,10 @@ Bonus *bonus_new(int x, int y)
  */
 void bonus_update(Bonus *bonus, int x, int y)
 {
-    bonus->coord = coord_from_xy(rand()%x, rand()%y);
+    GRand * randg = g_rand_new();
+    gint32  rx = g_rand_int_range(randg,0,x-1);
+    gint32  ry = g_rand_int_range(randg,0,y-1);
+    bonus->coord = coord_from_xy(rx, ry);
 }
 
 /**
@@ -272,3 +278,27 @@ int tab_bonus_memory_length(TabBonus *ts)
     return ts->taille_bonus;
 }
 
+
+Bonus * bonus_near_from_snake(TabBonus *tb, Snake * s)
+{
+    if(tb->nb_bonus >= 1 )
+    {
+        Bonus * res = tb->bonus[0];
+
+        int i;
+        for (i = 0; i < tb->nb_bonus; ++i)
+        {
+            if(coord_distance(bonus_coord(tb->bonus[i]),snake_pos(s))  < coord_distance(bonus_coord(res),snake_pos(s)))
+            {
+                res = tb->bonus[i];
+            }
+        }
+
+        return res;
+    }
+    else
+    {
+        perror("Erreur no bonus");
+    }
+
+}

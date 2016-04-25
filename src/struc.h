@@ -59,6 +59,7 @@ typedef enum
 Coord coord_from_xy(int x,int y);
 void print_coord(Coord c);
 int coord_egales(Coord c1, Coord c2);
+double coord_distance(Coord c1, Coord c2);
 
 /*Fonctions de base de TabSnakes*/
 

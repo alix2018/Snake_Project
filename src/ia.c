@@ -456,7 +456,8 @@ void snake_forward_ia1(Snake *snake_ia,Partie *p)
 {
     //Snake *snake_ia = partie_schlanga(p);
     //Snake *snake = partie_player(p);
-    Coord bonus =bonus_coord(partie_bonus(p));
+
+    Coord bonus =bonus_coord(bonus_near_from_snake(partie_tab_bonus(p),snake_ia));
     int indic = 1;
 	Coord tete = snake_pos(snake_ia);
 
@@ -571,7 +572,7 @@ void snake_forward_ia2(Snake * snake_ia,Partie *p)
 {
     //Snake *snake_ia = partie_schlanga(p);
     //Snake *snake = partie_snake(p);
-    Coord bonus =bonus_coord(partie_bonus(p));
+    Coord bonus =bonus_coord(bonus_near_from_snake(partie_tab_bonus(p),snake_ia));
     GRand * r = g_rand_new();
     gint32  rint = g_rand_int_range(r,0,4);
     Direction rdir;
