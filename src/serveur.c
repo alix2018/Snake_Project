@@ -15,6 +15,10 @@
 #include <pthread.h>
 #include <string.h>
 
+#include "partie.h"
+#include "struc.h"
+#include "bonus.h"
+
 #define MAX_NB_CLIENT 10 
 #define MAX_NAME_LENGTH 64
 
@@ -43,6 +47,8 @@ int client_connection(int fd)
 	struct sockaddr_in their_addr; /* Adresse du connecté  */
 	socklen_t sin_size;
 	sin_size = sizeof(struct sockaddr_in);
+	
+	printf("S: En attente de joueur...\n");
 	int client_fd = accept(fd, (struct sockaddr *)&their_addr, &sin_size);
 	
 	if(client_fd < 0)
@@ -53,7 +59,7 @@ int client_connection(int fd)
 	else
 	{
 		client_record[nb_client % MAX_NB_CLIENT].sock = client_fd;
-		printf("Nouvelle connection : client %d, num %d\n", client_record[nb_client % MAX_NB_CLIENT].sock, nb_client%MAX_NB_CLIENT);
+		printf("S: Nouvelle connection : client %d, num %d\n", client_record[nb_client % MAX_NB_CLIENT].sock, nb_client%MAX_NB_CLIENT);
 	}
 	return client_fd;
 }
@@ -83,23 +89,29 @@ int create_listen_socket(short port)
 		perror("SERVEUR listen");
 		exit(1);
 	}
-	printf("*listen (maxconn=%d)\n" ,MAX_NB_CLIENT);
+
+	printf("S: *listen (maxconn=%d)\n" ,MAX_NB_CLIENT);
 
 	return sockfd;
 }
 
-void *serveur_recv()
+void *serveur_recv(void *p)
 {
-	printf("Thread de reception pour le client %d \n", nb_client);
+	int id = *(int *)p;
+	printf("S: Thread de reception pour le client %d \n", id);
 	int continuer = 1;
 	while(continuer)
 	{
 
 	}
 }
+
 //Retourne 1 si le serveur s'est bien lancé
-void *lunch_serveur()
+void *init_serveur(void *p)
 {
+
+	Partie *partie = (Partie *)p;
+	
 	int sock, ret, errmask=0, srp, id, continuer=1;
 	pthread_t t_recv;
 
@@ -118,7 +130,7 @@ void *lunch_serveur()
 		else{
 			printf("\n---SERVEUR--- New client\n");
 			id = nb_client%MAX_NB_CLIENT;
-			printf("id : %d, pseudo : %s \nNombre de client : %d\n", id, client_record[id].name, nb_client+1);
+			printf("S: id : %d, pseudo : %s \nNombre de client : %d\n", id, client_record[id].name, nb_client+1);
 			ret = write(client_record[id].sock, &id, sizeof(int));
 			if(ret <= 0)
 			{
@@ -126,8 +138,8 @@ void *lunch_serveur()
 			}
 			else
 			{
-				printf("Envoie de l'id (taille:%d)\n", ret);
-				pthread_create(&t_recv, NULL, &serveur_recv, NULL);
+				printf("S: Envoie de l'id (taille:%d)\n", ret);
+				pthread_create(&t_recv, NULL, &serveur_recv, &id);
 				nb_client += 1;
 			}
 		}

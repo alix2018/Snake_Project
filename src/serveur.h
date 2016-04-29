@@ -1,6 +1,6 @@
 #ifndef _SERVEUR_
 #define _SERVEUR_
 
-void *lunch_serveur();
+void *init_serveur(void *p);
 
 #endif

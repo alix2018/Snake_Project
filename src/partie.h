@@ -35,6 +35,7 @@ Partie *create_partie();
 void free_partie(Partie *partie);
 Map *partie_map(Partie *partie);
 
+void init_partie_min(Partie *partie, int width, int height);
 void init_partie(Partie *partie, ClutterScript *ui, int nb_snakes, int width, int height);
 void init_pseudo(Partie *p, int argc, char **argv);
 

@@ -48,6 +48,27 @@ Node cons_node(void *elt, Node node)
     return res;
 }
 
+/**
+ * @brief   Alloue la mémoire nécessaire à un nœud de List. Ajoute le nouveau noeud à la fin
+ *
+ * @param[in]       elt   L'élément à ajouter au début.
+ * @param[in,out]   node  Le successeur.
+ *
+ * @return  Le nœud créé.
+ */
+Node cons_node_next(void *elt, Node node)
+{
+    Node res;
+    res = malloc(sizeof(struct _node));
+    res->elt = elt;
+    res->prev = node;
+    res->next = NULL;
+
+    if (node != NULL)
+        node->next = res;
+
+    return res;
+}
 
 /**
  * @brief   Compare 2 noeuds.
@@ -160,6 +181,22 @@ void list_add_last(List *list, void *elt)
         list->last = cons_node(elt, NULL);
         list->first = list->last;
     }
+}
+
+void list_add_node_first(List *list, Node node)
+{
+    list->first->prev = node;
+    node->next = list->first;
+    node->prev = NULL;
+    list->first = node;
+}
+
+void list_add_node_last(List *list, Node node)
+{
+    list->last->next = node;
+    node->prev = list->last;
+    node->next = NULL;
+    list->last = node;
 }
 
 void list_delete_node(List *list, Node n)

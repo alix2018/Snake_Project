@@ -29,15 +29,15 @@ DIST_FILES = configure \
              Makefile.in \
              Doxyfile
 
-VERSION = @PACKAGE_VERSION@
-TARNAME = @PACKAGE_TARNAME@-$(VERSION)
+VERSION = jalon3
+TARNAME = alpha-snake-$(VERSION)
 
-CC = @CC@
-CFLAGS = @CFLAGS@
+CC = gcc
+CFLAGS = -g -O2
 LDFLAGS = -lm
 
-CLUTTER_CFLAGS = @CLUTTER_CFLAGS@
-CLUTTER_LDFLAGS = @CLUTTER_LIBS@
+CLUTTER_CFLAGS = -pthread -I/usr/include/clutter-1.0 -I/usr/include/pango-1.0 -I/usr/include/cogl -I/usr/include/cairo -I/usr/include/atk-1.0 -I/usr/include/json-glib-1.0 -I/usr/include/gtk-3.0 -I/usr/include/harfbuzz -I/usr/include/freetype2 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/libdrm -I/usr/include/libpng12 -I/usr/include/pixman-1 -I/usr/include/gio-unix-2.0/  
+CLUTTER_LDFLAGS = -pthread -lclutter-1.0 -latk-1.0 -lcogl-pango -ljson-glib-1.0 -lgdk-3 -lXi -lcogl -lgmodule-2.0 -lwayland-egl -lgbm -ldrm -lwayland-server -lEGL -lX11 -lXext -lXdamage -lXcomposite -lXrandr -lwayland-client -lgio-2.0 -lpangocairo-1.0 -lgdk_pixbuf-2.0 -lcairo-gobject -lpango-1.0 -lcairo -lgobject-2.0 -lglib-2.0 -lXfixes  
 
 all: alpha-snake
 

@@ -299,6 +299,22 @@ static void collision_snake_vers_nourriture(Snake *snake, void *obj2, void *data
     bonus_update(nourriture, partie->map->width, partie->map->height);
 }
 
+/**
+ * @brief   Initialise une partie sans données : allocation de mémoir pour tout les attributs de partie
+ *
+ * @param[in]    partie Une partie.
+ * @param[in]    width  La largeur du plateau.
+ * @param[in]    height La hauteur du plateau.
+ */
+void init_partie_min(Partie *partie, int width, int height)
+{
+    partie->map = create_map(width, height);
+    partie->en_cours = TRUE;
+    partie->tab = create_tab_snakes();
+    partie->btab = create_tab_bonus();
+    partie->collisions = create_gestion_collisions();// collisions.c
+    partie->affichage = create_affichage();
+}
 
 /**
  * @brief   Initialise une partie déjà allouée.
@@ -308,10 +324,8 @@ static void collision_snake_vers_nourriture(Snake *snake, void *obj2, void *data
  * @param[in]    width  La largeur du plateau.
  * @param[in]    height La hauteur du plateau.
  */
-void init_partie(Partie *partie, ClutterScript *ui,int nb_snakes,  int width, int height)
+void init_partie(Partie *partie, ClutterScript *ui, int nb_snakes,  int width, int height)
 {
-
-
 
     int nb_bonus = 5;
 

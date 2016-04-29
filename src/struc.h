@@ -69,6 +69,8 @@ Snake *tab_snakes_add_object(TabSnakes *ts, Snake *obj);
 void tab_snakes_remove_object(TabSnakes *ts, Snake *obj);
 int tab_snakes_length(TabSnakes *ts);
 int tab_snakes_memory_length(TabSnakes *ts);
+Snake *tab_snakes_get(TabSnakes *ts, int i);
+void tab_snakes_set(TabSnakes *ts, Snake *s, int i);
 
 /* Fonctions de base de Snake */
 

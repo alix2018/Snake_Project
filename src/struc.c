@@ -148,7 +148,34 @@ int tab_snakes_memory_length(TabSnakes *ts)
 {
 	return ts->taille_snakes;
 }
-
+/**
+ * @brief   Retourne le snake numéro i
+ *
+ * @param[in]    ts    le tableau de snake.
+ * @param[in]    i     l'indice du snake que l'on veut dans le tableau.
+ */
+Snake *tab_snakes_get(TabSnakes *ts, int i)
+{
+	if(i>=ts->nb_snakes)
+	{
+		printf("Pas de snake num %d\n", i);
+	}
+	else
+	{
+		return ts->snakes[i];
+	}
+}
+/**
+ * @brief   Set le snake numéro i
+ *
+ * @param[in]    ts    le tableau de snake.
+ * @param[in]    s     le snake à mettre en position i
+ * @param[in]    i     l'indice l'on veut dans le tableau. Attention, pas de vérification sur i!
+ */
+void tab_snakes_set(TabSnakes *ts, Snake *s, int i)
+{
+	ts->snakes[i] = s;
+}
 
 /********************************/
 /* Fonctions de base de coord */
