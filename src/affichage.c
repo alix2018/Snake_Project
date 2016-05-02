@@ -738,3 +738,36 @@ void init_affichage(Affichage *affichage, ClutterScript *ui, Partie *p,
 
     clutter_actor_show(stage);
 }
+
+/**
+ * @brief   Crée la fenêtre du snake.
+ *
+ * @param[in]    partie     La partie affichée.
+ * @param[in]    ui         Le fichier ui contenant la déclaration de
+ *                          la fenêtre du Snake.
+ */
+void init_affichage_min(Partie *p, ClutterScript *ui, int width, int height)
+{
+    ClutterActor *zone_snake;
+    ClutterActor *stage;
+
+    partie_affichage(p)->ui = ui;
+    
+    stage = CLUTTER_ACTOR(clutter_script_get_object(ui, "stage"));
+    clutter_actor_set_size(stage, width * GRID_SIZE,
+                           height * GRID_SIZE);
+
+    zone_snake = CLUTTER_ACTOR(clutter_script_get_object(ui, "zone_snake"));
+    clutter_stage_set_key_focus(CLUTTER_STAGE(stage), zone_snake);
+    partie_affichage(p)->images = snake_generate_image();
+
+    g_signal_connect(zone_snake, "key-press-event", G_CALLBACK(zone_snake_key_press_cb), partie_player(p)); // TODO génraliser
+    g_signal_connect(stage, "destroy", G_CALLBACK(stage_destroy_cb), NULL);
+
+    // SET IMAGE BACKGROUND
+    ClutterContent *image = generate_image(BACKGROUND_IMAGE_SRC);
+    clutter_actor_set_content(zone_snake,image);
+    g_object_unref(image);
+
+    clutter_actor_show(stage);
+}

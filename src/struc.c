@@ -156,9 +156,9 @@ int tab_snakes_memory_length(TabSnakes *ts)
  */
 Snake *tab_snakes_get(TabSnakes *ts, int i)
 {
-	if(i>=ts->nb_snakes)
+	if(i>ts->nb_snakes)
 	{
-		printf("Pas de snake num %d\n", i);
+		printf("[tab_snakes_get] Pas de snake num %d\n", i);
 	}
 	else
 	{
@@ -180,6 +180,19 @@ void tab_snakes_set(TabSnakes *ts, Snake *s, int i)
 /********************************/
 /* Fonctions de base de coord */
 /********************************/
+Coord *coord_new(int x, int y)
+{
+	Coord *res = malloc(sizeof(Coord));
+	res->x = x;
+	res->y = y;
+	return res;
+}
+
+void free_coorf(Coord *c)
+{
+	free(c);
+}
+
 /**
  * @brief      A partir de deux integer renvoie un couple de type coordonnée
  *

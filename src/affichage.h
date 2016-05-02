@@ -3,6 +3,14 @@
 #ifndef ALPHA_SNAKE_AFFICHAGE_H
 #define ALPHA_SNAKE_AFFICHAGE_H
 
+typedef struct _Affichage Affichage;
+
+/**
+ * Cette structure contient les ClutterActor nécessaires à l'affichage du snake.
+ */
+typedef struct _snake_actor SnakeActor;
+typedef struct _snake_image SnakeImage;
+
 #include <clutter/clutter.h>
 #include "partie.h"
 #include "struc.h"
@@ -19,14 +27,6 @@
 #define TURNDARK_IMAGE_SRC "data/corpsturndarkside.png"
 #define POMME_IMAGE "data/pommeapple.png"
 
-
-typedef struct _Affichage Affichage;
-
-/**
- * Cette structure contient les ClutterActor nécessaires à l'affichage du snake.
- */
-typedef struct _snake_actor SnakeActor;
-typedef struct _snake_image SnakeImage;
 
 Affichage *create_affichage();
 void free_affichage(Affichage * affichage);
@@ -65,5 +65,6 @@ void affichage_update(Affichage *affichage);
 
 void init_affichage(Affichage *affichage, ClutterScript *ui, Partie *p,
                     int width, int height);
+void init_affichage_min(Partie *p, ClutterScript *ui, int width, int height);
 
 #endif //ALPHA_SNAKE_AFFICHAGE_H

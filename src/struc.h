@@ -55,6 +55,8 @@ typedef enum
 } Direction;
 
 /* Fonction de base de coord */
+Coord *coord_new(int x, int y);
+void free_coord(Coord *c);
 
 Coord coord_from_xy(int x,int y);
 void print_coord(Coord c);

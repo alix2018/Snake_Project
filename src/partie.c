@@ -192,6 +192,21 @@ Map *partie_map(Partie *partie)
     return partie->map;
 }
 
+gboolean partie_en_cours(Partie *partie)
+{
+    return partie->en_cours;
+}
+
+Affichage *partie_affichage(Partie *partie)
+{
+    return partie->affichage;
+}
+
+GestionCollisions *partie_collisions(Partie *partie)
+{
+    return partie->collisions;
+}
+
 /**
  * @brief   Retourne le GStrind à afficher lorsqu'on demande les scores
  *
@@ -359,9 +374,7 @@ void init_partie(Partie *partie, ClutterScript *ui, int nb_snakes,  int width, i
                 "ia1"
         );
         tab_snakes_add_object(partie->tab,snk);
-
     }
-
 
 
     partie->player = partie->tab->snakes[0]; // On définit le player comme le 1er élément du tableau

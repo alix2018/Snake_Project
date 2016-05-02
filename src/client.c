@@ -18,75 +18,147 @@
 #include "struc.h"
 #include "bonus.h"
 #include "list.h"
+#include "collisions.h"
 
-int socket_client, id;
+int socket_client, id, send_go;
 
 void *send_mysnake(void *p)
 {
 	Partie *partie = (Partie *)p;
 	TabSnakes *ts = partie_tab(p);
 	Snake *mysnake = tab_snakes_get(ts, id);
-	int continuer =1;
+	Coord my_send[30];
+	Node n;
+	int continuer = 1, i;
+	
+	send_go = 1;
 	while(continuer)
 	{
+		if(send_go == 1)
+		{
+			printf("C: SENDING...\n");
+			my_send[0] = coord_from_xy(-1, snake_longueur(mysnake));
+			my_send[1] = coord_from_xy(-2, snake_direction(mysnake));
+			i=2;
+			for(n = snake_premier(mysnake); n != NULL; n = node_next(n))
+			{
+				my_send[i] = *(Coord *)node_elt(n);
+				i += 1;
+			}
+			while(i<30)
+			{
+				my_send[i] = coord_from_xy(-1, -1);
+				i += 1;
+			}
+			/*
+			printf("C: Send\n");
+			for(i = 0; i < 30; i++)
+			{
+				print_coord(my_send[i]);
+			}
+			printf("C: end\n");
+			*/
+			if(write(socket_client, my_send, sizeof(my_send))<=0)
+			{
+				perror("C: Send my snake");
+				continuer = 0;
+			}
+			else
+			{
+				printf("C: Snake send!\n");
+			}
+			send_go = 0;
+		}
 	}
 }
 
 /*
 	Liste des indacteurs:
-		(-1, n) : n = Nombre de snakes en cours sur la partie, premier élément du paquet reçu
-		(-2, n) : nouveau snake en provenance de longueur n
-		(-3, n) : n = direction du snake en cours (suit un (-2,n))
+		(nb_snake, nb_bouf) : Premier élément du paquet reçu
+		(-1, n) : nouveau snake en provenance de longueur n
+		(-2, n) : n = direction du snake en cours (suit un (-2,n))
 		(x, x)  : coordonnées d'un élèment de snake
-		(-1, -1): fin des données utiles
+		(-1, -1): fin de données utiles
 */
 void update_partie(Partie *partie, Coord *recive)
 {
-	int nb_snake = recive[0].y, id_snake=0, lg_snake=0, dir_snake=0, i, n=1, cur_lg=0;
+	int nb_snake = recive[0].x, nb_bouf = recive[0].y, id_snake=0, lg_snake=0, dir_snake=0, i, n=0, cur_lg=0;
+	TabBonus *tb = partie_tab_bonus(partie);
 	TabSnakes *ts = partie_tab(partie);
 	Snake *s=NULL;
 	List *l=NULL;
 	Node node=NULL;
-	
+	Bonus *b=NULL;
+
+	n=2;
 	for(i=0; i<tab_snakes_length(ts); i++)//On update tout les snakes sur notre partie
 	{
-		s = tab_snakes_get(ts, i);
+		printf("C: update du snake %i\n", i);
+		s = ts->snakes[i];
 		l = snake_liste_snake(s);
 		node = list_first_node(l);
 		
 		lg_snake = snake_longueur(s);
-		n += 1;
+
+		//print_coord(recive[n]);
 		dir_snake = recive[n].y;
 		n += 1;
+		//printf("C: Setting direction!\n");
 		snake_set_direction(s, dir_snake);
+		//printf("C: Direction is set!\n");
 		cur_lg = 0;
-		while(recive[n].x !=  -2)
+		//print_coord(recive[n]);
+		while(recive[n].x !=  -1)
 		{
 			if(cur_lg >= lg_snake )
 			{
-				node = node_cons_next(recive[n], node);
-				list_add_last_node(l, node);
+				node = cons_node_next(&(recive[n]), node);
+				n += 1;
+				list_add_node_last(l, node);
+				printf("cur_lg : %i, lg_snake : %i\n", cur_lg, lg_snake);
 			}
-			Coord new = coord_from_xy(recive[n].x, recive[n].y);
-			void *ok = &new;
-			node_set_elt(node, ok);
+			Coord *elt = coord_new(recive[n].x, recive[n].y);// !! Il faudra liberer l'espace à chaque espace !!
+			node_set_elt(node, elt);
 			node = node_next(node);
 			n += 1;
 			cur_lg += 1;
 		}
 	}
-	print_coord(recive[n]);
 	if(tab_snakes_length(ts) < nb_snake)
 	{
-		printf("Nouveau joueur!\n");
+		printf("C: Nouveau joueur!\n");
 
 		lg_snake = recive[n].y;
 		n += 1;
 		dir_snake = recive[n].y;
 		n += 1;
 		s = create_snake(lg_snake, recive[n], dir_snake);
-
 		tab_snakes_add_object(ts, s);
+		n += lg_snake;
+	}
+	/*
+	printf("Coord à la fin de la mise à jour des snakes n:%i\n", n);
+	print_coord(recive[n]);
+	*/
+	n += 1;
+	/*printf("mise à jour de la bouf n=%i\n", n);
+	for( i=n; i < n+5; i++)
+	{
+			print_coord(recive[i]);
+	}
+	*/
+	for(i=0; i < tb->nb_bonus; i++)
+	{
+		print_coord(recive[n]);
+		bonus_update(tb->bonus[i], recive[n].x, recive[n].y);
+		n += 1;
+	}
+	if(tab_bonus_length(tb) < nb_bouf)
+	{
+		printf("C: Nouvelle bouf!\n");
+		b = bonus_new(recive[n].x, recive[n].y);
+		n += 1;
+		tab_bonus_add_object(tb, b);
 	}
 }
 
@@ -106,6 +178,7 @@ void *get_theirsnake(void *p)
 			continuer = 0;
 		}
 		update_partie(partie, recive);
+		send_go = 1;
 	}
 }
 
@@ -144,7 +217,7 @@ void init_client(int argc, char **argv, Partie *partie)
 	else
 	{
 		printf("C: Envoi du pseudo : %s (size:%d) (sock %d)\n", argv[1], (int)sizeof(argv[1]), socket_client);
-		ret = write(socket_client, argv[2], sizeof(argv[2]));
+		ret = write(socket_client, argv[1], sizeof(argv[1]));
 		if(ret <= 0)
 		{
 			perror("C: Echec de l'envoi du pseudo DECO\n");
@@ -152,7 +225,6 @@ void init_client(int argc, char **argv, Partie *partie)
 		}
 		printf("C: Pseudo envoyé (%d)\n", ret);
 
-		printf("sizeof(int)=%d sock=%d\n", (int)sizeof(int), socket_client);
 		ret = read(socket_client, &id, sizeof(int));
 		if(ret <= 0)
 		{

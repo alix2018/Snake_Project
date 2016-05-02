@@ -6,15 +6,14 @@
 #ifndef ALPHA_SNAKE_PARTIE_H
 #define ALPHA_SNAKE_PARTIE_H
 
-#include <clutter/clutter.h>
-#include "struc.h"
-#include "bonus.h"
-
-
-
 typedef struct _Map Map;
 typedef struct _Partie Partie;
 
+#include <clutter/clutter.h>
+#include "struc.h"
+#include "bonus.h"
+#include "affichage.h"
+#include "collisions.h"
 
 TabSnakes * partie_tab(Partie *p);
 Snake * partie_player(Partie *p);
@@ -34,6 +33,9 @@ int map_height(Map *map);
 Partie *create_partie();
 void free_partie(Partie *partie);
 Map *partie_map(Partie *partie);
+gboolean partie_en_cours(Partie *partie);
+Affichage *partie_affichage(Partie *partie);
+GestionCollisions *partie_collisions(Partie *partie);
 
 void init_partie_min(Partie *partie, int width, int height);
 void init_partie(Partie *partie, ClutterScript *ui, int nb_snakes, int width, int height);
