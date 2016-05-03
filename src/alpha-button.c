@@ -7,8 +7,10 @@
 struct _AlphaButton
 {
     ClutterActor parent_instance;
-
     // Les attributs ici
+    ClutterText text;
+    ClutterColor color;
+
 };
 
 G_DEFINE_TYPE(AlphaButton, alpha_button, CLUTTER_TYPE_ACTOR)
@@ -33,6 +35,7 @@ static void alpha_button_set_property(GObject *object,
     {
         case PROP_BUTTON_TEXT:
             // changer le texte
+            clutter_text_set_text(text,self->text);
             break;
 
         default:
@@ -52,6 +55,7 @@ static void alpha_button_get_property(GObject *object,
     {
         case PROP_BUTTON_TEXT:
             // Retourner le texte
+            g_value_set_string(value,clutter_text_get_text(text));
             break;
 
         default:
@@ -62,6 +66,7 @@ static void alpha_button_get_property(GObject *object,
 
 static void alpha_button_dispose(GObject *self)
 {
+    g_object_clear(G_OBJECT(ALPHA_BUTTON(self)->text));
     /*
      * Destructeur pour les objets de clutter
      *
@@ -74,6 +79,8 @@ static void alpha_button_dispose(GObject *self)
 
 static void alpha_button_finalize(GObject *g_object)
 {
+    clutter_color_free(color);
+
     /*
      * Destructeur pour les objets non clutter.
      */
@@ -83,7 +90,8 @@ static void alpha_button_finalize(GObject *g_object)
 
 static void alpha_button_init(AlphaButton *self)
 {
-    // Le constructeur (enfin je crois ...)
+    self->text = clutter_text_new();
+    self->color = clutter_color_alloc();
 }
 
 static void alpha_button_class_init(AlphaButtonClass *klass)
