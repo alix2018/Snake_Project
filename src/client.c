@@ -20,56 +20,48 @@
 #include "list.h"
 #include "collisions.h"
 
-int socket_client, id, send_go;
+int socket_client, id;
 
 void *send_mysnake(void *p)
 {
 	Partie *partie = (Partie *)p;
 	TabSnakes *ts = partie_tab(p);
 	Snake *mysnake = tab_snakes_get(ts, id);
+	print_snake(mysnake);
 	Coord my_send[30];
 	Node n;
-	int continuer = 1, i;
+	int i;
 	
-	send_go = 1;
-	while(continuer)
-	{
-		if(send_go == 1)
+		printf("C: SENDING...\n");
+		my_send[0] = coord_from_xy(-1, snake_longueur(mysnake));
+		my_send[1] = coord_from_xy(-2, snake_direction(mysnake));
+		i=2;
+		for(n = snake_premier(mysnake); n != NULL; n = node_next(n))
 		{
-			printf("C: SENDING...\n");
-			my_send[0] = coord_from_xy(-1, snake_longueur(mysnake));
-			my_send[1] = coord_from_xy(-2, snake_direction(mysnake));
-			i=2;
-			for(n = snake_premier(mysnake); n != NULL; n = node_next(n))
-			{
-				my_send[i] = *(Coord *)node_elt(n);
-				i += 1;
-			}
-			while(i<30)
-			{
-				my_send[i] = coord_from_xy(-1, -1);
-				i += 1;
-			}
-			/*
-			printf("C: Send\n");
-			for(i = 0; i < 30; i++)
-			{
-				print_coord(my_send[i]);
-			}
-			printf("C: end\n");
-			*/
-			if(write(socket_client, my_send, sizeof(my_send))<=0)
-			{
-				perror("C: Send my snake");
-				continuer = 0;
-			}
-			else
-			{
-				printf("C: Snake send!\n");
-			}
-			send_go = 0;
+			my_send[i] = *(Coord *)node_elt(n);
+			i += 1;
 		}
-	}
+		while(i<30)
+		{
+			my_send[i] = coord_from_xy(-1, -1);
+			i += 1;
+		}
+		/*
+		printf("C: Send\n");
+		for(i = 0; i < 30; i++)
+		{
+			print_coord(my_send[i]);
+		}
+		printf("C: end\n");
+		*/
+		if(write(socket_client, my_send, sizeof(my_send))<=0)
+		{
+			perror("C: Send my snake");
+		}
+		else
+		{
+			printf("C: Snake send!\n");
+		}
 }
 
 /*
@@ -85,10 +77,10 @@ void update_partie(Partie *partie, Coord *recive)
 	int nb_snake = recive[0].x, nb_bouf = recive[0].y, id_snake=0, lg_snake=0, dir_snake=0, i, n=0, cur_lg=0;
 	TabBonus *tb = partie_tab_bonus(partie);
 	TabSnakes *ts = partie_tab(partie);
-	Snake *s=NULL;
-	List *l=NULL;
-	Node node=NULL;
-	Bonus *b=NULL;
+	Snake *s = NULL;
+	List *l = NULL;
+	Node node = NULL;
+	Bonus *b = NULL;
 
 	n=2;
 	for(i=0; i<tab_snakes_length(ts); i++)//On update tout les snakes sur notre partie
@@ -160,14 +152,15 @@ void update_partie(Partie *partie, Coord *recive)
 		n += 1;
 		tab_bonus_add_object(tb, b);
 	}
+	printf("C: Partie updated\n");
 }
 
 void *get_theirsnake(void *p)
 {
 	Partie *partie = (Partie *)p;
 	TabSnakes *ts = partie_tab(p);
-
-	int ret, continuer = 1;
+	pthread_t t_send;
+	int ret, errmask, continuer = 1;
 	Coord recive[900];
 	while(continuer)
 	{
@@ -178,14 +171,16 @@ void *get_theirsnake(void *p)
 			continuer = 0;
 		}
 		update_partie(partie, recive);
-		send_go = 1;
+		printf("C: Thread d'emmission\n");
+		ret=pthread_create(&t_send, NULL, &send_mysnake, partie);
+	    errmask |= (ret==-1);
+
 	}
 }
 
 void init_client(int argc, char **argv, Partie *partie)
 {
-	pthread_t t_send;
-	pthread_t t_recv;
+	pthread_t t_recv, t_send;
 
 	int ret, errmask=0;	
 	
@@ -233,18 +228,18 @@ void init_client(int argc, char **argv, Partie *partie)
 		}
 		printf("C: Connexion initialisée, id : %d\n", id);
 		
-		ret=pthread_create(&t_recv, NULL, &get_theirsnake, partie);
-	    errmask |= (ret==-1);
-
-	    Snake *mysnake = create_snake(
+		Snake *mysnake = create_snake(
             5,
             coord_from_xy(22, 2+5*id),
             HAUT
     	);
-	    tab_snakes_add_object(partie_tab(partie), mysnake);
+    	tab_snakes_init_add_object(partie_tab(partie), mysnake, id);
 	    partie_set_player(partie, mysnake);
 
 	    ret=pthread_create(&t_send, NULL, &send_mysnake, partie);
+	    errmask |= (ret==-1);
+
+		ret=pthread_create(&t_recv, NULL, &get_theirsnake, partie);
 	    errmask |= (ret==-1);
 
 	    if (errmask)

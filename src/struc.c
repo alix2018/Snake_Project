@@ -107,6 +107,38 @@ Snake *tab_snakes_add_object(TabSnakes *ts, Snake *obj)
 	return ts->snakes[ts->nb_snakes - 1];
 }
 
+/**
+ * @brief   Ajoute d'un snake dans le tableau de snake à la position id
+ *
+ * @param[in]    ts     Le gestionnaire de collisions.
+ * @param[in]    obj    L'objet à ajouter.
+ * @param[in]    id     L'emplacement du snake.
+ *
+ * @return  Le Snake crée lors de l'ajout de obj, ou le
+ *          Snake qui gère obj si obj est déjà géré par gc.
+ */
+Snake *tab_snakes_init_add_object(TabSnakes *ts, Snake *obj, int id)
+{
+	int i;
+
+	ts->nb_snakes = id+1;
+	ts->snakes = malloc(ts->nb_snakes*sizeof(Snake *));
+
+	for (i = 0; i < ts->nb_snakes; i++)
+	{
+		if(id==i)
+		{
+			ts->snakes[i] = obj;
+		}
+		else
+		{
+			ts->snakes[i] = NULL;
+		}
+	}
+
+	return ts->snakes[id];
+}
+
 
 /**
  * @brief   Supprime le snake dans le tableau de snakes.

@@ -68,6 +68,7 @@ double coord_distance(Coord c1, Coord c2);
 TabSnakes *create_tab_snakes();
 void free_tab_snakes(TabSnakes *ts);
 Snake *tab_snakes_add_object(TabSnakes *ts, Snake *obj);
+Snake *tab_snakes_init_add_object(TabSnakes *ts, Snake *obj, int id);
 void tab_snakes_remove_object(TabSnakes *ts, Snake *obj);
 int tab_snakes_length(TabSnakes *ts);
 int tab_snakes_memory_length(TabSnakes *ts);

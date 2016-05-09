@@ -42,6 +42,7 @@ struct client_rec client_record[MAX_NB_CLIENT];
 
 void *serveur_send(void *p)
 {
+	printf("S: serveur_send...\n");
 	int continuer=1, envoi=0, c, i, n, ret;
 	Coord msg[300];
 	Partie *partie = (Partie *)p;
@@ -193,7 +194,12 @@ void *serveur_recv(void *p)
 	Coord recive[30];
 
 	TabSnakes *ts = partie_tab(pid->partie);
-	Snake *s = ts->snakes[id];
+	printf("Tab Snake ok\n");
+	Snake *s = create_snake(1, coord_from_xy(5,5), HAUT);
+	print_snake(s);
+	printf("Snake create\n");
+	tab_snakes_add_object(ts, s);
+	printf("Add ok\n");
 	Node n;
 	while(continuer)
 	{
@@ -203,15 +209,15 @@ void *serveur_recv(void *p)
 			perror("S: Sereur recive");
 			continuer = 0;
 		}
-		printf("S: Recive from %i, size:%i\n", id, (int)ret);
-			/*
+		printf("S: Recive from client %i, size:%i\n", id, (int)ret);
+		/*	
 			printf("S: recive\n");
 			for( c = 0; c < 30; c++)
 			{
 				print_coord(recive[c]);
 			}
 			printf("S: end\n");
-			*/
+		*/	
 
 		if(snake_longueur(s)<recive[0].y)
 		{
@@ -231,13 +237,19 @@ void *serveur_recv(void *p)
 		}
 		client_record[id].updated = 1;
 		printf("S: Snake %i updated!\n", id);
+		usleep(150);
 	}
 }
 
 //Retourne 1 si le serveur s'est bien lancé
 void *init_serveur(void *p)
 {
-	Partie *partie = (Partie *)p;
+	Partie *partie = create_partie();
+	TabSnakes *ts = partie_tab(p);
+	TabBonus *tb = partie_tab_bonus(p);
+
+	ts = create_tab_snakes();
+	tb = create_tab_bonus();
 
 	PartieId *pid = malloc(sizeof(struct partie_id));
 	pid->partie = partie;

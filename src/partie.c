@@ -160,7 +160,6 @@ Partie *create_partie()
     return res;
 }
 
-
 /**
  * @brief   Libère la mémoire consommée par une partie.
  *
