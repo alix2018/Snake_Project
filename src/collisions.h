@@ -30,6 +30,7 @@ CollisionObject *create_collision_object(void *obj, CollisionType type);
 void free_collision_object(CollisionObject *object);
 void collision_object_set_enabled(CollisionObject *object, int enabled);
 void collision_object_add_collision(CollisionObject *obj, Collision *collision);
+void collision_object_remove_object(CollisionObject *obj, void *obj1);
 
 Collision *create_collision(Snake *snake, CollisionCb cb, void *data);
 void free_collision(Collision *collision);

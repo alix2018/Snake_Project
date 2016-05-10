@@ -110,9 +110,9 @@ CollisionObject *gestion_collision_add_object(GestionCollisions *gc, void *obj,
  */
 void gestion_collision_remove_object(GestionCollisions *gc, void *obj)
 {
-    int i = 0;
+    int i;
 
-    while (i < gc->nb_objs)
+    for (i = 0; i < gc->nb_objs; i++)
     {
         if (gc->objs[i]->obj2 == obj)
         {
@@ -120,7 +120,10 @@ void gestion_collision_remove_object(GestionCollisions *gc, void *obj)
             gc->objs[i] = gc->objs[gc->nb_objs - 1];
             gc->objs[gc->nb_objs - 1] = NULL;
             gc->nb_objs--;
-            return;
+        }
+        else
+        {
+            collision_object_remove_object(gc->objs[i], obj);
         }
     }
 }
@@ -330,6 +333,21 @@ void collision_object_add_collision(CollisionObject *obj, Collision *collision)
     obj->collisions[obj->nb_collisions - 1] = collision;
 }
 
+void collision_object_remove_object(CollisionObject *obj, void *obj1)
+{
+    int i;
+
+    for (i = 0; i < obj->nb_collisions; i++)
+    {
+        if (obj->collisions[i]->obj1 == obj1)
+        {
+            free_collision(obj->collisions[i]);
+            obj->collisions[i] = obj->collisions[obj->nb_collisions - 1];
+            obj->nb_collisions--;
+            return;
+        }
+    }
+}
 
 /**
  * @brief   Crée une nouvelle condition.
