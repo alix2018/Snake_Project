@@ -10,7 +10,8 @@ pkg_check_modules(CLUTTER REQUIRED clutter-1.0 glib-2.0 gobject-2.0)
 add_executable(alpha-snake
         src/main.c
         src/affichage.c src/affichage.h src/list.c src/list.h
-        src/struc.c src/struc.h src/bonus.c src/bonus.h src/ia.c src/ia.h src/partie.c src/partie.h src/collisions.c src/collisions.h src/widgets/alpha-field.c src/widgets/alpha-field.h)
+        src/struc.c src/struc.h src/bonus.c src/bonus.h src/ia.c src/ia.h src/partie.c src/partie.h src/collisions.c src/collisions.h
+        src/alpha-button.c src/alpha-button.h)
 
 add_executable(tests
         tests/tests.c
