@@ -9,7 +9,7 @@
 #include <clutter/clutter.h>
 #include "struc.h"
 #include "bonus.h"
-
+#include "config.h"
 
 
 typedef struct _Map Map;
@@ -32,10 +32,12 @@ int map_height(Map *map);
 
 
 Partie *create_partie();
+void partie_set_config(Partie *p,Config * c);
+Config * partie_config(Partie *p);
 void free_partie(Partie *partie);
 Map *partie_map(Partie *partie);
 
-void init_partie(Partie *partie, ClutterScript *ui, int nb_snakes, int width, int height);
+void init_partie(Partie *partie, ClutterScript *ui);
 void init_pseudo(Partie *p, int argc, char **argv);
 
 gboolean timeout_tick_cb(gpointer data);

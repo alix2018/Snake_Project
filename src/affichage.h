@@ -7,10 +7,9 @@
 #include "partie.h"
 #include "struc.h"
 #include "bonus.h"
+#include "config.h"
 
 
-
-#define GRID_SIZE 23
 #define BACKGROUND_IMAGE_SRC "data/fond.jpg"
 #define TETE_IMAGE_SRC "data/tetev1.png"
 #define QUEUE_IMAGE_SRC "data/queuev1.png"
@@ -36,7 +35,7 @@ ClutterScript *affichage_ui(Affichage *affichage);
 gboolean zone_snake_key_press_cb(ClutterActor *actor, ClutterEvent *event, gpointer data);
 
 //Renvoie 1 si le snake se prend un mur
-int snake_border_map(SnakeActor *sa);
+int snake_border_map(Partie * p,SnakeActor *sa);
 
 //Renvoie 0 si le snake essaie de se mordre la queu, 1 sinon
 int snake_border_snake(SnakeActor *sa,SnakeActor * sa_ia);
@@ -52,16 +51,16 @@ SnakeActor *create_snake_actor(ClutterActor *parent, Snake *s, ClutterColor *col
 
 static void free_clutter_actor_fn(void * elt);
 void free_snake_actor(SnakeActor *sa);
-void snake_actor_update(SnakeActor *sa);
+void snake_actor_update(Partie *p,SnakeActor *sa);
 ClutterContent *generate_image(char * filename);
 SnakeImage *snake_generate_image();
 
 void affichage_add_snake(Affichage *affichage, Snake *snake,
                          const ClutterColor *color);
 void affichage_add_bonus(Affichage *affichage, Bonus *bonus,
-                         const ClutterColor *color);
+                         const ClutterColor *color,Config *config);
 
-void affichage_update(Affichage *affichage);
+void affichage_update(Partie *p,Affichage *affichage);
 
 void init_affichage(Affichage *affichage, ClutterScript *ui, Partie *p,
                     int width, int height);

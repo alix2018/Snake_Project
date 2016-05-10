@@ -4,7 +4,9 @@
 #define ALPHA_SNAKE_BONUS_H
 
 #include <clutter/clutter.h>
+#include "config.h"
 #include "struc.h"
+
 
 typedef struct _bonus Bonus;
 typedef struct _bonus_actor BonusActor;
@@ -45,12 +47,12 @@ void bonus_update(Bonus *bonus, int x, int y);
 Coord bonus_coord(Bonus *bonus);
 
 //Créé le BonusActor
-BonusActor *create_bonus_actor(ClutterActor *parent, Bonus *b, ClutterColor *color);
+BonusActor *create_bonus_actor(ClutterActor *parent, Bonus *b, ClutterColor *color, Config *config);
 void free_bonus_actor(BonusActor *b);
 Bonus *bonus_actor_bonus(BonusActor *bonus_actor);
 
 //Met à jour les coord du clutteractor
-void bonus_actor_update(BonusActor *ba);
+void bonus_actor_update(BonusActor *ba,Config *config);
 
 Bonus * bonus_near_from_snake(TabBonus *tb, Snake * s);
 

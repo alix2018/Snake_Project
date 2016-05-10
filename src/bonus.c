@@ -3,7 +3,7 @@
 //
 
 #include "bonus.h"
-
+#include "partie.h"
 #include "affichage.h"
 
 struct _bonus
@@ -76,15 +76,16 @@ Coord bonus_coord(Bonus *bonus)
  *
  * @return Le nouveau BonusActor initialisé
  */
-BonusActor *create_bonus_actor(ClutterActor *parent, Bonus *b, ClutterColor *color)
+BonusActor *create_bonus_actor(ClutterActor *parent, Bonus *b, ClutterColor *color,Config * config)
 {
     BonusActor *res;
     ClutterActor *bonus_c_actor;
     ClutterTransition *transition_x;
     ClutterTransition *transition_y;
 
+
     bonus_c_actor = clutter_actor_new();
-    clutter_actor_set_size(bonus_c_actor, GRID_SIZE, GRID_SIZE);
+    clutter_actor_set_size(bonus_c_actor, config->grid_size, config->grid_size);
     clutter_actor_set_pivot_point(bonus_c_actor, 0.5, 0.5);
     clutter_actor_set_scale(bonus_c_actor, 0.8, 0.8);
     //clutter_actor_set_background_color(bonus_c_actor, color);
@@ -124,7 +125,7 @@ BonusActor *create_bonus_actor(ClutterActor *parent, Bonus *b, ClutterColor *col
     g_object_unref(transition_y);
 
     clutter_actor_add_child(parent, bonus_c_actor);
-    clutter_actor_set_position(bonus_c_actor, b->coord.x * GRID_SIZE, b->coord.y * GRID_SIZE);
+    clutter_actor_set_position(bonus_c_actor, b->coord.x * config->grid_size, b->coord.y * config->grid_size);
 
     res = malloc(sizeof(BonusActor));
     res->parent = parent;
@@ -158,9 +159,9 @@ Bonus *bonus_actor_bonus(BonusActor *bonus_actor)
  *
  * @param[in]   ba   Le BonusActor à rafraichir
  */
-void bonus_actor_update(BonusActor *ba)
+void bonus_actor_update( BonusActor *ba,Config * config)
 {
-    clutter_actor_set_position(ba->bonus_c_actor, ba->bonus->coord.x * GRID_SIZE, ba->bonus->coord.y * GRID_SIZE);
+    clutter_actor_set_position(ba->bonus_c_actor, ba->bonus->coord.x * config->grid_size, ba->bonus->coord.y * config->grid_size);
 }
 
 

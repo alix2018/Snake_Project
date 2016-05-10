@@ -11,6 +11,7 @@
 #include "score.h"
 #include <string.h>
 #include <glib.h>
+#include "config.h"
 
 struct _Map
 {
@@ -35,6 +36,8 @@ struct _Partie
     gboolean en_cours;
 
     Map *map;
+
+    Config *config;
 };
 /**
 Snake * partie_snake(Partie *p)
@@ -156,11 +159,22 @@ Partie *create_partie()
     res->map = NULL;
     res->affichage = NULL;
     res->collisions = NULL;
+    res->config = NULL;
 
     return res;
 }
 
 
+
+void partie_set_config(Partie * p,Config * c)
+{
+    p->config = c;
+}
+
+Config * partie_config(Partie * p)
+{
+    return p->config;
+}
 /**
  * @brief   Libère la mémoire consommée par une partie.
  *
@@ -176,6 +190,7 @@ void free_partie(Partie *partie)
     //free_snake(partie->schlanga);
     free_tab_snakes(partie->tab);
     free_tab_bonus(partie->btab);
+    free_config(partie->config);
     free(partie);
 }
 
@@ -308,12 +323,15 @@ static void collision_snake_vers_nourriture(Snake *snake, void *obj2, void *data
  * @param[in]    width  La largeur du plateau.
  * @param[in]    height La hauteur du plateau.
  */
-void init_partie(Partie *partie, ClutterScript *ui,int nb_snakes,  int width, int height)
+void init_partie(Partie *partie, ClutterScript *ui)
 {
 
 
-
-    int nb_bonus = 5;
+    // Initillisation des configs
+    int nb_snakes = partie->config->nb_snakes;
+    int width = partie->config->width;
+    int height = partie->config->height;
+    int nb_bonus = partie->config->nb_bonus;
 
 
     CollisionObject **co_snakes = malloc(nb_snakes*sizeof(CollisionObject *));
@@ -330,7 +348,7 @@ void init_partie(Partie *partie, ClutterScript *ui,int nb_snakes,  int width, in
 
     // on ajoute le 1er snake comme player
     Snake * snk  = create_snake(
-            5,
+            partie->config->taille_snake,
             coord_from_xy(22, 2+5*0),
             DROITE
     );
@@ -339,7 +357,7 @@ void init_partie(Partie *partie, ClutterScript *ui,int nb_snakes,  int width, in
     for (i = 1; i < nb_snakes; ++i)
     {
         snk  = create_snake_bot(
-                5,
+                partie->config->taille_bot,
                 coord_from_xy(22, 2+5*i),
                 DROITE,
                 "ia1"
@@ -426,10 +444,10 @@ void init_partie(Partie *partie, ClutterScript *ui,int nb_snakes,  int width, in
     {
         ClutterColor * color = clutter_color_alloc();
         clutter_color_from_hls(color,(r+pasb*i)%360,0.4,1);
-        affichage_add_bonus(partie->affichage, partie->btab->bonus[i],  color);
+        affichage_add_bonus(partie->affichage, partie->btab->bonus[i],  color,partie->config);
     }
 
-    g_timeout_add(150, timeout_tick_cb, partie);
+    g_timeout_add(partie->config->interval, timeout_tick_cb, partie);
 
     free(co_snakes);
     free(co_bonus);
@@ -475,7 +493,7 @@ gboolean timeout_tick_cb(gpointer data)
     gestion_collisions_check(partie->collisions);
 
     if (partie->en_cours)
-        affichage_update(partie->affichage);
+        affichage_update(partie,partie->affichage);
 
     return partie->en_cours;
 }

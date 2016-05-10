@@ -1,5 +1,6 @@
 #include <clutter/clutter.h>
 #include "partie.h"
+#include "config.h"
 
 int main(int argc, char **argv)
 {
@@ -14,7 +15,9 @@ int main(int argc, char **argv)
     clutter_script_connect_signals(ui, ui);
 
     partie = create_partie();// partie.c
-    init_partie(partie, ui, 3, 30, 30);// partie.c
+    Config * conf = init_config(); // TODO ajouter param en fonction du menu etc..
+    partie_set_config(partie,conf);
+    init_partie(partie, ui);// partie.c
     init_pseudo(partie, argc, argv);
     clutter_main();
 

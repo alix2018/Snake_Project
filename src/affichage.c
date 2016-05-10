@@ -144,16 +144,16 @@ gboolean zone_snake_key_press_cb(ClutterActor *actor, ClutterEvent *event, gpoin
  *
  * @return      Renvoie 0 si le snake est contre un mur et veux avancer dans le mur, 1 sinon
  */
-int snake_border_map(SnakeActor *sa)
+int snake_border_map(Partie *p,SnakeActor *sa)
 {
     int res = 0, l_w, l_h;
     float w, h;
-
+    Config * config = partie_config(p);
     Snake *s = sa->snake;
 
     clutter_actor_get_size(sa->parent, &w, &h);
-    l_w = (int) w/GRID_SIZE;
-    l_h = (int) h/GRID_SIZE;
+    l_w = (int) w/config->grid_size;
+    l_h = (int) h/config->grid_size;
 
     if(snake_direction(s) == HAUT && snake_pos(s).y == 0)
     {
@@ -384,13 +384,14 @@ void free_snake_actor(SnakeActor *sa)
  *
  * @param[in]    sa     Le SnakeActor à mettre à jour.
  */
-void snake_actor_update(SnakeActor *sa)
+void snake_actor_update(Partie *p, SnakeActor *sa)
 {
     int delta;
     ClutterActor *actor;
     Node node_sa;
     Node node_s;
     Coord *c;
+    Config * config = partie_config(p);
 
     delta = snake_longueur(sa->snake) - sa->cur_size;
 
@@ -400,7 +401,7 @@ void snake_actor_update(SnakeActor *sa)
         {
             actor = clutter_actor_new();
             g_object_ref(actor);
-            clutter_actor_set_size(actor, GRID_SIZE, GRID_SIZE);
+            clutter_actor_set_size(actor, config->grid_size, config->grid_size);
            // clutter_actor_set_background_color(actor,sa->color );
 
             clutter_actor_add_effect (actor, clutter_colorize_effect_new (sa->color));
@@ -434,8 +435,8 @@ void snake_actor_update(SnakeActor *sa)
         actor = node_elt(node_sa);
         clutter_actor_set_position(
             actor,
-            c->x * GRID_SIZE,
-            c->y * GRID_SIZE
+            c->x * config->grid_size,
+            c->y * config->grid_size
         );
 
         // TODO changer les images pendant le deplacement
@@ -659,13 +660,14 @@ void affichage_add_snake(Affichage *affichage, Snake *snake,
  * @param[in]    color      La couleur du bonus.
  */
 void affichage_add_bonus(Affichage *affichage, Bonus *bonus,
-                         const ClutterColor *color)
+                         const ClutterColor *color,Config * config)
 {
     BonusActor *ba;
     ba = create_bonus_actor(
         CLUTTER_ACTOR(clutter_script_get_object(affichage->ui, "zone_snake")),
         bonus,
-        clutter_color_new(0, 255, 0, 255)
+        clutter_color_new(0, 255, 0, 255),
+        config
     );
     list_add_last(affichage->bonus, ba);
 }
@@ -675,7 +677,7 @@ void affichage_add_bonus(Affichage *affichage, Bonus *bonus,
  *
  * @param[in]    affichage  L'affichage à mettre à jour.
  */
-void affichage_update(Affichage *affichage)
+void affichage_update(Partie * p,Affichage *affichage)
 {
     SnakeActor *sa;
     BonusActor *ba;
@@ -687,7 +689,7 @@ void affichage_update(Affichage *affichage)
     {
         sa = node_elt(cur);
 
-        snake_actor_update(sa);
+        snake_actor_update(p,sa);
     }
 
     for (cur = list_first_node(affichage->bonus);
@@ -696,7 +698,7 @@ void affichage_update(Affichage *affichage)
     {
         ba = node_elt(cur);
 
-        bonus_actor_update(ba);
+        bonus_actor_update(ba,partie_config(p));
     }
 }
 
@@ -717,12 +719,12 @@ void init_affichage(Affichage *affichage, ClutterScript *ui, Partie *p,
     SnakeActor *sa, *sa_ia;
     Bonus *bonus;
     BonusActor *ba;
-
+    Config * config = partie_config(p);
     affichage->ui = ui;
 
     stage = CLUTTER_ACTOR(clutter_script_get_object(ui, "stage"));
-    clutter_actor_set_size(stage, width * GRID_SIZE,
-                           height * GRID_SIZE);
+    clutter_actor_set_size(stage, width * config->grid_size,
+                           height * config->grid_size);
 
     zone_snake = CLUTTER_ACTOR(clutter_script_get_object(ui, "zone_snake"));
     clutter_stage_set_key_focus(CLUTTER_STAGE(stage), zone_snake);
