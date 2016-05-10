@@ -739,4 +739,6 @@ void init_affichage(Affichage *affichage, ClutterScript *ui, Partie *p,
     g_object_unref(image);
 
     clutter_actor_show(stage);
+
+
 }

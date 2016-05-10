@@ -257,44 +257,93 @@ GString *get_gstring_score()
 static void collision_snake_vers_snake(Snake *snake, void *obj2, void *data)
 {
     Partie *partie = data;
-    ClutterScript *ui = affichage_ui(partie->affichage);
-    ClutterActor *fin_partie;
-
-    partie->en_cours = FALSE;
-
-    GString *out = g_string_new(snake_pseudo(partie->player));
 
 
 
-    if(snake == partie->player) // Si le snake en paramètre est le joueur on a perdu
+    if(partie->config->collision == 0) { // ON TERMINE LA FONCTION !! (A VOIR)
+        return;
+
+    }
+    if(partie->config->type_partie == 1)
     {
-        g_string_append(out, "\n Perdu !");
-        score_enregistre(partie->player, 'G');
+        if(snake == partie->player) // on a perdu
+        {
+            ClutterScript *ui = affichage_ui(partie->affichage);
+            ClutterActor *fin_partie;
+            partie->en_cours = FALSE;
+            GString *out = g_string_new(snake_pseudo(partie->player));
+            g_string_append(out, "\n Perdu !");
+            score_enregistre(partie->player, 'G');
+
+
+
+            GString *gscore = get_gstring_score();
+            g_string_append(out, gscore->str);
+
+            clutter_text_set_text(
+                    CLUTTER_TEXT(clutter_script_get_object(ui, "fin_partie_texte")),
+                    out->str
+            );
+
+            fin_partie = CLUTTER_ACTOR(clutter_script_get_object(ui, "fin_partie"));
+            clutter_actor_add_child(
+                    CLUTTER_ACTOR(clutter_script_get_object(ui, "stage")),
+                    fin_partie
+            );
+
+            clutter_actor_save_easing_state(fin_partie);
+            clutter_actor_set_easing_duration(fin_partie, 250);
+            clutter_actor_set_opacity(fin_partie, 255);
+            clutter_actor_restore_easing_state(fin_partie);
+        }
+        else // un snake non joueur est mort
+        {
+            tab_snakes_remove_object(partie->tab,snake);
+            gestion_collision_remove_object(partie->collisions,snake);
+            free_snake(snake);
+            printf("dead\n");
+        }
     }
     else
     {
-        g_string_append(out, "\n Gagné !");
-        score_enregistre(partie->player, 'P');
+        ClutterScript *ui = affichage_ui(partie->affichage);
+        ClutterActor *fin_partie;
+        partie->en_cours = FALSE;
+        GString *out = g_string_new(snake_pseudo(partie->player));
+
+
+
+        if(snake == partie->player) // Si le snake en paramètre est le joueur on a perdu
+        {
+            g_string_append(out, "\n Perdu !");
+            score_enregistre(partie->player, 'G');
+        }
+        else
+        {
+            g_string_append(out, "\n Gagné !");
+            score_enregistre(partie->player, 'P');
+        }
+
+        GString *gscore = get_gstring_score();
+        g_string_append(out, gscore->str);
+
+        clutter_text_set_text(
+                CLUTTER_TEXT(clutter_script_get_object(ui, "fin_partie_texte")),
+                out->str
+        );
+
+        fin_partie = CLUTTER_ACTOR(clutter_script_get_object(ui, "fin_partie"));
+        clutter_actor_add_child(
+                CLUTTER_ACTOR(clutter_script_get_object(ui, "stage")),
+                fin_partie
+        );
+
+        clutter_actor_save_easing_state(fin_partie);
+        clutter_actor_set_easing_duration(fin_partie, 250);
+        clutter_actor_set_opacity(fin_partie, 255);
+        clutter_actor_restore_easing_state(fin_partie);
     }
 
-    GString *gscore = get_gstring_score();
-    g_string_append(out, gscore->str);
-
-    clutter_text_set_text(
-        CLUTTER_TEXT(clutter_script_get_object(ui, "fin_partie_texte")),
-        out->str
-    );
-
-    fin_partie = CLUTTER_ACTOR(clutter_script_get_object(ui, "fin_partie"));
-    clutter_actor_add_child(
-        CLUTTER_ACTOR(clutter_script_get_object(ui, "stage")),
-        fin_partie
-    );
-
-    clutter_actor_save_easing_state(fin_partie);
-    clutter_actor_set_easing_duration(fin_partie, 250);
-    clutter_actor_set_opacity(fin_partie, 255);
-    clutter_actor_restore_easing_state(fin_partie);
 }
 
 /**
@@ -349,7 +398,7 @@ void init_partie(Partie *partie, ClutterScript *ui)
     // on ajoute le 1er snake comme player
     Snake * snk  = create_snake(
             partie->config->taille_snake,
-            coord_from_xy(22, 2+5*0),
+            coord_from_xy(partie->config->width/2, 2),
             DROITE
     );
     tab_snakes_add_object(partie->tab,snk);
@@ -358,7 +407,7 @@ void init_partie(Partie *partie, ClutterScript *ui)
     {
         snk  = create_snake_bot(
                 partie->config->taille_bot,
-                coord_from_xy(22, 2+5*i),
+                coord_from_xy(partie->config->width/2, (2+5*i)%partie->config->height),
                 DROITE,
                 "ia1"
         );
