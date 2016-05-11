@@ -26,8 +26,7 @@
           "children": [
             {
               "id": "Jouer",
-              "type":"ClutterActor",
-              "background-color": "#FFFFFF",
+              "type":"AlphaButton",
               "reactive": true,
               "signals": [
                 {"name": "enter-event", "handler": "button_enter_cb"},
@@ -50,7 +49,7 @@
             },
             {
               "id": "Quitter",
-              "type":"ClutterActor",
+              "type":"AlphaButton",
               "background-color": "#FFFFFF",
               "reactive": true,
               "signals": [
