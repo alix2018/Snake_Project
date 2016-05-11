@@ -1,4 +1,11 @@
-
+/**
+ * @file      bonus.h
+ * @author    alpha-snake
+ * @version   1
+ * @date      11/05/2016
+ * @brief     Toutes les fonctions permettant de créer et générer les bonus.
+ * @details   ---
+ */
 
 #ifndef ALPHA_SNAKE_BONUS_H
 #define ALPHA_SNAKE_BONUS_H

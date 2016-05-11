@@ -1,4 +1,11 @@
-
+/**
+ * @file      collisions.h
+ * @author    alpha-snake
+ * @version   1
+ * @date      25/02/2016
+ * @brief     Toutes les fonctions permettant de créer les collisions et les détecter.
+ * @details   ---
+ */
 
 #ifndef ALPHA_SNAKE_COLLISIONS_H
 #define ALPHA_SNAKE_COLLISIONS_H

@@ -1,16 +1,38 @@
-//
-// Created by thibaut on 14/03/16.
-//
+/**
+ * @file      bonus.c
+ * @author    alpha-snake
+ * @version   1
+ * @date      11/05/2016
+ * @brief     Toutes les fonctions permettant de créer et générer les bonus.
+ * @details   ---
+ */
 
 #include "bonus.h"
 #include "partie.h"
 #include "affichage.h"
 
+
+/**
+ * @brief      La structure d'un bonus.
+ *
+ * @use Bonus
+ * @param[in]   coord   Cordonnées du bonus.
+ */
 struct _bonus
 {
     Coord coord;
 };
 
+
+/**
+ * @brief      La structure de l'acteur bonus
+ *
+ * @use BonusActor
+ * @param[in]  parent            Le ClutterActor qui contient les acteurs du snake.
+ * @param[in]  bonus_c_actor     Le ClutterActor qui contient les acteurs du bonus.
+ * @param[in]  bonus             Le bonus
+ * @param[in]  color             La couleur du bonus.
+ */
 struct _bonus_actor
 {
     ClutterActor *parent;
@@ -39,13 +61,13 @@ Bonus *bonus_new(int x, int y)
 }
 
 /**
- * @brief   Change les coordonnés de la bonus
+ * @brief   Change les coordonnées de le bonus
  *
- * @param[in]   bonus  La bonus à rafraichir
- * @param[in]   x     Largeur de la map
- * @param[in]   y     Hauteur de la map
+ * @param[in]   bonus  Le bonus à rafraichir
+ * @param[in]   x      Largeur de la map
+ * @param[in]   y      Hauteur de la map
  *
- * @return La bonus avec de nouvelles coordonnées
+ * @return Le bonus avec de nouvelles coordonnées
  */
 void bonus_update(Bonus *bonus, int x, int y)
 {
@@ -56,11 +78,11 @@ void bonus_update(Bonus *bonus, int x, int y)
 }
 
 /**
- * @brief   Permet d'accéder au coordonnées de la bonus
+ * @brief   Permet d'accéder aux coordonnées du bonus
  *
- * @param[in]   bonus  La bonus dont on veut les coordonnées
+ * @param[in]   bonus  Le bonus dont on veut les coordonnées
  *
- * @return Les coordonnées de la bonus
+ * @return Les coordonnées du bonus
  */
 Coord bonus_coord(Bonus *bonus)
 {
@@ -68,11 +90,12 @@ Coord bonus_coord(Bonus *bonus)
 }
 
 /**
- * @brief   Génère une BonusActor
+ * @brief   Génère un BonusActor
  *
  * @param[in]   parent  Le parent du nouveau BonusActor
  * @param[in]   b       La bonus à afficher
  * @param[in]   color   La couleur de la bonus
+ * @param[in]   config  Les configurations
  *
  * @return Le nouveau BonusActor initialisé
  */
@@ -136,6 +159,11 @@ BonusActor *create_bonus_actor(ClutterActor *parent, Bonus *b, ClutterColor *col
     return res;
 }
 
+/**
+ * @brief   Libérer un bonus de la mémoire
+ *
+ * @param[in]   bonus_actor     Le BonusActor à libérer
+**/
 void free_bonus_actor(BonusActor *b)
 {
     clutter_color_free(b->color);
@@ -143,11 +171,11 @@ void free_bonus_actor(BonusActor *b)
 }
 
 /**
- * @brief   Permet d'accéder à la bonus d'un BonusActor
+ * @brief   Permet d'accéder au bonus d'un BonusActor
  *
  * @param[in]   bonus_actor Le BonusActor
  *
- * @return La bonus du bonus_actor
+ * @return Le bonus du bonus_actor
  */
 Bonus *bonus_actor_bonus(BonusActor *bonus_actor)
 {
@@ -155,9 +183,10 @@ Bonus *bonus_actor_bonus(BonusActor *bonus_actor)
 }
 
 /**
- * @brief   Rafraîchit la bonus d'un BonusActor
+ * @brief   Rafraîchit le bonus d'un BonusActor
  *
- * @param[in]   ba   Le BonusActor à rafraichir
+ * @param[in]   ba       Le BonusActor à rafraichir
+ * @param[in]   config   Les configurations
  */
 void bonus_actor_update( BonusActor *ba,Config * config)
 {
@@ -206,13 +235,12 @@ void free_tab_bonus(TabBonus *ts)
 
 
 /**
- * @brief   Ajoute d'un snake dans le tableau de snake
+ * @brief   Ajout d'un snake dans le tableau de snake.
  *
- * @param[in]    ts     Le gestionnaire de collisions.
+ * @param[in]    ts     Le tableau de bonus.
  * @param[in]    obj    L'objet à ajouter.
  *
- * @return  Le Bonus crée lors de l'ajout de obj, ou le
- *          Bonus qui gère obj si obj est déjà géré par gc.
+ * @return  Le Bonus crée lors de l'ajout de obj
  */
 Bonus *tab_bonus_add_object(TabBonus *ts, Bonus *obj)
 {
@@ -241,7 +269,7 @@ Bonus *tab_bonus_add_object(TabBonus *ts, Bonus *obj)
 /**
  * @brief   Supprime le snake dans le tableau de bonus.
  *
- * @param[in]    ts     Le gestionnaire de collisions.
+ * @param[in]    ts     Le tableau de bonus.
  * @param[in]    obj    L'objet à supprimer.
  */
 void tab_bonus_remove_object(TabBonus *ts, Bonus *obj)
@@ -261,18 +289,24 @@ void tab_bonus_remove_object(TabBonus *ts, Bonus *obj)
     }
 }
 /**
- * @brief   Le nombre de bonus (obselete)
+ * @brief   Le nombre de bonus (obselète)
  *
- * @param[in]    ts    le tableau de snake.
+ * @param[in]    ts    Le tableau de bonus.
+ *
+ * @return Renvoie le nombre de bonus contenus dans le tableau ts.
  */
 int tab_bonus_length(TabBonus *ts)
 {
     return ts->nb_bonus;
 }
+
+
 /**
  * @brief   La place en mémoire (obselete).
  *
- * @param[in]    ts    le tableau de snake.
+ * @param[in]    ts    Le tableau de bonus.
+ *
+ * @return  Renvoie la taille du tableau en mémoire.
  */
 int tab_bonus_memory_length(TabBonus *ts)
 {
@@ -280,6 +314,15 @@ int tab_bonus_memory_length(TabBonus *ts)
 }
 
 
+/**
+ * @brief   Permet de récupérer le bonus le plus proche du Snake.
+ *
+ * @param[in]    tb    Le tableau de bonus.
+ * @param[in]    s     Un snake.
+ *
+ *
+ * @return  Renvoie le bonus qui est le plus proche du snake concerné.
+ */
 Bonus * bonus_near_from_snake(TabBonus *tb, Snake * s)
 {
     if(tb->nb_bonus >= 1 )

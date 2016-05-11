@@ -1,4 +1,11 @@
-
+/**
+ * @file      affichage.h
+ * @author    alpha-snake
+ * @version   1
+ * @date      11/05/2016
+ * @brief     Toutes les fonctions permettant d'afficher la fenêtre, les Snakes/Schlangà et les bonus.
+ * @details   ---
+ */
 
 #ifndef ALPHA_SNAKE_AFFICHAGE_H
 #define ALPHA_SNAKE_AFFICHAGE_H

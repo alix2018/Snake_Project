@@ -1,3 +1,12 @@
+/**
+ * @file      collisions.c
+ * @author    alpha-snake
+ * @version   1
+ * @date      25/02/2016
+ * @brief     Toutes les fonctions permettant de créer les collisions et les détecter.
+ * @details   ---
+ */
+
 
 #include <stddef.h>
 #include <stdlib.h>
