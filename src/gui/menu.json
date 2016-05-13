@@ -1,21 +1,119 @@
 [
   {
-    "id": "menu_general", "type": "ClutterActor",
-    "x-align": "center", "y-align": "center", "x-expand": true,  "x-expand": true,
-    "layout-manager": {"type": "ClutterBoxLayout","orientation": "vertical",
-      "spacing": 50},
+    "id": "menu_general",
+    "type": "ClutterActor",
+    "x-align": "center",
+    "y-align": "center",
+    "x-expand": true,
+    "y-expand": true,
+    "layout-manager": {
+      "type": "ClutterBoxLayout",
+      "orientation": "vertical",
+      "spacing": 50
+    },
     "children": [
       {
         "type": "ClutterActor",
-        "background-color": "#FFFFFF",
+        "x-align": "center",
+        "y-align": "center",
         "layout-manager": {
           "type": "ClutterBoxLayout",
           "orientation": "vertical",
           "spacing": 30
-        }
+        },
+        "children": [
+          // contient l'image
+          {
+            "type": "ClutterActor",
+            "x-expand": true,
+            "height": 70,
+            "children": [
+              // contient les boutons
+              {
+                "type": "ClutterActor",
+                "layout-manager": {
+                  "type": "ClutterBoxLayout",
+                  "orientation": "vertical",
+                  "spacing": 5
+                }
+                "y-expand": true
 
-
-
+                "children": [
+                  // Bouton JOUER
+                  {
+                    "id": "Jouer",
+                    "type": "AlphaButton",
+                    "reactive": true,
+                    "x-expand": true,
+                    "signals": [
+                      {
+                        "name": "jouer",
+                        "handler": "jouer_lancer_cb"
+                      }
+                    ],
+                    "actions": [
+                      {
+                        "type": "ClutterClickAction",
+                        "signals": [
+                          {
+                            "name": "clicked",
+                            "handler": "jouer_clicked_cb"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "id": "Scores",
+                    "type": "AlphaButton",
+                    "reactive": true,
+                    "x-expand": true,
+                    "signals": [
+                      {
+                        "name": "score",
+                        "handler": "score_afficher_cb"
+                      }
+                    ],
+                    "actions": [
+                      {
+                        "type": "ClutterClickAction",
+                        "signals": [
+                          {
+                            "name": "clicked",
+                            "handler": "jouer_clicked_cb"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "id": "Quitter",
+                    "type": "AlphaButton",
+                    "reactive": true,
+                    "x-expand": true,
+                    "signals": [
+                      {
+                        "name": "quitter",
+                        "handler": "quitter_fermer_cb"
+                      }
+                    ],
+                    "actions": [
+                      {
+                        "type": "ClutterClickAction",
+                        "signals": [
+                          {
+                            "name": "clicked",
+                            "handler": "jouer_clicked_cb"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
       }
     ]
   }
