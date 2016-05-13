@@ -1,8 +1,21 @@
+/**
+ * @file      config.c
+ * @author    alpha-snake
+ * @version   1
+ * @date      25/02/2016
+ * @brief     Configuration de tout le jeu (snake, schlangà, bonus, taille du plateau...)
+ * @details   ---
+ */
+
 #include "config.h"
 #include <stdlib.h>
-
 #include <gdk/gdk.h>
 
+/**
+ * @brief   Initialise toutes les configurations
+ *
+ * @return  Les nouvelles configurations par défaut
+ */
 Config * init_default_config()
 {
     Config * res;
@@ -24,7 +37,11 @@ Config * init_default_config()
 
 }
 
-
+/**
+ * @brief   Libère la mémoire consommée par un les configurations
+ *
+ * @param[in]    les configurations à libérer.
+ */
 void free_config(Config * c)
 {
     free(c);
@@ -57,7 +74,7 @@ void config_grid_from_screen_and_window(Config * config)
     int gs1 = config->screen_height/config->height;
     int gs2 = config->screen_width/config->width;
     int gs;
-    if(gs1 != gs2) // résolution pas conforme ? modification personnel ou ajuste avec le min
+    if(gs1 != gs2) // résolution pas conforme ? modification personnelle ou ajuste avec le min
     {
 
         if(gs1 > gs2)
