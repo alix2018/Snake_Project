@@ -24,7 +24,7 @@ add_executable(tests
         src/score.c src/score.h
         src/config.c src/config.h)
 
-target_link_libraries(alpha-snake ${CLUTTER_LIBRARIES})
+target_link_libraries(alpha-snake ${CLUTTER_LIBRARIES} m)
 include_directories(alpha-snake ${CLUTTER_INCLUDE_DIRS})
 
 target_link_libraries(tests ${CLUTTER_LIBRARIES})

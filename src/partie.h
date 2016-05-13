@@ -36,6 +36,8 @@ void partie_set_config(Partie *p,Config * c);
 Config * partie_config(Partie *p);
 void free_partie(Partie *partie);
 Map *partie_map(Partie *partie);
+void partie_add_bonus(Partie *partie,Bonus * bonus);
+
 
 void init_partie(Partie *partie, ClutterScript *ui);
 void init_pseudo(Partie *p, int argc, char **argv);

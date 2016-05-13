@@ -259,7 +259,6 @@ static void collision_snake_vers_snake(Snake *snake, void *obj2, void *data)
     Partie *partie = data;
 
 
-
     if(partie->config->collision == 0) { // ON TERMINE LA FONCTION !! (A VOIR)
         return;
 
@@ -298,9 +297,41 @@ static void collision_snake_vers_snake(Snake *snake, void *obj2, void *data)
         }
         else // un snake non joueur est mort
         {
-            tab_snakes_remove_object(partie->tab,snake);
+            /**tab_snakes_remove_object(partie->tab,snake);
             gestion_collision_remove_object(partie->collisions,snake);
             free_snake(snake);
+             **/
+            Coord cp = snake_pos(snake);
+
+            GRand * r = g_rand_new();
+            gint32  rh = g_rand_int_range(r,1,partie->config->height-1);
+            gint32  rw = g_rand_int_range(r,1,partie->config->width-1);
+            Coord c;
+            if(rh%4 == 0)
+            {
+                c = coord_from_xy(0,rh);
+            }
+            else if(rh%4 ==1)
+            {
+                c = coord_from_xy(rw,partie->config->height);
+            }
+            else if(rh%4 ==2)
+            {
+                c = coord_from_xy(partie->config->width,rh);
+            }
+            else
+            {
+                c = coord_from_xy(rw,0);
+            }
+            int i ;
+            int l = snake_longueur(snake) - partie->config->taille_bot;
+            for (i = 0; i < l; ++i) {
+                free(list_pop_last(snake_liste_snake(snake)));
+
+            }
+            snake_set_longueur(snake,partie->config->taille_bot);
+            snake_set_pos(snake,c,partie->config);
+            partie_add_bonus(partie,bonus_init(cp.x+1%(partie->config->width-1),cp.y+1%(partie->config->height-1)));
             printf("dead\n");
         }
     }
@@ -346,6 +377,8 @@ static void collision_snake_vers_snake(Snake *snake, void *obj2, void *data)
 
 }
 
+
+
 /**
  * @brief   Fonction callback appelée quand un Snake entre en collision avec
  *          la nourriture.
@@ -363,6 +396,30 @@ static void collision_snake_vers_nourriture(Snake *snake, void *obj2, void *data
     bonus_update(nourriture, partie->map->width, partie->map->height);
 }
 
+
+void partie_add_bonus(Partie *partie,Bonus * bonus)
+{
+    tab_bonus_add_object(partie->btab,bonus);
+    int j;
+    CollisionObject*  co_bonus = gestion_collision_add_object(partie->collisions,
+                                               bonus,
+                                               COLLISION_BONUS);
+    for (j = 0; j < partie->tab->nb_snakes ; ++j)
+    {
+        collision_object_add_collision(
+                co_bonus,
+                create_collision(partie->tab->snakes[j], collision_snake_vers_nourriture, partie)
+        );
+    }
+    // On choisit une couleur
+    GRand * randg = g_rand_new();
+    gint32  r = g_rand_int_range(randg,0,360);
+
+    ClutterColor * color = clutter_color_alloc();
+    clutter_color_from_hls(color,(r)%360,0.4,1);
+    affichage_add_bonus(partie->affichage, bonus,  color,partie->config);
+
+}
 
 /**
  * @brief   Initialise une partie déjà allouée.

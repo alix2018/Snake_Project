@@ -41,6 +41,13 @@ struct _bonus_actor
     ClutterColor *color;
 };
 
+Bonus *bonus_init(int x,int y)
+{
+    Bonus *new = malloc(sizeof(Bonus));
+    new->coord = coord_from_xy(x, y);
+    return new;
+}
+
 /**
  * @brief   Génère un élèment de type bonus
  *
