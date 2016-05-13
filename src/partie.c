@@ -38,6 +38,8 @@ struct _Partie
     Map *map;
 
     Config *config;
+
+    int duree; //Nombre de déplacement qui se sont effectué depuis le debut de la partie
 };
 /**
 Snake * partie_snake(Partie *p)
@@ -205,6 +207,31 @@ void free_partie(Partie *partie)
 Map *partie_map(Partie *partie)
 {
     return partie->map;
+}
+
+/**
+ * @brief   Permet d'obtenir la durée d'une partie.
+ *
+ * @param[in]   partie  Une partie.
+ *
+ * @return  La durée depuis le début de la partie.
+ */
+int partie_duree(Partie *partie)
+{
+    return partie->duree;
+}
+
+/**
+ * @brief   Permet de set la durée d'une partie.
+ *
+ * @param[in]   partie  Une partie.
+ * @param[in]   duree   La nouvelle durée partie.
+ *
+ * @return  La durée depuis le début de la partie.
+ */
+int partie_set_duree(Partie *partie, int duree)
+{
+    return partie->duree = duree;
 }
 
 /**
@@ -431,14 +458,11 @@ void partie_add_bonus(Partie *partie,Bonus * bonus)
  */
 void init_partie(Partie *partie, ClutterScript *ui)
 {
-
-
     // Initillisation des configs
     int nb_snakes = partie->config->nb_snakes;
     int width = partie->config->width;
     int height = partie->config->height;
     int nb_bonus = partie->config->nb_bonus;
-
 
     CollisionObject **co_snakes = malloc(nb_snakes*sizeof(CollisionObject *));
 
@@ -449,6 +473,8 @@ void init_partie(Partie *partie, ClutterScript *ui)
 
     partie->map = create_map(width, height);
     partie->en_cours = TRUE;
+    partie->duree = 0;
+
     // Initialisation du tableau de snake
     partie->tab = create_tab_snakes();
 
@@ -464,9 +490,9 @@ void init_partie(Partie *partie, ClutterScript *ui)
     {
         snk  = create_snake_bot(
                 partie->config->taille_bot,
-                coord_from_xy(partie->config->width/2, (2+5*i)%partie->config->height),
+                coord_from_xy((partie->config->width+i)/2, (2+5*i)%partie->config->height),
                 DROITE,
-                "ia1"
+                "ia6"
         );
         tab_snakes_add_object(partie->tab,snk);
 
@@ -599,7 +625,10 @@ gboolean timeout_tick_cb(gpointer data)
     gestion_collisions_check(partie->collisions);
 
     if (partie->en_cours)
+    {
         affichage_update(partie,partie->affichage);
+        partie->duree += 1;
+    }
 
     return partie->en_cours;
 }

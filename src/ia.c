@@ -10,6 +10,35 @@
 #include "ia.h"
 
 /**
+ * @brief   Retourne la future coordonnée après avoir appliqué le déplacement à c
+ *
+ * @param[in]   c       La coord
+ * @param[in]   dir     La direction à appliquer
+ *
+ */
+Coord future_pos(Coord c, Direction dir)
+{
+    switch(dir){
+        case HAUT:
+            c.y -= 1;
+            break;
+        case BAS:
+            c.y += 1;
+            break;
+        case GAUCHE:
+            c.x -= 1;
+            break;
+        case DROITE:
+            c.x += 1;
+            break;
+        default:
+            printf("Erreur snake_verif_ia dans le switch de ia.c\n");
+    }
+    return c;
+}
+
+
+/**
  * @brief   verifie que la direction désignée par snake_forward_ia1 est pertinente et la corrige sinon
  *
  * @param[in]   snake_ia   Schlanglà
@@ -17,7 +46,7 @@
  * @param[in]   futurdir   La direction qui va être appliquée à snake_ia
  *
  */
-static void snake_verif_ia(Snake * snake_ia,Partie * p,Direction futurdir, int nb_appel) // TODO déplacement défensif
+static void snake_verif_ia(Snake * snake_ia, Partie * p, Direction futurdir, int nb_appel) // TODO déplacement défensif
 {
     // TODO à réimplémenter avec le type list
     TabSnakes *t = partie_tab(p);
@@ -340,6 +369,7 @@ static void snake_verif_ia(Snake * snake_ia,Partie * p,Direction futurdir, int n
         */
     }
 }
+
 void snake_verif_wall(Snake *snake_ia, Partie * p, Direction futurdir,Map *m)
 {
     Coord futur_tete = snake_pos(snake_ia), *cur_element_queue_ia, *cur_element_queue;
@@ -444,6 +474,7 @@ void snake_verif_wall(Snake *snake_ia, Partie * p, Direction futurdir,Map *m)
         }
     }
 }
+
 /**
  * @brief   Fait avancer le Schlanglà : déetermine la direction logique à prendre 
             pour accéder à la bonus, l'applique et appelle snake_forward
@@ -452,7 +483,7 @@ void snake_verif_wall(Snake *snake_ia, Partie * p, Direction futurdir,Map *m)
  * @param[in]   snake    Le joueur
  * @param[in]   bonus     La bonus
  */
-void snake_forward_ia1(Snake *snake_ia,Partie *p)
+void snake_forward_ia1(Snake *snake_ia, Partie *p)
 {
     //Snake *snake_ia = partie_schlanga(p);
     //Snake *snake = partie_player(p);
@@ -558,6 +589,205 @@ void snake_forward_ia1(Snake *snake_ia,Partie *p)
 
 }
 
+/**
+ * @brief   Fait avancer le Schlanglà : ia qui tourne sur elle même dans le sens directe
+ *
+ * @param[in]   snake_ia Le Schlanglà
+ * @param[in]   snake    Le joueur
+ * @param[in]   bonus     La bonus
+ */
+void snake_forward_ia3(Snake *snake_ia, Partie *p)
+{
+    Direction dir = snake_direction(snake_ia);
+    Coord tete = snake_pos(snake_ia);
+    Direction futur_dir;
+    switch(dir)
+    {
+        case HAUT:
+            futur_dir = GAUCHE;
+            break;
+        case GAUCHE:
+            futur_dir = BAS;
+            break;
+        case BAS:
+            futur_dir = DROITE;
+            break;
+        case DROITE:
+            futur_dir = HAUT;
+            break;
+
+    }
+
+    Coord futur_tete = future_pos(tete, futur_dir);
+
+    int no_collision = 1;
+    Node s = NULL;
+    for(s = snake_premier(snake_ia); s != NULL; s = node_next(s))
+    {
+        if(coord_egales(*(Coord *)node_elt(s), futur_tete))
+        {
+            no_collision = 0;
+        }
+    }
+    if(no_collision)
+    {
+        snake_set_direction(snake_ia, futur_dir);
+    }
+}
+
+/**
+ * @brief   Fait avancer le Schlanglà : ia qui tourne sur elle même dans le sens horraire
+ *
+ * @param[in]   snake_ia Le Schlanglà
+ * @param[in]   snake    Le joueur
+ * @param[in]   bonus     La bonus
+ */
+void snake_forward_ia4(Snake *snake_ia, Partie *p)
+{
+    Direction dir = snake_direction(snake_ia);
+    Coord tete = snake_pos(snake_ia);
+    Direction futur_dir;
+    switch(dir)
+    {
+        case HAUT:
+            futur_dir = DROITE;
+            break;
+        case DROITE:
+            futur_dir = BAS;
+            break;
+        case BAS:
+            futur_dir = GAUCHE;
+            break;
+        case GAUCHE:
+            futur_dir = HAUT;
+            break;
+
+    }
+
+    Coord futur_tete = future_pos(tete, futur_dir);
+
+    int no_collision = 1;
+    Node s = NULL;
+    for(s = snake_premier(snake_ia); s != NULL; s = node_next(s))
+    {
+        if(coord_egales(*(Coord *)node_elt(s), futur_tete))
+        {
+            no_collision = 0;
+        }
+    }
+    if(no_collision)
+    {
+        snake_set_direction(snake_ia, futur_dir);
+    }
+}
+
+void snake_ia_border(Snake *snake_ia, Partie *p)
+{
+    Map *m = partie_map(p);
+    Direction futurdir = snake_direction(snake_ia);
+    Coord futur_tete = future_pos(snake_pos(snake_ia), futurdir);
+    if(futur_tete.y == 0 || futur_tete.y == map_height(m)-1)
+    {
+        if(futur_tete.x < map_width(m)/2)
+        {
+            snake_set_direction(snake_ia, DROITE);
+        }
+        else
+        {
+            snake_set_direction(snake_ia, GAUCHE);
+        }
+    }
+    if(futur_tete.x == 0 || futur_tete.x == map_width(m)-1)
+    {
+        if(futur_tete.y < map_height(m)/2)
+        {
+            snake_set_direction(snake_ia, HAUT);
+        }
+        else
+        {
+            snake_set_direction(snake_ia, BAS);
+        }
+    }
+}
+
+/**
+ * @brief   Fait avancer le Schlanglà : ia qui avance en accordéon
+ *
+ * @param[in]   snake_ia Le Schlanglà
+ * @param[in]   snake    Le joueur
+ * @param[in]   bonus     La bonus
+ */
+void snake_forward_ia5(Snake *snake_ia, Partie *p)
+{
+    int duree = partie_duree(p);
+    if(duree%4<2)
+    {
+        snake_forward_ia3(snake_ia, p);
+        snake_verif_wall(snake_ia, p, snake_direction(snake_ia), partie_map(p));
+        snake_ia_border(snake_ia, p);
+        snake_verif_ia(snake_ia, p, snake_direction(snake_ia), 0);
+    }
+    else
+    {
+        snake_forward_ia4(snake_ia, p);
+        snake_verif_wall(snake_ia, p, snake_direction(snake_ia), partie_map(p));
+        snake_ia_border(snake_ia, p);
+        snake_verif_ia(snake_ia, p, snake_direction(snake_ia), 0);
+    }
+}
+
+/**
+ * @brief   Fait avancer le Schlanglà : ia qui fait des losanges de rayon R
+ *
+ * @param[in]   snake_ia Le Schlanglà
+ * @param[in]   snake    Le joueur
+ * @param[in]   bonus     La bonus
+ */
+void snake_forward_ia6(Snake *snake_ia, Partie *p, int R)
+{
+    int duree = partie_duree(p);
+    if(duree%(2*R)<=R)
+    {
+        if(duree%2)
+        {
+            snake_forward_ia3(snake_ia, p);
+            snake_verif_wall(snake_ia, p, snake_direction(snake_ia), partie_map(p));
+            snake_ia_border(snake_ia, p);
+            snake_verif_ia(snake_ia, p, snake_direction(snake_ia), 0);
+        }
+        else
+        {
+            snake_forward_ia4(snake_ia, p);
+            snake_verif_wall(snake_ia, p, snake_direction(snake_ia), partie_map(p));
+            snake_ia_border(snake_ia, p);
+            snake_verif_ia(snake_ia, p, snake_direction(snake_ia), 0);
+        }
+        if(duree%(2*R)==R)
+        {
+            snake_forward_ia3(snake_ia, p);
+            snake_verif_wall(snake_ia, p, snake_direction(snake_ia), partie_map(p));
+            snake_ia_border(snake_ia, p);
+            snake_verif_ia(snake_ia, p, snake_direction(snake_ia), 0);
+        }
+    }
+    else
+    {
+        if(duree%2==0)
+        {
+            snake_forward_ia3(snake_ia, p);
+            snake_verif_wall(snake_ia, p, snake_direction(snake_ia), partie_map(p));
+            snake_ia_border(snake_ia, p);
+            snake_verif_ia(snake_ia, p, snake_direction(snake_ia), 0);
+        }
+        else
+        {
+            snake_forward_ia4(snake_ia, p);
+            snake_verif_wall(snake_ia, p, snake_direction(snake_ia), partie_map(p));
+            snake_ia_border(snake_ia, p);
+            snake_verif_ia(snake_ia, p, snake_direction(snake_ia), 0);
+        }
+    }
+}
 
 
 /**
@@ -599,6 +829,7 @@ void snake_forward_ia2(Snake * snake_ia,Partie *p)
     snake_verif_ia(snake_ia,p, rdir, 0);
     g_rand_free(r);
 }
+
 /**
  * @brief   Change la direction de l'ia en fonction de l'IA demandé (ia_name)
  *
@@ -607,10 +838,8 @@ void snake_forward_ia2(Snake * snake_ia,Partie *p)
  * @param[in]   bonus     La bonus
  * @param[in]   ia_name  Le nom de l'ia
  */
-void snake_set_direction_ia(Snake * snake_ia,Partie *p,char * ia_name)
+void snake_set_direction_ia(Snake * snake_ia, Partie *p, char * ia_name)
 {
-
-
     if(strcmp(ia_name,"ia1") == 0)
     {
         snake_forward_ia1(snake_ia, p);
@@ -620,10 +849,29 @@ void snake_set_direction_ia(Snake * snake_ia,Partie *p,char * ia_name)
         // TODO ia2
         snake_forward_ia2(snake_ia, p);
     }
+    else if(strcmp(ia_name,"ia3") == 0)
+    {
+        // TODO ia2
+        snake_forward_ia3(snake_ia, p);
+    }
+    else if(strcmp(ia_name,"ia4") == 0)
+    {
+        // TODO ia2
+        snake_forward_ia4(snake_ia, p);
+    }
+    else if(strcmp(ia_name,"ia5") == 0)
+    {
+        // TODO ia2
+        snake_forward_ia5(snake_ia, p);
+    }
+    else if(strcmp(ia_name,"ia6") == 0)
+    {
+        // TODO ia2
+        snake_forward_ia6(snake_ia, p, 6);
+    }
     else
     {
         // L'IA de base est l'ia1
         snake_forward_ia1(snake_ia, p);
     }
-
 }
