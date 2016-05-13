@@ -131,5 +131,52 @@
         ]
       }
     ]
+  },
+  {
+    "id": "menu_partie", "type": "ClutterActor",
+    "x-align": "center", "y-align": "center", "x-expand": true,  "y-expand": true,
+    "background-color": "black",
+    "layout-manager": { "type": "ClutterBinLayout" },
+    "children": [{
+      "type": "ClutterActor",
+      "x-align": "center", "y-align": "center",
+      "layout-manager": {
+        "type": "ClutterBoxLayout", "orientation": "vertical", "spacing": 30
+      },
+      "children": [
+        { "type": "ClutterActor", "height": 50, "witdh": 100, "background-color": "red" },
+        {
+          "type": "ClutterActor",
+          "layout-manager": {"type": "ClutterBoxLayout", "orientation": "horizontal", "spacing": 6}
+          "children": [
+            {
+              "type": "ClutterText",
+              "text": "Pseudo :", "color": "white", "font-name": "Sans 12 bold"
+            },
+            {
+              "id": "pseudo", "type": "AlphaField", "width": 100
+            }
+          ]
+        },
+        {
+          "type": "ClutterActor",
+          "layout-manager": {"type": "ClutterBoxLayout", "spacing": 10, "orientation": "vertical"},
+          "Children": [
+            {
+              "id": "bouton_partie_simple", "type": "AlphaButton",
+              "button-text": "Partie Simple"
+            },
+            {
+              "id": "bouton_partie_avancee", "type": "AlphaButton",
+              "button-text": "Partie avancée"
+            },
+            {
+              "id": "bouton_partie_reseau", "type": "AlphaButton",
+              "button-text": "Partie en réseau"
+            }
+          ]
+        }
+      ]
+    }]
   }
 ]
