@@ -14,6 +14,17 @@
 #include "partie.h"
 #include "struc.h"
 
+/**
+ * @brief      La structure d'un object collision
+ *
+ * @use CollisionObject
+ * @param[in]  type                  Le type de l'object collision.
+ * @param[in]  enabled               Si la collision est active.
+ * @param[in]  obj2                  Objet de la collision.
+ * @param[in]  collisions            Le tableau des collisions.
+ * @param[in]  nb_collisions         Le nombre de collisions.
+ * @param[in]  taille_collisions     La taille des collisions.
+ */
 struct _CollisionObject
 {
     CollisionType type;
@@ -24,6 +35,17 @@ struct _CollisionObject
     int taille_collisions;
 };
 
+
+/**
+ * @brief      La structure d'une collision
+ *
+ * @use Collision
+ * @param[in]  cb                  Le type de l'object collision.
+ * @param[in]  enabled             Si la collision est active.
+ * @param[in]  obj1                Le snake.
+ * @param[in]  obj2                La collision.
+ * @param[in]  data
+ */
 struct _Collision
 {
     CollisionCb cb;
@@ -33,6 +55,15 @@ struct _Collision
     void *data;
 };
 
+
+/**
+ * @brief      La structure d'un gestionnaire de collisions.
+ *
+ * @use GestionCollisions
+ * @param[in]  objs             L'objet de collision.
+ * @param[in]  nb_objs          Le nombre de CollisionObject.
+ * @param[in]  taille_objs      La taille du CollisionObject.
+ */
 struct _GestionCollisions
 {
     CollisionObject **objs;
