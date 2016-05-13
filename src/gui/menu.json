@@ -43,7 +43,6 @@
                   {
                     "id": "Jouer",
                     "type": "AlphaButton",
-                    "reactive": true,
                     "x-expand": true,
                     "signals": [
                       {
@@ -61,12 +60,17 @@
                           }
                         ]
                       }
+                    ],
+                    "children": [
+                      {
+                        "type": "ClutterText",
+                        "Buttontext": "Jouer"
+                      }
                     ]
                   },
                   {
                     "id": "Scores",
                     "type": "AlphaButton",
-                    "reactive": true,
                     "x-expand": true,
                     "signals": [
                       {
@@ -84,12 +88,17 @@
                           }
                         ]
                       }
+                    ],
+                    "children": [
+                      {
+                        "type": "ClutterText",
+                        "Buttontext": "Scores"
+                      }
                     ]
                   },
                   {
                     "id": "Quitter",
                     "type": "AlphaButton",
-                    "reactive": true,
                     "x-expand": true,
                     "signals": [
                       {
@@ -106,6 +115,12 @@
                             "handler": "jouer_clicked_cb"
                           }
                         ]
+                      }
+                    ],
+                    "children": [
+                      {
+                        "type": "ClutterText",
+                        "button-text": "Quitter"
                       }
                     ]
                   }
