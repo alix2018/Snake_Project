@@ -1,13 +1,6 @@
 
 #include "alpha-field.h"
 
-struct _AlphaField
-{
-    ClutterActor parent_instance;
-
-    ClutterActor *text;
-};
-
 G_DEFINE_TYPE(AlphaField, alpha_field, CLUTTER_TYPE_ACTOR)
 
 enum
@@ -89,11 +82,16 @@ static void alpha_field_init(AlphaField *self)
         "reactive", TRUE,
         "cursor-visible", TRUE,
         "x-expand", TRUE,
+        "color", CLUTTER_COLOR_Black,
         NULL
     );
-    clutter_text_set_color(CLUTTER_TEXT(self->text), CLUTTER_COLOR_Red);
     clutter_actor_set_margin(self->text, &margin);
 
+    g_object_set(
+        self,
+        "background-color", CLUTTER_COLOR_White,
+        NULL
+    );
     clutter_actor_set_layout_manager(CLUTTER_ACTOR(self), layout);
     clutter_actor_add_child(CLUTTER_ACTOR(self), self->text);
 }

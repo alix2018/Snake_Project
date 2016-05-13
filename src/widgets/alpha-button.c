@@ -4,22 +4,6 @@
 
 #include "alpha-button.h"
 
-struct _AlphaButton
-{
-    ClutterActor parent_instance;
-    // Les attributs ici
-    ClutterActor *text;
-    ClutterColor *color;
-
-};
-
-struct _AlphaButtonClass
-{
-    ClutterActorClass * parent_class;
-};
-
-GType alpha_button_get_type();
-
 G_DEFINE_TYPE(AlphaButton, alpha_button, CLUTTER_TYPE_ACTOR)
 
 enum
@@ -30,6 +14,31 @@ enum
 };
 
 static GParamSpec *obj_properties[PROP_N] = { NULL, };
+
+static gboolean enter_event_cb(ClutterActor *actor, ClutterEvent *event,
+                               gpointer data)
+{
+    ClutterColor *bg = clutter_color_new(255, 255, 255, 255);
+
+    clutter_actor_set_background_color(actor, bg);
+
+    clutter_color_free(bg);
+
+    return CLUTTER_EVENT_STOP;
+}
+
+static gboolean leave_event_cb(ClutterActor *actor, ClutterEvent *event,
+                               gpointer data)
+{
+    ClutterColor *bg = clutter_color_alloc();
+    clutter_color_from_string(bg, "grey");
+
+    clutter_actor_set_background_color(actor, bg);
+
+    clutter_color_free(bg);
+
+    return CLUTTER_EVENT_STOP;
+}
 
 static void alpha_button_set_property(GObject *object,
                                       guint property_id,
@@ -82,19 +91,41 @@ static void alpha_button_dispose(GObject *object)
 
 static void alpha_button_finalize(GObject *g_object)
 {
-    clutter_color_free(ALPHA_BUTTON(g_object)->color);
-
-    /*
-     * Destructeur pour les objets non clutter.
-     */
 
     G_OBJECT_CLASS(alpha_button_parent_class)->finalize(g_object);
 }
 
 static void alpha_button_init(AlphaButton *self)
 {
+    ClutterMargin margin = (ClutterMargin) { 5, 5, 5, 5 };
+    ClutterColor *bg = clutter_color_alloc();
+    ClutterColor *fg = clutter_color_alloc();
+    ClutterLayoutManager *layout = clutter_bin_layout_new(CLUTTER_BIN_ALIGNMENT_CENTER,
+                                                          CLUTTER_BIN_ALIGNMENT_CENTER);
+
+    clutter_color_from_string(bg, "grey");
+    clutter_color_from_string(fg, "black");
+
+    g_object_set(
+        self,
+        "background-color", bg,
+        "reactive", TRUE,
+        "layout-manager", layout,
+        NULL
+    );
+    
     self->text = clutter_text_new();
-    self->color = clutter_color_alloc();
+    g_object_set(
+        self->text,
+        "color", fg,
+        NULL
+    );
+    clutter_actor_set_margin(self->text, &margin);
+    
+    clutter_actor_add_child(CLUTTER_ACTOR(self), self->text);
+
+    g_signal_connect(self, "enter-event", G_CALLBACK(enter_event_cb), NULL);
+    g_signal_connect(self, "leave-event", G_CALLBACK(leave_event_cb), NULL);
 }
 
 static void alpha_button_class_init(AlphaButtonClass *klass)
