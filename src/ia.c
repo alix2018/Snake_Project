@@ -720,7 +720,6 @@ void snake_ia_border(Snake *snake_ia, Partie *p)
 void snake_forward_ia5(Snake *snake_ia, Partie *p)
 {
     int duree = partie_duree(p);
-    printf("ok, d--2 = %d\n", duree%2);
     if(duree%4<2)
     {
         snake_forward_ia3(snake_ia, p);
@@ -736,6 +735,60 @@ void snake_forward_ia5(Snake *snake_ia, Partie *p)
         snake_verif_ia(snake_ia, p, snake_direction(snake_ia), 0);
     }
 }
+
+/**
+ * @brief   Fait avancer le Schlanglà : ia qui fait des losanges de rayon R
+ *
+ * @param[in]   snake_ia Le Schlanglà
+ * @param[in]   snake    Le joueur
+ * @param[in]   bonus     La bonus
+ */
+void snake_forward_ia6(Snake *snake_ia, Partie *p, int R)
+{
+    int duree = partie_duree(p);
+    if(duree%(2*R)<=R)
+    {
+        if(duree%2)
+        {
+            snake_forward_ia3(snake_ia, p);
+            snake_verif_wall(snake_ia, p, snake_direction(snake_ia), partie_map(p));
+            snake_ia_border(snake_ia, p);
+            snake_verif_ia(snake_ia, p, snake_direction(snake_ia), 0);
+        }
+        else
+        {
+            snake_forward_ia4(snake_ia, p);
+            snake_verif_wall(snake_ia, p, snake_direction(snake_ia), partie_map(p));
+            snake_ia_border(snake_ia, p);
+            snake_verif_ia(snake_ia, p, snake_direction(snake_ia), 0);
+        }
+        if(duree%(2*R)==R)
+        {
+            snake_forward_ia3(snake_ia, p);
+            snake_verif_wall(snake_ia, p, snake_direction(snake_ia), partie_map(p));
+            snake_ia_border(snake_ia, p);
+            snake_verif_ia(snake_ia, p, snake_direction(snake_ia), 0);
+        }
+    }
+    else
+    {
+        if(duree%2==0)
+        {
+            snake_forward_ia3(snake_ia, p);
+            snake_verif_wall(snake_ia, p, snake_direction(snake_ia), partie_map(p));
+            snake_ia_border(snake_ia, p);
+            snake_verif_ia(snake_ia, p, snake_direction(snake_ia), 0);
+        }
+        else
+        {
+            snake_forward_ia4(snake_ia, p);
+            snake_verif_wall(snake_ia, p, snake_direction(snake_ia), partie_map(p));
+            snake_ia_border(snake_ia, p);
+            snake_verif_ia(snake_ia, p, snake_direction(snake_ia), 0);
+        }
+    }
+}
+
 
 /**
  * @brief   Fait avancer le Schlanglà : déetermine la direction aleatoire
@@ -776,6 +829,7 @@ void snake_forward_ia2(Snake * snake_ia,Partie *p)
     snake_verif_ia(snake_ia,p, rdir, 0);
     g_rand_free(r);
 }
+
 /**
  * @brief   Change la direction de l'ia en fonction de l'IA demandé (ia_name)
  *
@@ -786,8 +840,6 @@ void snake_forward_ia2(Snake * snake_ia,Partie *p)
  */
 void snake_set_direction_ia(Snake * snake_ia, Partie *p, char * ia_name)
 {
-
-
     if(strcmp(ia_name,"ia1") == 0)
     {
         snake_forward_ia1(snake_ia, p);
@@ -807,10 +859,19 @@ void snake_set_direction_ia(Snake * snake_ia, Partie *p, char * ia_name)
         // TODO ia2
         snake_forward_ia4(snake_ia, p);
     }
+    else if(strcmp(ia_name,"ia5") == 0)
+    {
+        // TODO ia2
+        snake_forward_ia5(snake_ia, p);
+    }
+    else if(strcmp(ia_name,"ia6") == 0)
+    {
+        // TODO ia2
+        snake_forward_ia6(snake_ia, p, 6);
+    }
     else
     {
         // L'IA de base est l'ia1
-        snake_forward_ia5(snake_ia, p);
+        snake_forward_ia1(snake_ia, p);
     }
-
 }
