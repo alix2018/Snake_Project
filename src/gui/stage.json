@@ -7,11 +7,8 @@
     "layout-manager": { "type": "ClutterBinLayout" },
     "children": [
       {
-        "id": "zone_snake",
-        "type": "ClutterActor",
-        "x-align": "fill",
-        "y-align": "fill",
-        "x-expand": true,
+        "id": "zone_snake", "type": "ClutterActor",
+        "x-align": "fill", "y-align": "fill", "x-expand": true,
         "y-expand": true,
         "reactive": true,
         "background-color": "#FFFFFF"
