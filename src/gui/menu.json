@@ -2,11 +2,18 @@
   {
     "id": "menu_general", "type": "ClutterActor",
     "x-align": "center", "y-align": "center", "x-expand": true,  "x-expand": true,
-    "layout-manager": {"type": "ClutterBoxLayout"},
+    "layout-manager": {"type": "ClutterBoxLayout","orientation": "vertical",
+      "spacing": 50},
     "children": [
       {
         "type": "ClutterActor",
         "background-color": "#FFFFFF",
+        "layout-manager": {
+          "type": "ClutterBoxLayout",
+          "orientation": "vertical",
+          "spacing": 30
+        }
+
 
 
       }
