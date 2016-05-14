@@ -2,30 +2,36 @@
   {
     "id": "menu_general",
     "type": "ClutterActor",
-    "x-align": "center",
-    "y-align": "center",
+    "background-color": "grey",
     "x-expand": true,
     "y-expand": true,
     "layout-manager": {
       "type": "ClutterBoxLayout",
       "orientation": "vertical",
-      "spacing": 50
+      "spacing": 20
     },
     "children": [
       {
         "type": "ClutterActor",
+        "background-color": "red",
         "x-align": "center",
         "y-align": "center",
         "layout-manager": {
           "type": "ClutterBoxLayout",
           "orientation": "vertical",
-          "spacing": 30
+          "spacing": 200
         },
         "children": [
           {
+            "type":"ClutterActor",
+            "width":600,
+            "height": 170,
+            "background-color": "green"
+          },
+          {
             "type": "ClutterActor",
             "x-expand": true,
-            "height": 70,
+            "background-color": "blue",
             "children": [
               {
                 "type": "ClutterActor",
@@ -41,6 +47,7 @@
                     "id": "Jouer",
                     "type": "AlphaButton",
                     "button-text": "Jouer",
+                    "width":400,
                     "x-expand": true,
                     "actions": [
                       {

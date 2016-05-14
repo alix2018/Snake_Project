@@ -360,7 +360,7 @@ void init_partie(Partie *partie, ClutterScript *ui, int width, int height)
     );
 
     partie->affichage = create_affichage();// affichage.c
-    init_affichage(partie->affichage, ui, snake, width, height);// affichage.c
+    init_affichage(partie->affichage, ui, snake);// affichage.c
 
     affichage_add_snake(partie->affichage, snake,  CLUTTER_COLOR_Blue);// affichage.c
     affichage_add_snake(partie->affichage, schlanga,  CLUTTER_COLOR_Red);

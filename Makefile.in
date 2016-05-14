@@ -8,7 +8,8 @@ SOURCE_FILES = struc.c \
                collisions.c \
                score.c \
 	           widgets/alpha-field.c \
-	           widgets/alpha-button.c
+	           widgets/alpha-button.c \
+	           application.c
 
 SRC_DIR = src
 OBJ_DIR = build

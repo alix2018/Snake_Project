@@ -58,7 +58,7 @@ void affichage_add_bonus(Affichage *affichage, Bouf *bonus,
 
 void affichage_update(Affichage *affichage);
 
-void init_affichage(Affichage *affichage, ClutterScript *ui, Snake *snake,
-                    int width, int height);
+void init_affichage(Affichage *affichage, ClutterScript *ui, Snake *snake);
+
 
 #endif //ALPHA_SNAKE_AFFICHAGE_H

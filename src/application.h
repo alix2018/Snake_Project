@@ -13,6 +13,6 @@ typedef struct _Application {
     Partie *partie;
 }Application;
 
-Application init_application(Application *app);
+Application init_application(Application *app, int width, int height);
 
 #endif //ALPHA_SNAKE_APPLICATION_H
