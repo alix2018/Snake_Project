@@ -365,19 +365,6 @@ int snake_eat(Snake *s, Bonus *b)
     }
 }
 
-/**
- * @brief        Fonction callback appelée lorsque la fenêtre est fermée.
- *
- * @param[in]    actor   L'acteur qui a émis le signal.
- * @param[in]    data    Le SnakeActor du snake.
- *
- * @return       Ce prototype est défini par Clutter, cf. la documentation de Clutter.
- */
-void stage_destroy_cb(ClutterActor *actor, gpointer data)
-{
-    clutter_main_quit();
-}
-
 
 /**
  * @brief   Initialise un SnakeActor.

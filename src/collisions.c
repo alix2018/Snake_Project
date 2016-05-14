@@ -258,9 +258,9 @@ static void check_all_collisions_for_snake(CollisionObject *obj) {
  */
 int check_collision_for_bonus(Collision *collision)
 {
-    Bouf *bonus = collision->obj2;
+    Bonus *bonus = collision->obj2;
 
-    return collision->enabled && coord_egales(bouf_coord(bonus), snake_pos(collision->obj1));
+    return collision->enabled && coord_egales(bonus_coord(bonus), snake_pos(collision->obj1));
 }
 
 /**

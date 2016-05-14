@@ -26,16 +26,32 @@ gboolean bouton_partie_simple_clicked_cb(ClutterClickAction *action,
     clutter_actor_remove_child(app->stage, app->menu_partie);
 
     partie = create_partie();
-    init_partie(partie, app->ui, 30, 30); // TODO récupérer depuis app
+    partie_set_config(partie, app->config);    //app->partie = create_partie();
+    //init_partie(app->partie, app->ui, 30, 30);
+    init_partie(partie, app->ui); // TODO récupérer depuis app
     init_pseudo(partie, 0, NULL);
 
     return CLUTTER_EVENT_STOP;
+}
+
+/**
+ * @brief        Fonction callback appelée lorsque la fenêtre est fermée.
+ *
+ * @param[in]    actor   L'acteur qui a émis le signal.
+ * @param[in]    data    Le SnakeActor du snake.
+ *
+ * @return       Ce prototype est défini par Clutter, cf. la documentation de Clutter.
+ */
+void stage_destroy_cb(ClutterActor *actor, gpointer data)
+{
+    clutter_main_quit();
 }
 
 void init_application(Application *app, int width, int height){
     GError *err = NULL;
 
     app->partie = NULL;
+    app->config = init_config();
 
     app->ui = clutter_script_new();
     clutter_script_load_from_file(app->ui, "src/gui/stage.json", &err);
@@ -61,15 +77,16 @@ void init_application(Application *app, int width, int height){
     );
 
     clutter_actor_add_child(app->stage, app->menu_general);
-    clutter_actor_set_size(app->stage, width * GRID_SIZE, height * GRID_SIZE);
+    clutter_actor_set_size(app->stage, width * app->config->grid_size,
+                           height * app->config->grid_size);
 
     g_signal_connect(app->stage, "destroy", G_CALLBACK(stage_destroy_cb), NULL);
 
-    //app->partie = create_partie();
-    //init_partie(app->partie, app->ui, 30, 30);
     clutter_actor_show(app->stage);
     clutter_main();
 
     if (app->partie != NULL)
         free_partie(app->partie);
+
+    free_config(app->config);
 };

@@ -15,6 +15,7 @@ typedef struct _Application {
     ClutterActor *menu_general;
     ClutterActor *menu_partie;
     ClutterActor *stage;
+    Config *config;
 }Application;
 
 void init_application(Application *app, int width, int height);

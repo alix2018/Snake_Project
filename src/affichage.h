@@ -50,10 +50,6 @@ int snake_border_snake(SnakeActor *sa,SnakeActor * sa_ia);
 //Renvoie 1 si et seulement si les coords de la te et de la queue sont égales
 int snake_eat(Snake *s, Bonus *b);
 
-//Libere mémoir
-void stage_destroy_cb(ClutterActor *actor, gpointer data);
-
-
 SnakeActor *create_snake_actor(ClutterActor *parent, Snake *s, ClutterColor *color, SnakeImage *imgs);
 
 static void free_clutter_actor_fn(void * elt);
