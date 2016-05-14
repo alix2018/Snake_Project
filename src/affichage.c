@@ -710,17 +710,14 @@ void affichage_update(Affichage *affichage)
 void init_affichage(Affichage *affichage, ClutterScript *ui, Snake *snake)
 {
     ClutterActor *zone_snake;
-    ClutterActor *stage;
-    Snake *snk, *snk_ia;
-    SnakeActor *sa, *sa_ia;
-    Bouf *bouf;
-    BoufActor *ba;
+    ClutterStage *stage;
 
     affichage->ui = ui;
 
+    stage = CLUTTER_STAGE(clutter_script_get_object(ui, "stage"));
 
     zone_snake = CLUTTER_ACTOR(clutter_script_get_object(ui, "zone_snake"));
-    clutter_stage_set_key_focus(CLUTTER_STAGE(stage), zone_snake);
+    clutter_stage_set_key_focus(stage, zone_snake);
     affichage->images = snake_generate_image();
 
     g_signal_connect(zone_snake, "key-press-event", G_CALLBACK(zone_snake_key_press_cb), snake);

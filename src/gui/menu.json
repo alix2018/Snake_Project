@@ -105,7 +105,7 @@
   },
   {
     "id": "menu_partie", "type": "ClutterActor",
-    "x-align": "center", "y-align": "center", "x-expand": true,  "y-expand": true,
+    "x-expand": true,  "y-expand": true,
     "background-color": "black",
     "layout-manager": { "type": "ClutterBinLayout" },
     "children": [{
@@ -132,7 +132,7 @@
         {
           "type": "ClutterActor",
           "layout-manager": {"type": "ClutterBoxLayout", "spacing": 10, "orientation": "vertical"},
-          "Children": [
+          "children": [
             {
               "id": "buton_partie_simple", "type": "AlphaButton",
               "button-text": "Partie Simple",
