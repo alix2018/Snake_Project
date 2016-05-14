@@ -22,27 +22,25 @@
           "spacing": 30
         },
         "children": [
-          // contient l'image
           {
             "type": "ClutterActor",
             "x-expand": true,
             "height": 70,
             "children": [
-              // contient les boutons
               {
                 "type": "ClutterActor",
                 "layout-manager": {
                   "type": "ClutterBoxLayout",
                   "orientation": "vertical",
                   "spacing": 5
-                }
-                "y-expand": true
+                },
+                "y-expand": true,
 
                 "children": [
-                  // Bouton JOUER
                   {
                     "id": "Jouer",
                     "type": "AlphaButton",
+                    "button-text": "Jouer",
                     "x-expand": true,
                     "signals": [
                       {
@@ -60,17 +58,12 @@
                           }
                         ]
                       }
-                    ],
-                    "children": [
-                      {
-                        "type": "ClutterText",
-                        "Buttontext": "Jouer"
-                      }
                     ]
                   },
                   {
                     "id": "Scores",
                     "type": "AlphaButton",
+                    "button-text": "Scores",
                     "x-expand": true,
                     "signals": [
                       {
@@ -88,17 +81,12 @@
                           }
                         ]
                       }
-                    ],
-                    "children": [
-                      {
-                        "type": "ClutterText",
-                        "Buttontext": "Scores"
-                      }
                     ]
                   },
                   {
                     "id": "Quitter",
                     "type": "AlphaButton",
+                    "button-text": "Quitter",
                     "x-expand": true,
                     "signals": [
                       {
@@ -115,12 +103,6 @@
                             "handler": "jouer_clicked_cb"
                           }
                         ]
-                      }
-                    ],
-                    "children": [
-                      {
-                        "type": "ClutterText",
-                        "button-text": "Quitter"
                       }
                     ]
                   }
@@ -144,10 +126,10 @@
         "type": "ClutterBoxLayout", "orientation": "vertical", "spacing": 30
       },
       "children": [
-        { "type": "ClutterActor", "height": 50, "witdh": 100, "background-color": "red" },
+        { "type": "ClutterActor", "height": 50, "width": 100, "background-color": "red" },
         {
           "type": "ClutterActor",
-          "layout-manager": {"type": "ClutterBoxLayout", "orientation": "horizontal", "spacing": 6}
+          "layout-manager": {"type": "ClutterBoxLayout", "orientation": "horizontal", "spacing": 6},
           "children": [
             {
               "type": "ClutterText",
@@ -163,7 +145,7 @@
           "layout-manager": {"type": "ClutterBoxLayout", "spacing": 10, "orientation": "vertical"},
           "Children": [
             {
-              "id": "bouton_partie_simple", "type": "AlphaButton",
+              "id": "buton_partie_simple", "type": "AlphaButton",
               "button-text": "Partie Simple"
             },
             {
