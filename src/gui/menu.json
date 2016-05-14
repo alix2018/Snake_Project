@@ -42,12 +42,6 @@
                     "type": "AlphaButton",
                     "button-text": "Jouer",
                     "x-expand": true,
-                    "signals": [
-                      {
-                        "name": "jouer",
-                        "handler": "jouer_lancer_cb"
-                      }
-                    ],
                     "actions": [
                       {
                         "type": "ClutterClickAction",
@@ -65,19 +59,13 @@
                     "type": "AlphaButton",
                     "button-text": "Scores",
                     "x-expand": true,
-                    "signals": [
-                      {
-                        "name": "score",
-                        "handler": "score_afficher_cb"
-                      }
-                    ],
                     "actions": [
                       {
                         "type": "ClutterClickAction",
                         "signals": [
                           {
                             "name": "clicked",
-                            "handler": "jouer_clicked_cb"
+                            "handler": "scores_clicked_cb"
                           }
                         ]
                       }
@@ -88,19 +76,13 @@
                     "type": "AlphaButton",
                     "button-text": "Quitter",
                     "x-expand": true,
-                    "signals": [
-                      {
-                        "name": "quitter",
-                        "handler": "quitter_fermer_cb"
-                      }
-                    ],
                     "actions": [
                       {
                         "type": "ClutterClickAction",
                         "signals": [
                           {
                             "name": "clicked",
-                            "handler": "jouer_clicked_cb"
+                            "handler": "quitter_clicked_cb"
                           }
                         ]
                       }
@@ -146,15 +128,39 @@
           "Children": [
             {
               "id": "buton_partie_simple", "type": "AlphaButton",
-              "button-text": "Partie Simple"
+              "button-text": "Partie Simple",
+              "actions": [
+                {
+                  "type": "ClutterClickAction",
+                  "signals": [
+                    { "name": "clicked", "handler": "bouton_partie_simple_clicked_cb"}
+                  ]
+                }
+              ]
             },
             {
               "id": "bouton_partie_avancee", "type": "AlphaButton",
-              "button-text": "Partie avancée"
+              "button-text": "Partie avancée",
+              "actions": [
+                {
+                  "type": "ClutterClickAction",
+                  "signals": [
+                    { "name": "clicked", "handler": "bouton_partie_avancee_clicked_cb"}
+                  ]
+                }
+              ]
             },
             {
               "id": "bouton_partie_reseau", "type": "AlphaButton",
-              "button-text": "Partie en réseau"
+              "button-text": "Partie en réseau",
+              "actions": [
+                {
+                  "type": "ClutterClickAction",
+                  "signals": [
+                    { "name": "clicked", "handler": "bouton_partie_reseau_clicked_cb"}
+                  ]
+                }
+              ]
             }
           ]
         }
