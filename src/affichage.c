@@ -1,21 +1,53 @@
+/**
+ * @file      affichage.c
+ * @author    alpha-snake
+ * @version   1
+ * @date      11/05/2016
+ * @brief     Toutes les fonctions permettant d'afficher la fenêtre, les Snakes/Schlangà et les bonus.
+ * @details   ---
+ */
+
 #include <clutter/clutter.h>
 #include "affichage.h"
+#include "partie.h"
 #include "list.h"
 #include "struc.h"
 #include "ia.h"
 #include <gdk/gdk.h>
 
+/**
+ * @brief      La structure de l'acteur Snake
+ *
+ * @use SnakeActor
+ * @param[in]  actor        La liste des ClutterActor du snake.
+ * @param[in]  parent       Le ClutterActor qui contient les acteurs du snake.
+ * @param[in]  snake        Le Snake affiché par le SnakeActor.
+ * @param[in]  color        La couleur.
+ * @param[in]  images       Images du snake.
+ * @param[in]  cur_size     La taille du snake _affiché_ (peut être différente de la taille du Snake).
+ */
 struct _snake_actor
 {
-    List *actors;           /// La liste des ClutterActor du snake.
-    ClutterActor *parent;   /// Le ClutterActor qui contient les acteurs du snake.
-    Snake *snake;           /// Le Snake affiché par le SnakeActor.
-    ClutterColor *color;    /// La couleur.
+    List *actors;
+    ClutterActor *parent;
+    Snake *snake;
+    ClutterColor *color;
     SnakeImage *images;
-    int cur_size;           /// La taille du snake _affiché_ (peut être différente de la taille du Snake).
+    int cur_size;
 
 };
 
+
+/**
+ * @brief      La structure de l'acteur image pour un snake
+ *
+ * @use SnakeImage
+ * @param[in]  tete        Image de la tête du Snake.
+ * @param[in]  queue       Image de la queue du Snake.
+ * @param[in]  corps       Image du corps du Snake.
+ * @param[in]  turnlight   Image du corps du Snake quand il tourne (angle plus clair).
+ * @param[in]  turndark    Image du corps du Snake quand il tourne (angle plus sombre).
+ */
 struct _snake_image
 {
     ClutterContent *tete;
@@ -25,6 +57,17 @@ struct _snake_image
     ClutterContent *turndark;
 };
 
+
+
+/**
+ * @brief      La structure de l'acteur affichae
+ *
+ * @use Affichage
+ * @param[in]  snake_actors     Liste des acteurs du snake.
+ * @param[in]  bonus            Liste des acteurs du bonus.
+ * @param[in]  images           Images du snake.
+ * @param[in]  ui               Le fichier ui contenant la déclaration de la fenêtre du Snake.
+ */
 struct _Affichage
 {
     List *snake_actors;
@@ -63,9 +106,9 @@ static void free_affichage_snake_actors(void *elt)
 
 static void free_affichage_bonus_actor(void *elt)
 {
-    BoufActor *actor = elt;
+    BonusActor *actor = elt;
 
-    free_bouf_actor(actor);
+    free_bonus_actor(actor);
 }
 
 /**
@@ -106,7 +149,7 @@ ClutterScript *affichage_ui(Affichage *affichage)
  * @param[in]    event  Permet de récupérer des données sur la touche appuyée.
  * @param[in]    data   Un pointeur void* vers le snake contrôlé par le joueur.
  *
- * @return ce prototype est défini par Clutter, cf. la documentation de Clutter.
+ * @return  Ce prototype est défini par Clutter, cf. la documentation de Clutter.
  */
 gboolean zone_snake_key_press_cb(ClutterActor *actor, ClutterEvent *event, gpointer data)
 {
@@ -135,23 +178,24 @@ gboolean zone_snake_key_press_cb(ClutterActor *actor, ClutterEvent *event, gpoin
 
 
 /**
- * @brief      Renvoie true si le snake est contre un mur et veut avancer dans
+ * @brief      Renvoie true si le snake est contre un mur et veux avancer dans
  *             le mur. Appelée dans la fonction timeout_tich_cb
  *
- * @param[in]  c1  coord à vérifier
- * @param[in]  c2  coord à vérifier
+ * @param[in]  p    La partie
+ * @param[in]  sa   Un snake
  *
+ * @return     Renvoie 1 si le snake est contre un mur et veux avancer dans le mur, 0 sinon
  */
-int snake_border_map(SnakeActor *sa)
+int snake_border_map(Partie *p,SnakeActor *sa)
 {
     int res = 0, l_w, l_h;
     float w, h;
-
+    Config * config = partie_config(p);
     Snake *s = sa->snake;
 
     clutter_actor_get_size(sa->parent, &w, &h);
-    l_w = (int) w/GRID_SIZE;
-    l_h = (int) h/GRID_SIZE;
+    l_w = (int) w/config->grid_size;
+    l_h = (int) h/config->grid_size;
 
     if(snake_direction(s) == HAUT && snake_pos(s).y == 0)
     {
@@ -174,8 +218,12 @@ int snake_border_map(SnakeActor *sa)
 }
 
 /**
-    Renvoie 0 si le snake essaie de se mordre la queue, 1 sinon
-    Appelée dans la fonction timeout_tich_cb
+ * @brief      Renvoie true si le snake va se mordre la queue. Appelée dans la fonction timeout_tich_cb.
+ *
+ * @param[in]  sa      Un Schlangà
+ * @param[in]  sa_ia   Un snake
+ *
+ * @return     Renvoie 0 si le snake essaie de se mordre la queue, 1 sinon
 */
 int snake_border_snake(SnakeActor *sa,SnakeActor *sa_ia)
 {
@@ -298,14 +346,16 @@ int snake_border_snake(SnakeActor *sa,SnakeActor *sa_ia)
 }
 
 /*
- * @brief Indique si le snake mange la bouf
+ * @brief        Indique si le snake mange la bonus
  *
- * @param[in]    s   un snake
- * return   1 si et seulement si la tête du snake est au même endroit que la bouf
+ * @param[in]    s   Un snake
+ * @param[in]    b   Un bonus
+ *
+ * @return       1 si et seulement si la tête du snake est au même endroit que la bonus
  */
-int snake_eat(Snake *s, Bouf *b)
+int snake_eat(Snake *s, Bonus *b)
 {
-    if(coord_egales(snake_pos(s), bouf_coord(b)))
+    if(coord_egales(snake_pos(s), bonus_coord(b)))
     {
         return 1; // O_o
     }
@@ -316,11 +366,12 @@ int snake_eat(Snake *s, Bouf *b)
 }
 
 /**
- * @brief   Fonction callback appelée lorsque la fenêtre est fermée.
+ * @brief        Fonction callback appelée lorsque la fenêtre est fermée.
  *
- * @param[in]    data   Le SnakeActor du snake.
+ * @param[in]    actor   L'acteur qui a émis le signal.
+ * @param[in]    data    Le SnakeActor du snake.
  *
- * Ce prototype est défini par Clutter, cf. la documentation de Clutter.
+ * @return       Ce prototype est défini par Clutter, cf. la documentation de Clutter.
  */
 void stage_destroy_cb(ClutterActor *actor, gpointer data)
 {
@@ -331,8 +382,10 @@ void stage_destroy_cb(ClutterActor *actor, gpointer data)
 /**
  * @brief   Initialise un SnakeActor.
  *
- * @param[in]    parent Le ClutterActor qui contiendra le snake.
- * @param[in]    s      Le snake qui sera affiché par le SnakeActor.
+ * @param[in]    parent     Le ClutterActor qui contiendra le snake.
+ * @param[in]    s          Le snake qui sera affiché par le SnakeActor.
+ * @param[in]    color      Couleur du snake.
+ * @param[in]    imgs       Images du snake.
  *
  * @return  Le SnakeActor initialisé.
  */
@@ -353,8 +406,8 @@ SnakeActor *create_snake_actor(ClutterActor *parent, Snake *s, ClutterColor *col
 
 
 /**
- * @brief Fonction appliquée à chaque élément de la liste des acteurs
- * de SnakeActor lors de la suppression de cette liste.
+ * @brief Fonction appliquée à chaque élément de la liste des acteurs de SnakeActor lors de la suppression de cette liste.
+ *
  * @param[in]   elt     Le ClutterActor à suprimer.
  */
 static void free_clutter_actor_fn(void * elt)
@@ -379,17 +432,19 @@ void free_snake_actor(SnakeActor *sa)
 
 
 /**
- * Met à jour la longueur et la position d'un SnakeActor.
+ * @brief   Met à jour la longueur et la position d'un SnakeActor.
  *
+ * @param[in]    p      La partie.
  * @param[in]    sa     Le SnakeActor à mettre à jour.
  */
-void snake_actor_update(SnakeActor *sa)
+void snake_actor_update(Partie *p, SnakeActor *sa)
 {
     int delta;
     ClutterActor *actor;
     Node node_sa;
     Node node_s;
     Coord *c;
+    Config * config = partie_config(p);
 
     delta = snake_longueur(sa->snake) - sa->cur_size;
 
@@ -399,7 +454,7 @@ void snake_actor_update(SnakeActor *sa)
         {
             actor = clutter_actor_new();
             g_object_ref(actor);
-            clutter_actor_set_size(actor, GRID_SIZE, GRID_SIZE);
+            clutter_actor_set_size(actor, config->grid_size, config->grid_size);
            // clutter_actor_set_background_color(actor,sa->color );
 
             clutter_actor_add_effect (actor, clutter_colorize_effect_new (sa->color));
@@ -433,8 +488,8 @@ void snake_actor_update(SnakeActor *sa)
         actor = node_elt(node_sa);
         clutter_actor_set_position(
             actor,
-            c->x * GRID_SIZE,
-            c->y * GRID_SIZE
+            c->x * config->grid_size,
+            c->y * config->grid_size
         );
 
         // TODO changer les images pendant le deplacement
@@ -584,7 +639,9 @@ void snake_actor_update(SnakeActor *sa)
 
 /**
  * @brief   Charge une image
+ *
  * @param[in] filename  Nom de l'image à importer.
+ *
  * @return  Un ClutterContent avec l'image chargée.
  */
 ClutterContent *generate_image(char *filename)
@@ -610,6 +667,7 @@ ClutterContent *generate_image(char *filename)
 
 /**
  * @brief   Crée un élément de type SnakeImage
+ *
  * @return  Le SnakeImage initialisé.
  */
 SnakeImage *snake_generate_image()
@@ -656,15 +714,17 @@ void affichage_add_snake(Affichage *affichage, Snake *snake,
  * @param[in]    affichage  Un affichage.
  * @param[in]    bonus      Le bonus à ajouter.
  * @param[in]    color      La couleur du bonus.
+ * @param[in]    config     Les configurations.
  */
-void affichage_add_bonus(Affichage *affichage, Bouf *bonus,
-                         const ClutterColor *color)
+void affichage_add_bonus(Affichage *affichage, Bonus *bonus,
+                         const ClutterColor *color,Config * config)
 {
-    BoufActor *ba;
-    ba = create_bouf_actor(
+    BonusActor *ba;
+    ba = create_bonus_actor(
         CLUTTER_ACTOR(clutter_script_get_object(affichage->ui, "zone_snake")),
         bonus,
-        clutter_color_new(0, 255, 0, 255)
+        clutter_color_new(0, 255, 0, 255),
+        config
     );
     list_add_last(affichage->bonus, ba);
 }
@@ -672,12 +732,13 @@ void affichage_add_bonus(Affichage *affichage, Bouf *bonus,
 /**
  * @brief   Met à jour un affichage.
  *
+ * @param[in]    p          La partie.
  * @param[in]    affichage  L'affichage à mettre à jour.
  */
-void affichage_update(Affichage *affichage)
+void affichage_update(Partie * p,Affichage *affichage)
 {
     SnakeActor *sa;
-    BoufActor *ba;
+    BonusActor *ba;
     Node cur;
 
     for (cur = list_first_node(affichage->snake_actors);
@@ -686,7 +747,7 @@ void affichage_update(Affichage *affichage)
     {
         sa = node_elt(cur);
 
-        snake_actor_update(sa);
+        snake_actor_update(p,sa);
     }
 
     for (cur = list_first_node(affichage->bonus);
@@ -695,7 +756,7 @@ void affichage_update(Affichage *affichage)
     {
         ba = node_elt(cur);
 
-        bouf_actor_update(ba);
+        bonus_actor_update(ba,partie_config(p));
     }
 }
 
@@ -703,24 +764,35 @@ void affichage_update(Affichage *affichage)
 /**
  * @brief   Crée la fenêtre du snake.
  *
- * @param[in]    partie     La partie affichée.
+ * @param[in]    affichage  L'affichage de la fenêtre.
  * @param[in]    ui         Le fichier ui contenant la déclaration de
  *                          la fenêtre du Snake.
+ * @param[in]    partie     La partie affichée.
+ * @param[in]    width      La largeur de la fenêtre.
+ * @param[in]    height     La longueur de la fenêtre.
+
  */
-void init_affichage(Affichage *affichage, ClutterScript *ui, Snake *snake)
+void init_affichage(Affichage *affichage, ClutterScript *ui, Partie *p,
+                    int width, int height)
 {
     ClutterActor *zone_snake;
-    ClutterStage *stage;
-
+    ClutterActor *stage;
+    Snake *snk, *snk_ia;
+    SnakeActor *sa, *sa_ia;
+    Bonus *bonus;
+    BonusActor *ba;
+    Config * config = partie_config(p);
     affichage->ui = ui;
 
-    stage = CLUTTER_STAGE(clutter_script_get_object(ui, "stage"));
+    stage = CLUTTER_ACTOR(clutter_script_get_object(ui, "stage"));
+    clutter_actor_set_size(stage, width * config->grid_size,
+                           height * config->grid_size);
 
     zone_snake = CLUTTER_ACTOR(clutter_script_get_object(ui, "zone_snake"));
-    clutter_stage_set_key_focus(stage, zone_snake);
+    clutter_stage_set_key_focus(CLUTTER_STAGE(stage), zone_snake);
     affichage->images = snake_generate_image();
 
-    g_signal_connect(zone_snake, "key-press-event", G_CALLBACK(zone_snake_key_press_cb), snake);
+    g_signal_connect(zone_snake, "key-press-event", G_CALLBACK(zone_snake_key_press_cb), partie_player(p)); // TODO génraliser
 
     // SET IMAGE BACKGROUND
     ClutterContent *image = generate_image(BACKGROUND_IMAGE_SRC);
