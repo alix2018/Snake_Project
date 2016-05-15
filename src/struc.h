@@ -80,6 +80,10 @@ void print_snake(Snake *snake);
 Coord snake_pos(Snake *snake);
 int snake_longueur(Snake *snake);
 void snake_set_longueur(Snake *snake,int nl);
+int snake_indic_duree(Snake *snake);
+void snake_set_indic_duree(Snake *snake, int d);
+int snake_num_ia(Snake *snake);
+void snake_set_num_ia(Snake *snake, int n);
 
 List *snake_liste_snake(Snake *snake);
 Node snake_dernier(Snake *snake);
