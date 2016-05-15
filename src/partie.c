@@ -184,15 +184,11 @@ Config * partie_config(Partie * p)
  */
 void free_partie(Partie *partie)
 {
-    //free(partie->nourriture);
     free_affichage(partie->affichage);
     free_map(partie->map);
     free_gestion_collisions(partie->collisions);
-    //free_snake(partie->snake);
-    //free_snake(partie->schlanga);
     free_tab_snakes(partie->tab);
     free_tab_bonus(partie->btab);
-    free_config(partie->config);
     free(partie);
 }
 

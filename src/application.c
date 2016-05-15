@@ -26,8 +26,7 @@ gboolean bouton_partie_simple_clicked_cb(ClutterClickAction *action,
     clutter_actor_remove_child(app->stage, app->menu_partie);
 
     app->partie = create_partie();
-    partie_set_config(app->partie, app->config);    //app->partie = create_partie();
-    //init_partie(app->partie, app->ui, 30, 30);
+    partie_set_config(app->partie, app->config);
     init_partie(app->partie, app->ui); // TODO récupérer depuis app
     init_pseudo(app->partie, 0, NULL);
 
@@ -47,7 +46,8 @@ void stage_destroy_cb(ClutterActor *actor, gpointer data)
     clutter_main_quit();
 }
 
-void init_application(Application *app){
+void init_application(Application *app)
+{
     GError *err = NULL;
 
     app->partie = NULL;
