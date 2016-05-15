@@ -26,5 +26,6 @@ struct _AlphaFieldClass
 };
 
 GType alpha_button_get_type();
+gchar *alpha_field_get_text(AlphaField *self);
 
 #endif //ALPHA_SNAKE_ALPHA_FIELD_H

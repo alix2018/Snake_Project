@@ -62,9 +62,9 @@
                     ]
                   },
                   {
-                    "id": "Scores",
+                    "id": "Options",
                     "type": "AlphaButton",
-                    "button-text": "Scores",
+                    "button-text": "Options",
                     "x-expand": true,
                     "actions": [
                       {
@@ -72,7 +72,7 @@
                         "signals": [
                           {
                             "name": "clicked",
-                            "handler": "scores_clicked_cb"
+                            "handler": "options_clicked_cb"
                           }
                         ]
                       }
@@ -105,8 +105,8 @@
   },
   {
     "id": "menu_partie", "type": "ClutterActor",
-    "x-align": "center", "y-align": "center", "x-expand": true,  "y-expand": true,
-    "background-color": "black",
+    "x-align": "fill", "y-align": "fill", "x-expand": true,  "y-expand": true,
+    "background-color": "grey",
     "layout-manager": { "type": "ClutterBinLayout" },
     "children": [{
       "type": "ClutterActor",
@@ -173,5 +173,120 @@
         }
       ]
     }]
+  },
+  {
+    "id": "menu_options", "type": "ClutterActor",
+    "x-align": "fill", "y-align": "fill", "x-expand": true,  "y-expand": true,
+    "background-color": "grey",
+    "layout-manager": { "type": "ClutterBinLayout" },
+    "children": [
+      {
+        "type": "ClutterActor",
+        "x-align": "center", "y-align": "center",
+        "layout-manager": {
+          "type": "ClutterBoxLayout", "orientation": "vertical", "spacing": 30
+        },
+        "children": [
+          {
+            "type": "ClutterText",
+            "text": "OPTIONS",
+            "font-name": "Sans 30 bold"
+          },
+          {
+            "type": "ClutterActor",
+            "layout-manager": {
+              "type": "ClutterBoxLayout", "orientation": "vertical", "spacing": 15
+            },
+            "children": [
+              {
+                "type": "ClutterText",
+                "text": "Taille du plateau", "color": "black", "font-name": "Sans 12 bold"
+              },
+              {
+                "type": "ClutterActor",
+                "layout-manager": {
+                  "type": "ClutterBoxLayout",
+                  "orientation": "horizontal",
+                  "spacing": 6
+                },
+                "children": [
+                  {
+                    "type": "ClutterText",
+                    "text": "hauteur",
+                    "color": "black",
+                    "font-name": "Sans 12 bold"
+                  },
+                  {
+                    "id": "hauteur",
+                    "type": "AlphaField",
+                    "width": 100
+                  }
+                ]
+              },
+              {
+                "type": "ClutterActor",
+                "layout-manager": {
+                  "type": "ClutterBoxLayout",
+                  "orientation": "horizontal",
+                  "spacing": 6
+                },
+                "children": [
+                  {
+                    "type": "ClutterText",
+                    "text": "largeur",
+                    "color": "black",
+                    "font-name": "Sans 12 bold"
+                  },
+                  {
+                    "id": "largeur",
+                    "type": "AlphaField",
+                    "width": 100
+                  }
+                ]
+              },
+              {
+                "type": "ClutterActor",
+                "layout-manager": {
+                  "type": "ClutterBoxLayout",
+                  "orientation": "horizontal",
+                  "spacing": 6
+                },
+                "children": [
+                  {
+                    "type": "ClutterText",
+                    "text": "Taille des Snakes",
+                    "color": "black",
+                    "font-name": "Sans 12 bold"
+                  },
+                  {
+                    "id": "taille_snake",
+                    "type": "AlphaField",
+                    "width": 100
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "retour_menu_principal",
+            "type": "AlphaButton",
+            "button-text": "Retour",
+            "x-expand": true,
+            "actions":
+            [
+              {
+                "type": "ClutterClickAction",
+                "signals": [
+                  {
+                    "name": "clicked",
+                    "handler": "retour_clicked_cb"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
   }
 ]

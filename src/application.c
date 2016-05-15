@@ -4,6 +4,14 @@
 
 #include "application.h"
 
+gboolean quitter_clicked_cb(ClutterClickAction *action,
+                            ClutterActor *actor,
+                            gpointer data)
+{
+    clutter_main_quit();
+    return CLUTTER_EVENT_STOP;
+}
+
 Application init_application(Application *app, int width, int height){
     ClutterActor *menu_general, *stage;
     GError *err = NULL;

@@ -153,3 +153,4 @@ AlphaButton *alpha_button_new(gchar *text)
 {
     return ALPHA_BUTTON(g_object_new(ALPHA_TYPE_BUTTON, "button-text", text, NULL));
 }
+    

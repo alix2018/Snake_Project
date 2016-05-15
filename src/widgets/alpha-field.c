@@ -114,3 +114,11 @@ static void alpha_field_class_init(AlphaFieldClass *klass)
     G_OBJECT_CLASS(klass)->dispose = alpha_field_dispose;
     G_OBJECT_CLASS(klass)->finalize = alpha_field_finalize;
 }
+
+gchar *alpha_field_get_text(AlphaField *self)
+{
+    gchar *res;
+    g_object_get(self, "text", &res);
+
+    return res;
+}
