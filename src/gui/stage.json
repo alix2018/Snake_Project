@@ -43,6 +43,26 @@
         "y-align": "center",
         "font-name": "large bold",
         "color": "white"
+      },
+      {
+        "id" :"bouton_rejouer",
+        "type" : "AlphaButton",
+        "button-text": "Rejouer",
+        "x-align": "center",
+        "y-align": "center",
+        "font-name": "large bold",
+        "color": "white",
+        "actions": [
+          {
+            "type": "ClutterClickAction",
+            "signals": [
+              {
+                "name": "clicked",
+                "handler": "bouton_rejouer_clicked_cb"
+              }
+            ]
+          }
+        ]
       }
     ]
   }
