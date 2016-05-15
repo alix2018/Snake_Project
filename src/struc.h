@@ -84,7 +84,8 @@ int snake_indic_duree(Snake *snake);
 void snake_set_indic_duree(Snake *snake, int d);
 int snake_num_ia(Snake *snake);
 void snake_set_num_ia(Snake *snake, int n);
-
+int snake_vitesse(Snake *snake);
+void snake_set_vitesse(Snake *snake, int v);
 List *snake_liste_snake(Snake *snake);
 Node snake_dernier(Snake *snake);
 Node snake_premier(Snake *snake);

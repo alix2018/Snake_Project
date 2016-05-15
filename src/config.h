@@ -11,7 +11,8 @@
 #define DEFAULT_GRID_SIZE 25
 #define DEFAULT_COLLISION 1
 #define DEFAULT_ADVANCED_BONUS 0
-#define DEFAULT_INTERVAL 150
+#define DEFAULT_INTERVAL_TIMEOUT 50
+#define DEFAULT_INTERVAL_SCALE 2
 #define DEFAULT_SCREEN_WIDTH 1366
 #define DEFAULT_SCREEN_HEIGHT 600
 
@@ -32,7 +33,8 @@ struct _config
     int grid_size;
     int collision; // 0 pas de collision 1 des collision
     int advanced_bonus; //TODO
-    int interval;
+    int interval_timeout;
+    int interval_scale;
     int screen_width;
     int screen_height;
 
