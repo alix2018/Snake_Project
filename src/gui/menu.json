@@ -13,23 +13,21 @@
     "children": [
       {
         "type": "ClutterActor",
-        "background-color": "red",
         "x-align": "center",
         "y-align": "center",
         "layout-manager": {
           "type": "ClutterBoxLayout",
           "orientation": "vertical",
-          "spacing": 70
+          "spacing": 50
         },
         "children": [
           {
+            "id": "image_alpha_snake",
             "type":"ClutterActor",
             "width":600,
-            "height": 170,
-            "background-color": "green"
+            "height": 170
           },
           {
-            "id": "image_alpha_snake",
             "type": "ClutterActor",
             "x-expand": true,
             "background-color": "blue",
@@ -113,10 +111,10 @@
       "type": "ClutterActor",
       "x-align": "center", "y-align": "center",
       "layout-manager": {
-        "type": "ClutterBoxLayout", "orientation": "vertical", "spacing": 30
+        "type": "ClutterBoxLayout", "orientation": "vertical", "spacing": 20
       },
       "children": [
-        { "id": "image_alpha_snake2", "type": "ClutterActor", "height": 170, "width": 600, "background-color": "red" },
+        { "id": "image_alpha_snake2", "type": "ClutterActor", "height": 170, "width": 600 },
         {
           "type": "ClutterActor",
           "layout-manager": {"type": "ClutterBoxLayout", "orientation": "horizontal", "spacing": 6},
@@ -126,7 +124,7 @@
               "text": "Pseudo :", "color": "white", "font-name": "Sans 12 bold"
             },
             {
-              "id": "pseudo", "type": "AlphaField", "width": 100
+              "id": "pseudo", "type": "AlphaField", "width": 200
             }
           ]
         },

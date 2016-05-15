@@ -73,6 +73,8 @@ void init_application(Application *app)
 {
     GError *err = NULL;
     ClutterImage *bg_menus;
+    ClutterImage *logo_menus;
+
 
     app->partie = NULL;
     app->config = init_config();
@@ -96,13 +98,20 @@ void init_application(Application *app)
         app->ui,
         "menu_partie", &app->menu_partie,
         "menu_general", &app->menu_general,
+        "image_alpha_snake", &app->image_alpha_snake,
+        "image_alpha_snake2", &app->image_alpha_snake2,
         "stage", &app->stage,
         NULL
     );
 
+
     bg_menus = create_clutter_image("data/fond_menu.png");
     clutter_actor_set_content(app->menu_general, CLUTTER_CONTENT(bg_menus));
     clutter_actor_set_content(app->menu_partie, CLUTTER_CONTENT(bg_menus));
+    logo_menus = create_clutter_image("logo.png");
+    clutter_actor_set_content(app->image_alpha_snake, CLUTTER_CONTENT(logo_menus));
+    clutter_actor_set_content(app->image_alpha_snake2, CLUTTER_CONTENT(logo_menus));
+
 
     clutter_actor_add_child(app->stage, app->menu_general);
     clutter_actor_set_size(app->stage, app->config->width * app->config->grid_size,
