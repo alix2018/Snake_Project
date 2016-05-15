@@ -55,7 +55,7 @@ void bonus_update(Bonus *bonus, int x, int y);
 Coord bonus_coord(Bonus *bonus);
 
 //Créé le BonusActor
-BonusActor *create_bonus_actor(ClutterActor *parent, Bonus *b, ClutterColor *color, Config *config);
+BonusActor *create_bonus_actor(ClutterActor *parent, Bonus *b, ClutterColor *color,Config * config,char * image);
 void free_bonus_actor(BonusActor *b);
 Bonus *bonus_actor_bonus(BonusActor *bonus_actor);
 

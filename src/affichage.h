@@ -24,6 +24,22 @@
 #define TURNLIGHT_IMAGE_SRC "data/corpsturnlightside.png"
 #define TURNDARK_IMAGE_SRC "data/corpsturndarkside.png"
 #define POMME_IMAGE "data/pommeapple.png"
+#define BONUS_DRUG "data/drug.png"
+#define BONUS_GHOST "data/ghost.png"
+#define BONUS_GOLDEN "data/goldenapple.png"
+#define BONUS_SPEED "data/speed.png"
+#define BONUS_SPEEDRED "data/speedred.png"
+#define BONUS_SPEED "data/speed.png"
+#define BONUS_TELLIER "data/tellier.png"
+#define BONUS_TURTLE "data/turtle.png"
+#define BONUS_TURTLERED "data/turtlered.png"
+#define BONUS_WALL "data/wall.png"
+#define BONUS_WEED "data/weed.png"
+#define BONUS_18 "data/18.png"
+#define BONUS_BASE "data/base.png"
+#define BONUS_BLIND "data/blind.png"
+
+
 
 
 typedef struct _Affichage Affichage;

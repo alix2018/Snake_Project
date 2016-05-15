@@ -132,7 +132,7 @@ Coord bonus_coord(Bonus *bonus)
  *
  * @return Le nouveau BonusActor initialisé
  */
-BonusActor *create_bonus_actor(ClutterActor *parent, Bonus *b, ClutterColor *color,Config * config)
+BonusActor *create_bonus_actor(ClutterActor *parent, Bonus *b, ClutterColor *color,Config * config,char * image)
 {
     BonusActor *res;
     ClutterActor *bonus_c_actor;
@@ -148,7 +148,7 @@ BonusActor *create_bonus_actor(ClutterActor *parent, Bonus *b, ClutterColor *col
 
     // SET IMAGE POMME/BOUF/bonus
 
-    ClutterContent *imgpomme = generate_image(POMME_IMAGE );
+    ClutterContent *imgpomme = generate_image(image );
     clutter_actor_set_content(bonus_c_actor,imgpomme);
     g_object_unref(imgpomme);
 
