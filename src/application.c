@@ -3,6 +3,7 @@
 //
 
 #include "application.h"
+#include "widgets/utils.h"
 
 gboolean jouer_clicked_cb(ClutterClickAction *action,
                           ClutterActor *actor,
@@ -49,6 +50,7 @@ void stage_destroy_cb(ClutterActor *actor, gpointer data)
 void init_application(Application *app)
 {
     GError *err = NULL;
+    ClutterImage *bg_menus;
 
     app->partie = NULL;
     app->config = init_config();
@@ -75,6 +77,10 @@ void init_application(Application *app)
         "stage", &app->stage,
         NULL
     );
+    
+    bg_menus = create_clutter_image("data/fond_menu.png");
+    clutter_actor_set_content(app->menu_general, CLUTTER_CONTENT(bg_menus));
+    clutter_actor_set_content(app->menu_partie, CLUTTER_CONTENT(bg_menus));
 
     clutter_actor_add_child(app->stage, app->menu_general);
     clutter_actor_set_size(app->stage, app->config->width * app->config->grid_size,
