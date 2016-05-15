@@ -11,8 +11,13 @@
 typedef struct _Application {
     ClutterScript*  ui;
     Partie *partie;
+    ClutterActor *zone_snake;
+    ClutterActor *menu_general;
+    ClutterActor *menu_partie;
+    ClutterActor *stage;
+    Config *config;
 }Application;
 
-Application init_application(Application *app, int width, int height);
+void init_application(Application *app);
 
 #endif //ALPHA_SNAKE_APPLICATION_H

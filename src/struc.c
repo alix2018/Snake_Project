@@ -1,17 +1,18 @@
 /**
- * @file         struc.c
+ * @file      struc.c
  * @author    alpha-snake
  * @version   1
- * @date       25/02/2016
- * @brief      Toutes les fonctions permetant d'utiliser la structure et de jouer
- * @details    --- 
+ * @date      25/02/2016
+ * @brief     Toutes les fonctions permettant d'utiliser la structure et de jouer
+ * @details   ---
  */
 
 #include <string.h>
 #include <time.h>
 #include "struc.h"
 #include "list.h"
-
+#include "ia.h"
+#include <math.h>
 
 /**
  * @brief      La structure du snake 
@@ -22,18 +23,136 @@
  * @param[in]  longueur  	   La longueur de la liste
  * @param[in]  direction  	   La direction du snake
  */
-struct snake
+struct _snake
 {
 	List *liste_snake;
 	int longueur;
 	Direction direction;
 	char *pseudo;
+	int is_bot;
+	char * script_name;
 };
 
 
 
-/* Fonctions de base de coord */
+/*********************************/
+/* Fonctions de base de tabsnake */
+/********************************/
+/**
+ * @brief   Crée un tableau de snake.
+ *
+ * @return  Le tableau de snake.
+ */
+TabSnakes *create_tab_snakes()
+{
+	TabSnakes *res;
 
+	res = malloc(sizeof(TabSnakes));
+	res->nb_snakes = 0;
+	res->taille_snakes = 2;
+	res->snakes = malloc(res->taille_snakes * sizeof(TabSnakes *));
+	return res;
+}
+
+
+/**
+ * @brief   Libère la mémoire le tableau de snake.
+ *
+ * @param[in]    ts  Le tableau de snake à supprimer.
+ */
+void free_tab_snakes(TabSnakes *ts)
+{
+	int i;
+
+	for (i = 0; i < ts->nb_snakes; i++)
+	{
+		free_snake(ts->snakes[i]);
+	}
+
+	free(ts->snakes);
+	free(ts);
+}
+
+
+
+/**
+ * @brief   Ajoute d'un snake dans le tableau de snake
+ *
+ * @param[in]    ts     Le gestionnaire de collisions.
+ * @param[in]    obj    L'objet à ajouter.
+ *
+ * @return  Le Snake crée lors de l'ajout de obj, ou le
+ *          Snake qui gère obj si obj est déjà géré par gc.
+ */
+Snake *tab_snakes_add_object(TabSnakes *ts, Snake *obj)
+{
+	int i;
+
+	for (i = 0; i < ts->nb_snakes; i++)
+	{
+		if (ts->snakes[i] == obj) // pas de duplicat
+			return ts->snakes[i];
+	}
+
+	ts->nb_snakes++;
+	if (ts->nb_snakes > ts->taille_snakes)
+	{
+		ts->taille_snakes *= 2;
+		ts->snakes = realloc(ts->snakes,
+						   ts->taille_snakes * sizeof(Snake *));
+	}
+
+	ts->snakes[ts->nb_snakes - 1] = obj;
+
+	return ts->snakes[ts->nb_snakes - 1];
+}
+
+
+/**
+ * @brief   Supprime le snake dans le tableau de snakes.
+ *
+ * @param[in]    ts     Le gestionnaire de collisions.
+ * @param[in]    obj    L'objet à supprimer.
+ */
+void tab_snakes_remove_object(TabSnakes *ts, Snake *obj)
+{
+	int i = 0;
+
+	while (i < ts->nb_snakes)
+	{
+		if (ts->snakes[i] == obj)
+		{
+			free_snake(ts->snakes[i]);
+			ts->snakes[i] = ts->snakes[ts->nb_snakes - 1];
+			ts->snakes[ts->nb_snakes - 1] = NULL;
+			ts->nb_snakes--;
+			return;
+		}
+	}
+}
+/**
+ * @brief   Le nombre de snakes (obselete)
+ *
+ * @param[in]    ts    le tableau de snake.
+ */
+int tab_snakes_length(TabSnakes *ts)
+{
+	return ts->nb_snakes;
+}
+/**
+ * @brief   La place en mémoire (obselete).
+ *
+ * @param[in]    ts    le tableau de snake.
+ */
+int tab_snakes_memory_length(TabSnakes *ts)
+{
+	return ts->taille_snakes;
+}
+
+
+/********************************/
+/* Fonctions de base de coord */
+/********************************/
 /**
  * @brief      A partir de deux integer renvoie un couple de type coordonnée
  *
@@ -76,6 +195,18 @@ int coord_egales(Coord c1, Coord c2)
 	return c1.x == c2.x && c1.y == c2.y;
 }
 
+/**
+ * @brief      Calcul la distance entre deux coordonnées
+ *
+ * @param[in]  c1  Coord à vérifier
+ * @param[in]  c2  Coord à vérifier
+ *
+ * @return    double de la distance
+ */
+double coord_distance(Coord c1, Coord c2)
+{
+	return sqrt( pow((c1.x - c2.x),2)  + pow(c1.y -  c2.y,2));
+}
 
 /* Fonctions de base de Snake */
 
@@ -101,6 +232,8 @@ Snake *create_snake(int longueur, Coord c, Direction dir)
     res->longueur = longueur;
     res->direction = dir;
     res->liste_snake = ls;
+	res->is_bot = 0;
+	res->script_name = NULL;
 
     cur = &c;
 
@@ -132,6 +265,15 @@ Snake *create_snake(int longueur, Coord c, Direction dir)
 		}
 	}
 
+	return res;
+}
+
+
+Snake *create_snake_bot(int longueur, Coord c, Direction dir,char * str)
+{
+	Snake * res = create_snake(longueur,c,dir);
+	res->script_name = str;
+	res->is_bot = 1;
 	return res;
 }
 
@@ -193,6 +335,10 @@ int snake_longueur(Snake *snake)
     return snake->longueur;
 }
 
+void snake_set_longueur(Snake *snake,int nl)
+{
+    snake->longueur = nl;
+}
 
 /**
  * @brief      Récupère la liste du snake
@@ -203,6 +349,7 @@ int snake_longueur(Snake *snake)
  */
 List *snake_liste_snake(Snake *snake)
 {
+
     return snake->liste_snake;
 }
 
@@ -282,6 +429,55 @@ int snake_set_direction(Snake *snake, Direction dir)
     }
 }
 
+int snake_set_pos(Snake *snake,Coord pos,Config * config )
+{
+	Node ls = list_first_node(snake_liste_snake(snake));
+	Direction dir = HAUT;
+	Coord * c;
+	if(pos.x >= 0 && pos.x <= config->width && pos.y >= 0 && pos.y <= config->height )
+	{
+		int dx =0;
+		int dy =0;
+		if(pos.x == 0)
+        {
+            dx=-1;
+            snake_set_direction(snake,DROITE);
+        }
+        else if(pos.x ==config->width)
+        {
+            dx = 1;
+            snake_set_direction(snake,GAUCHE);
+
+        }
+        else if(pos.y == 0)
+        {
+            dy = -1;
+            snake_set_direction(snake,BAS);
+        }
+        else if(pos.y == config->height)
+        {
+            dy = 1;
+            snake_set_direction(snake,HAUT);
+        }
+		int i = 0;
+		while (ls != NULL)
+		{
+            c =  malloc(sizeof(Coord));
+			*c = coord_from_xy(pos.x+dx*i,pos.y+dy*i);
+			node_set_elt(ls,c);
+			i++;
+			ls = node_next(ls);
+		}
+
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
+
+
+}
 
 /**
  * @brief      Affecte la nouvelle liste au snake
@@ -353,4 +549,16 @@ void snake_increase(Snake *snake)
     *c = *((Coord *) list_get_last(snake->liste_snake));
     list_add_last(snake->liste_snake, c);
 	snake->longueur++;
+}
+
+
+
+int snake_is_bot(Snake *snake)
+{
+	return snake->is_bot;
+}
+
+char * snake_script_name(Snake * snake)
+{
+	return snake->script_name;
 }

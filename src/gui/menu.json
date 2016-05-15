@@ -5,6 +5,7 @@
     "background-color": "grey",
     "x-expand": true,
     "y-expand": true,
+    "content-repeat": "both",
     "layout-manager": {
       "type": "ClutterBoxLayout",
       "orientation": "vertical",
@@ -105,8 +106,8 @@
   },
   {
     "id": "menu_partie", "type": "ClutterActor",
-    "x-align": "fill", "y-align": "fill", "x-expand": true,  "y-expand": true,
-    "background-color": "grey",
+    "x-expand": true,  "y-expand": true,
+    "background-color": "black", "content-repeat": "both",
     "layout-manager": { "type": "ClutterBinLayout" },
     "children": [{
       "type": "ClutterActor",
@@ -132,7 +133,7 @@
         {
           "type": "ClutterActor",
           "layout-manager": {"type": "ClutterBoxLayout", "spacing": 10, "orientation": "vertical"},
-          "Children": [
+          "children": [
             {
               "id": "buton_partie_simple", "type": "AlphaButton",
               "button-text": "Partie Simple",

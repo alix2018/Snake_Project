@@ -18,6 +18,12 @@ struct _AlphaField
     ClutterActor parent_instance;
 
     ClutterActor *text;
+    
+    ClutterImage *img_hd;
+    ClutterImage *img_d;
+    ClutterImage *img_bd;
+    ClutterImage *img_b;
+    ClutterImage *img_bg;
 };
 
 struct _AlphaFieldClass

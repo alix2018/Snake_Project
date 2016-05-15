@@ -3,7 +3,7 @@
 //
 
 #include "partie.h"
-#include "struc.h"
+
 #include "bonus.h"
 #include "affichage.h"
 #include "ia.h"
@@ -11,6 +11,7 @@
 #include "score.h"
 #include <string.h>
 #include <glib.h>
+#include "config.h"
 
 struct _Map
 {
@@ -20,9 +21,13 @@ struct _Map
 
 struct _Partie
 {
-    Snake *snake;
-    Snake *schlanga;
-    Bouf *nourriture;
+
+
+    //Bonus *nourriture;
+    TabBonus *btab; // pour faire cour b = bonus  mais pas correct visuellement
+
+    Snake *player;
+    TabSnakes *tab; // Il y a un probléme avec ce nom je voulais faire cour pour avoir à faire partie->tab−>snakes
 
     GestionCollisions *collisions;
 
@@ -31,37 +36,57 @@ struct _Partie
     gboolean en_cours;
 
     Map *map;
-};
 
+    Config *config;
+
+    int duree; //Nombre de déplacement qui se sont effectué depuis le debut de la partie
+};
+/**
 Snake * partie_snake(Partie *p)
 {
     return p->snake;
 }
-
 void partie_set_snake(Partie *p,Snake *s)
 {
     p->snake = s;
 }
-
-Snake * partie_schlanga(Partie *p)
+ Snake * partie_schlanga(Partie *p)
 {
     return p->schlanga;
 }
-
 void partie_set_schlanga(Partie *p,Snake *s)
 {
     p->schlanga = s;
 }
 
-Bouf * partie_bouf(Partie *p)
+ **/
+
+TabSnakes * partie_tab(Partie *p)
 {
-    return p->nourriture;
+    return p->tab;
 }
 
-void partie_set_bouf(Partie *p,Bouf *s)
+Snake * partie_player(Partie *p)
+{
+    return p->player;
+}
+void partie_set_player(Partie *p,Snake *s)
+{
+    p->player = s;
+}
+
+TabBonus * partie_tab_bonus(Partie *p)
+{
+    return p->btab;
+}
+
+/**
+
+ void partie_set_bonus(Partie *p,Bonus *s)
 {
     p->nourriture = s;
-}
+}**/
+
 
 /**
  * @brief   Crée le plateau d'une partie.
@@ -128,17 +153,30 @@ Partie *create_partie()
     Partie *res;
 
     res = malloc(sizeof(Partie));
-    res->snake = NULL;
-    res->schlanga = NULL;
-    res->nourriture = NULL;
+    //res->snake = NULL;
+    //res->schlanga = NULL;
+    //res->nourriture = NULL;
+    res->btab = NULL;
+    res->tab = NULL;
     res->map = NULL;
     res->affichage = NULL;
     res->collisions = NULL;
+    res->config = NULL;
 
     return res;
 }
 
 
+
+void partie_set_config(Partie * p,Config * c)
+{
+    p->config = c;
+}
+
+Config * partie_config(Partie * p)
+{
+    return p->config;
+}
 /**
  * @brief   Libère la mémoire consommée par une partie.
  *
@@ -146,12 +184,11 @@ Partie *create_partie()
  */
 void free_partie(Partie *partie)
 {
-    free(partie->nourriture);
     free_affichage(partie->affichage);
     free_map(partie->map);
     free_gestion_collisions(partie->collisions);
-    free_snake(partie->snake);
-    free_snake(partie->schlanga);
+    free_tab_snakes(partie->tab);
+    free_tab_bonus(partie->btab);
     free(partie);
 }
 
@@ -166,6 +203,31 @@ void free_partie(Partie *partie)
 Map *partie_map(Partie *partie)
 {
     return partie->map;
+}
+
+/**
+ * @brief   Permet d'obtenir la durée d'une partie.
+ *
+ * @param[in]   partie  Une partie.
+ *
+ * @return  La durée depuis le début de la partie.
+ */
+int partie_duree(Partie *partie)
+{
+    return partie->duree;
+}
+
+/**
+ * @brief   Permet de set la durée d'une partie.
+ *
+ * @param[in]   partie  Une partie.
+ * @param[in]   duree   La nouvelle durée partie.
+ *
+ * @return  La durée depuis le début de la partie.
+ */
+int partie_set_duree(Partie *partie, int duree)
+{
+    return partie->duree = duree;
 }
 
 /**
@@ -218,43 +280,127 @@ GString *get_gstring_score()
 static void collision_snake_vers_snake(Snake *snake, void *obj2, void *data)
 {
     Partie *partie = data;
-    ClutterScript *ui = affichage_ui(partie->affichage);
-    ClutterActor *fin_partie;
 
-    partie->en_cours = FALSE;
 
-    GString *out = g_string_new(snake_pseudo(partie->snake));
+    if(partie->config->collision == 0) { // ON TERMINE LA FONCTION !! (A VOIR)
+        return;
 
-    if(snake == partie->schlanga)
+    }
+    if(partie->config->type_partie == 1)
     {
-        g_string_append(out, "\n Gagné !");
-        score_enregistre(partie->snake, 'G');
+        if(snake == partie->player) // on a perdu
+        {
+            ClutterScript *ui = affichage_ui(partie->affichage);
+            ClutterActor *fin_partie;
+            partie->en_cours = FALSE;
+            GString *out = g_string_new(snake_pseudo(partie->player));
+            g_string_append(out, "\n Perdu !");
+            score_enregistre(partie->player, 'G');
+
+
+
+            GString *gscore = get_gstring_score();
+            g_string_append(out, gscore->str);
+
+            clutter_text_set_text(
+                    CLUTTER_TEXT(clutter_script_get_object(ui, "fin_partie_texte")),
+                    out->str
+            );
+
+            fin_partie = CLUTTER_ACTOR(clutter_script_get_object(ui, "fin_partie"));
+            clutter_actor_add_child(
+                    CLUTTER_ACTOR(clutter_script_get_object(ui, "stage")),
+                    fin_partie
+            );
+
+            clutter_actor_save_easing_state(fin_partie);
+            clutter_actor_set_easing_duration(fin_partie, 250);
+            clutter_actor_set_opacity(fin_partie, 255);
+            clutter_actor_restore_easing_state(fin_partie);
+        }
+        else // un snake non joueur est mort
+        {
+            /**tab_snakes_remove_object(partie->tab,snake);
+            gestion_collision_remove_object(partie->collisions,snake);
+            free_snake(snake);
+             **/
+            Coord cp = snake_pos(snake);
+
+            GRand * r = g_rand_new();
+            gint32  rh = g_rand_int_range(r,1,partie->config->height-1);
+            gint32  rw = g_rand_int_range(r,1,partie->config->width-1);
+            Coord c;
+            if(rh%4 == 0)
+            {
+                c = coord_from_xy(0,rh);
+            }
+            else if(rh%4 ==1)
+            {
+                c = coord_from_xy(rw,partie->config->height);
+            }
+            else if(rh%4 ==2)
+            {
+                c = coord_from_xy(partie->config->width,rh);
+            }
+            else
+            {
+                c = coord_from_xy(rw,0);
+            }
+            int i ;
+            int l = snake_longueur(snake) - partie->config->taille_bot;
+            for (i = 0; i < l; ++i) {
+                free(list_pop_last(snake_liste_snake(snake)));
+
+            }
+            snake_set_longueur(snake,partie->config->taille_bot);
+            snake_set_pos(snake,c,partie->config);
+            partie_add_bonus(partie,bonus_init((cp.x+1)%(partie->config->width-1),(cp.y+1)%(partie->config->height-1)));
+            printf("dead\n");
+        }
     }
     else
     {
-        g_string_append(out, "\n Perdu !");
-        score_enregistre(partie->snake, 'P');
+        ClutterScript *ui = affichage_ui(partie->affichage);
+        ClutterActor *fin_partie;
+        partie->en_cours = FALSE;
+        GString *out = g_string_new(snake_pseudo(partie->player));
+
+
+
+        if(snake == partie->player) // Si le snake en paramètre est le joueur on a perdu
+        {
+            g_string_append(out, "\n Perdu !");
+            score_enregistre(partie->player, 'G');
+        }
+        else
+        {
+            g_string_append(out, "\n Gagné !");
+            score_enregistre(partie->player, 'P');
+        }
+
+        GString *gscore = get_gstring_score();
+        g_string_append(out, gscore->str);
+
+        clutter_text_set_text(
+                CLUTTER_TEXT(clutter_script_get_object(ui, "fin_partie_texte")),
+                out->str
+        );
+
+        fin_partie = CLUTTER_ACTOR(clutter_script_get_object(ui, "fin_partie"));
+        clutter_actor_add_child(
+                CLUTTER_ACTOR(clutter_script_get_object(ui, "stage")),
+                fin_partie
+        );
+
+        clutter_actor_save_easing_state(fin_partie);
+        clutter_actor_set_easing_duration(fin_partie, 250);
+        clutter_actor_set_opacity(fin_partie, 255);
+        clutter_actor_restore_easing_state(fin_partie);
     }
 
-    GString *gscore = get_gstring_score();
-    g_string_append(out, gscore->str);
-
-    clutter_text_set_text(
-        CLUTTER_TEXT(clutter_script_get_object(ui, "fin_partie_texte")),
-        out->str
-    );
-
-    fin_partie = CLUTTER_ACTOR(clutter_script_get_object(ui, "fin_partie"));
-    clutter_actor_add_child(
-        CLUTTER_ACTOR(clutter_script_get_object(ui, "stage")),
-        fin_partie
-    );
-
-    clutter_actor_save_easing_state(fin_partie);
-    clutter_actor_set_easing_duration(fin_partie, 250);
-    clutter_actor_set_opacity(fin_partie, 255);
-    clutter_actor_restore_easing_state(fin_partie);
 }
+
+
 
 /**
  * @brief   Fonction callback appelée quand un Snake entre en collision avec
@@ -266,13 +412,37 @@ static void collision_snake_vers_snake(Snake *snake, void *obj2, void *data)
  */
 static void collision_snake_vers_nourriture(Snake *snake, void *obj2, void *data)
 {
-    Bouf *nourriture = obj2;
+    Bonus *nourriture = obj2;
     Partie *partie = data;
 
     snake_increase(snake);
-    bouf_update(nourriture, partie->map->width, partie->map->height);
+    bonus_update(nourriture, partie->map->width, partie->map->height);
 }
 
+
+void partie_add_bonus(Partie *partie,Bonus * bonus)
+{
+    tab_bonus_add_object(partie->btab,bonus);
+    int j;
+    CollisionObject*  co_bonus = gestion_collision_add_object(partie->collisions,
+                                               bonus,
+                                               COLLISION_BONUS);
+    for (j = 0; j < partie->tab->nb_snakes ; ++j)
+    {
+        collision_object_add_collision(
+                co_bonus,
+                create_collision(partie->tab->snakes[j], collision_snake_vers_nourriture, partie)
+        );
+    }
+    // On choisit une couleur
+    GRand * randg = g_rand_new();
+    gint32  r = g_rand_int_range(randg,0,360);
+
+    ClutterColor * color = clutter_color_alloc();
+    clutter_color_from_hls(color,(r)%360,0.4,1);
+    affichage_add_bonus(partie->affichage, bonus,  color,partie->config);
+
+}
 
 /**
  * @brief   Initialise une partie déjà allouée.
@@ -282,102 +452,144 @@ static void collision_snake_vers_nourriture(Snake *snake, void *obj2, void *data
  * @param[in]    width  La largeur du plateau.
  * @param[in]    height La hauteur du plateau.
  */
-void init_partie(Partie *partie, ClutterScript *ui, int width, int height)
+void init_partie(Partie *partie, ClutterScript *ui)
 {
-    Snake *snake;
-    Snake *schlanga;
-    Bouf *bouf;
+    // Initillisation des configs
+    int nb_snakes = partie->config->nb_snakes;
+    int width = partie->config->width;
+    int height = partie->config->height;
+    int nb_bonus = partie->config->nb_bonus;
 
-    CollisionObject *co_snake;
-    CollisionObject *co_schlanga;
-    CollisionObject *co_nourriture;
+    CollisionObject **co_snakes = malloc(nb_snakes*sizeof(CollisionObject *));
+
+    CollisionObject **co_bonus = malloc(nb_bonus*sizeof(CollisionObject *)); // ON DIT QU'Il Y A QU'UN BONUS  TODO à changer
+
     CollisionObject *co_map;
+
 
     partie->map = create_map(width, height);
     partie->en_cours = TRUE;
+    partie->duree = 0;
 
-    snake = create_snake(
-        10,
-        coord_from_xy(22, 2),
-        DROITE
-    );// struc.c
-    partie->snake = snake;
-    schlanga = create_snake(
-        10,
-        coord_from_xy(22, 7),//L'ia commence 5 case en dessous du snake de base
-        DROITE
-    );// struc.c
-    partie->schlanga = schlanga;
-    bouf = bouf_new(width, height);// bonus.c
-    partie->nourriture = bouf;
+    // Initialisation du tableau de snake
+    partie->tab = create_tab_snakes();
+
+    // on ajoute le 1er snake comme player
+    Snake * snk  = create_snake(
+            partie->config->taille_snake,
+            coord_from_xy(partie->config->width/2, 2),
+            DROITE
+    );
+    tab_snakes_add_object(partie->tab,snk);
+    int i;
+    for (i = 1; i < nb_snakes; ++i)
+    {
+        snk  = create_snake_bot(
+                partie->config->taille_bot,
+                coord_from_xy((partie->config->width+i)/2, (2+5*i)%partie->config->height),
+                DROITE,
+                "ia6"
+        );
+        tab_snakes_add_object(partie->tab,snk);
+
+    }
+
+
+
+    partie->player = partie->tab->snakes[0]; // On définit le player comme le 1er élément du tableau
+
+
+    partie->btab = create_tab_bonus();
+
+    // On crée pour l'instant qu'un bonus !
+    for (i = 0; i < nb_bonus; ++i) {
+           tab_bonus_add_object(partie->btab,bonus_new(width, height));
+    }
+
+
 
     partie->collisions = create_gestion_collisions();// collisions.c
-    co_snake = gestion_collision_add_object(partie->collisions, partie->snake,
-                                            COLLISION_SNAKE);// collisions.c
-    co_schlanga = gestion_collision_add_object(partie->collisions,
-                                               partie->schlanga,
-                                               COLLISION_SNAKE);
-    co_nourriture = gestion_collision_add_object(partie->collisions,
-                                                 partie->nourriture,
-                                                 COLLISION_BONUS);
+
+    for (i = 0; i < partie->tab->nb_snakes ; ++i)
+    {
+
+        co_snakes[i] = gestion_collision_add_object(partie->collisions, partie->tab->snakes[i],
+                                                    COLLISION_SNAKE);
+    }
+
+
+    for (i = 0; i < partie->btab->nb_bonus; ++i) {
+        co_bonus[i] = gestion_collision_add_object(partie->collisions,
+                                                     partie->btab->bonus[i],
+                                                     COLLISION_BONUS);
+    }
+
     co_map = gestion_collision_add_object(partie->collisions, partie->map,
                                           COLLISION_MAP);
 
-    collision_object_add_collision(
-        co_snake,
-        create_collision(partie->snake, collision_snake_vers_snake, partie)// collisions.c
-    );// collisions.c
-    collision_object_add_collision(
-        co_snake,
-        create_collision(partie->schlanga, collision_snake_vers_snake, partie)
-    );
+    int j;
+    for (i = 0; i < partie->tab->nb_snakes ; ++i)
+    {
+        for (j = 0; j < partie->tab->nb_snakes ; ++j)
+        {
+            collision_object_add_collision(
+                    co_snakes[i],
+                    create_collision(partie->tab->snakes[j], collision_snake_vers_snake, partie)// collisions.c
+            );
 
-    collision_object_add_collision(
-        co_schlanga,
-        create_collision(partie->snake, collision_snake_vers_snake, partie)
-    );
-    collision_object_add_collision(
-        co_schlanga,
-        create_collision(partie->schlanga, collision_snake_vers_snake, partie)
-    );
+        }
 
-    collision_object_add_collision(
-        co_nourriture,
-        create_collision(partie->snake, collision_snake_vers_nourriture, partie)
-    );
-    collision_object_add_collision(
-        co_nourriture,
-        create_collision(partie->schlanga, collision_snake_vers_nourriture, partie)
-    );
+        for (j = 0; j < partie->btab->nb_bonus ; ++j)
+        {
+            collision_object_add_collision(
+                    co_bonus[j],
+                    create_collision(partie->tab->snakes[i], collision_snake_vers_nourriture, partie)
+            );
+        }
+        collision_object_add_collision(
+                co_map,
+                create_collision(partie->tab->snakes[i], collision_snake_vers_snake, partie)
+        );
+    }
 
-    collision_object_add_collision(
-        co_map,
-        create_collision(partie->snake, collision_snake_vers_snake, partie)
-    );
-    collision_object_add_collision(
-        co_map,
-        create_collision(partie->schlanga, collision_snake_vers_snake, partie)
-    );
 
     partie->affichage = create_affichage();// affichage.c
-    init_affichage(partie->affichage, ui, snake);// affichage.c
+    init_affichage(partie->affichage, ui, partie, width, height);// affichage.c
 
-    affichage_add_snake(partie->affichage, snake,  CLUTTER_COLOR_Blue);// affichage.c
-    affichage_add_snake(partie->affichage, schlanga,  CLUTTER_COLOR_Red);
-    affichage_add_bonus(partie->affichage, bouf,  CLUTTER_COLOR_Green);
+    // On choisit une couleur
+    GRand * randg = g_rand_new();
+    gint32  r = g_rand_int_range(randg,0,360);
+    int pas = 360/(partie->tab->nb_snakes);
+    for (i = 0; i < partie->tab->nb_snakes ; ++i)
+    {
+        ClutterColor * color = clutter_color_alloc();
+        clutter_color_from_hls(color,(r+pas*i)%360,0.4,1); // Puis le couleurs sont complémentaires
+        affichage_add_snake(partie->affichage, partie->tab->snakes[i], color);// affichage.c
+    }
 
-    g_timeout_add(150, timeout_tick_cb, partie);
+    int pasb = 360/(partie->btab->nb_bonus);
+    for (i = 0; i < partie->btab->nb_bonus ; ++i)
+    {
+        ClutterColor * color = clutter_color_alloc();
+        clutter_color_from_hls(color,(r+pasb*i)%360,0.4,1);
+        affichage_add_bonus(partie->affichage, partie->btab->bonus[i],  color,partie->config);
+    }
+
+    g_timeout_add(partie->config->interval, timeout_tick_cb, partie);
+
+    free(co_snakes);
+    free(co_bonus);
 }
 
 void init_pseudo(Partie *p, int argc, char **argv)
 {
     if(argc == 2)
     {
-        snake_set_pseudo(p->snake, argv[1]); 
+        snake_set_pseudo(p->player, argv[1]);
     }
     else
     {
-        snake_set_pseudo(p->snake, "Anonyme");
+        snake_set_pseudo(p->player, "Anonyme");
     }
 }
 
@@ -390,15 +602,29 @@ gboolean timeout_tick_cb(gpointer data)
 {
     Partie *partie = data;
 
-    snake_forward(partie->snake);// struct.c
+    int i;
+    for (i = 0; i < partie->tab->nb_snakes; ++i)
+    {
+        if(snake_is_bot(partie->tab->snakes[i]))
+        {
+            snake_set_direction_ia(partie->tab->snakes[i],partie,snake_script_name(partie->tab->snakes[i]));
+            snake_forward(partie->tab->snakes[i]);
+        }
+        else
+        {
+            // TODO generaliser les forward ?  la direction se choisit comment ?
+            snake_forward(partie->player);
+        }
+    }
 
-    snake_set_direction_ia(partie,"ia1");// ia.c
-    snake_forward(partie->schlanga);
 
     gestion_collisions_check(partie->collisions);
 
     if (partie->en_cours)
-        affichage_update(partie->affichage);
+    {
+        affichage_update(partie,partie->affichage);
+        partie->duree += 1;
+    }
 
     return partie->en_cours;
 }

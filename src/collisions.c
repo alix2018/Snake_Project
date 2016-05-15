@@ -1,3 +1,12 @@
+/**
+ * @file      collisions.c
+ * @author    alpha-snake
+ * @version   1
+ * @date      25/02/2016
+ * @brief     Toutes les fonctions permettant de créer les collisions et les détecter.
+ * @details   ---
+ */
+
 
 #include <stddef.h>
 #include <stdlib.h>
@@ -5,6 +14,17 @@
 #include "partie.h"
 #include "struc.h"
 
+/**
+ * @brief      La structure d'un object collision
+ *
+ * @use CollisionObject
+ * @param[in]  type                  Le type de l'object collision.
+ * @param[in]  enabled               Si la collision est active.
+ * @param[in]  obj2                  Objet de la collision.
+ * @param[in]  collisions            Le tableau des collisions.
+ * @param[in]  nb_collisions         Le nombre de collisions.
+ * @param[in]  taille_collisions     La taille des collisions.
+ */
 struct _CollisionObject
 {
     CollisionType type;
@@ -15,6 +35,17 @@ struct _CollisionObject
     int taille_collisions;
 };
 
+
+/**
+ * @brief      La structure d'une collision
+ *
+ * @use Collision
+ * @param[in]  cb                  Le type de l'object collision.
+ * @param[in]  enabled             Si la collision est active.
+ * @param[in]  obj1                Le snake.
+ * @param[in]  obj2                La collision.
+ * @param[in]  data
+ */
 struct _Collision
 {
     CollisionCb cb;
@@ -24,6 +55,15 @@ struct _Collision
     void *data;
 };
 
+
+/**
+ * @brief      La structure d'un gestionnaire de collisions.
+ *
+ * @use GestionCollisions
+ * @param[in]  objs             L'objet de collision.
+ * @param[in]  nb_objs          Le nombre de CollisionObject.
+ * @param[in]  taille_objs      La taille du CollisionObject.
+ */
 struct _GestionCollisions
 {
     CollisionObject **objs;
@@ -110,9 +150,9 @@ CollisionObject *gestion_collision_add_object(GestionCollisions *gc, void *obj,
  */
 void gestion_collision_remove_object(GestionCollisions *gc, void *obj)
 {
-    int i = 0;
+    int i;
 
-    while (i < gc->nb_objs)
+    for (i = 0; i < gc->nb_objs; i++)
     {
         if (gc->objs[i]->obj2 == obj)
         {
@@ -120,7 +160,10 @@ void gestion_collision_remove_object(GestionCollisions *gc, void *obj)
             gc->objs[i] = gc->objs[gc->nb_objs - 1];
             gc->objs[gc->nb_objs - 1] = NULL;
             gc->nb_objs--;
-            return;
+        }
+        else
+        {
+            collision_object_remove_object(gc->objs[i], obj);
         }
     }
 }
@@ -128,9 +171,9 @@ void gestion_collision_remove_object(GestionCollisions *gc, void *obj)
 /**
  * @brief Teste une collision pour un snake. La fonction callback
  *        n'est pas appelée.
- * 
+ *
  * @param[in]   collision  La collision à tester.
- * 
+ *
  * @return    1 si le snake obj1 est en collision avec le snake obj2,
  *            0 sinon.
  */
@@ -140,13 +183,13 @@ int check_collision_for_snake(Collision *collision)
     Coord pos_snake = snake_pos((Snake *) collision->obj1);
     Node cur_cible = snake_premier((Snake *) collision->obj2);
     Coord *cur_cible_coord;
-    
+
     if (collision->obj1 != collision->obj2) {
 	cur_cible_coord = node_elt(cur_cible);
 	if (coord_egales(pos_snake, *cur_cible_coord))
 	    return 1;
     }
-    
+
     for (cur_cible = node_next(cur_cible);
 	 cur_cible != NULL;
          cur_cible = node_next(cur_cible))
@@ -155,7 +198,7 @@ int check_collision_for_snake(Collision *collision)
 	if (coord_egales(pos_snake, *cur_cible_coord))
 	    return 1;
     }
-    
+
     return 0;
 }
 
@@ -208,16 +251,16 @@ static void check_all_collisions_for_snake(CollisionObject *obj) {
 /**
  * @brief Teste une collision pour un bonus. La fonction callback
  *        n'est pas appelée.
- * 
+ *
  * @param[in]   collision  La collision à tester.
- * 
+ *
  * @return    1 si le snake est en collision avec le bonus, 0 sinon.
  */
 int check_collision_for_bonus(Collision *collision)
 {
-    Bouf *bonus = collision->obj2;
-    
-    return collision->enabled && coord_egales(bouf_coord(bonus), snake_pos(collision->obj1));
+    Bonus *bonus = collision->obj2;
+
+    return collision->enabled && coord_egales(bonus_coord(bonus), snake_pos(collision->obj1));
 }
 
 /**
@@ -240,16 +283,16 @@ static void check_all_collisions_for_bonus(CollisionObject *obj)
 /**
  * @brief Teste une collision pour le plateau. La fonction callback
  *        n'est pas appelée.
- * 
+ *
  * @param[in]   collision  La collision à tester.
- * 
+ *
  * @return    1 si le snake sort du plateau, 0 sinon.
  */
 static int check_collision_for_map(Collision *collision)
 {
     Map *map = collision->obj2;
     Coord coord = snake_pos((Snake *) collision->obj1);
-    
+
     return coord.x > map_width(map)-1
                 || coord.y > map_height(map)-1
                 || coord.x < 0
@@ -386,6 +429,21 @@ void collision_object_add_collision(CollisionObject *obj, Collision *collision)
     obj->collisions[obj->nb_collisions - 1] = collision;
 }
 
+void collision_object_remove_object(CollisionObject *obj, void *obj1)
+{
+    int i;
+
+    for (i = 0; i < obj->nb_collisions; i++)
+    {
+        if (obj->collisions[i]->obj1 == obj1)
+        {
+            free_collision(obj->collisions[i]);
+            obj->collisions[i] = obj->collisions[obj->nb_collisions - 1];
+            obj->nb_collisions--;
+            return;
+        }
+    }
+}
 
 /**
  * @brief   Crée une nouvelle condition.

@@ -1,5 +1,7 @@
 
 #include "alpha-field.h"
+#include <gdk-pixbuf/gdk-pixbuf.h>
+#include "utils.h"
 
 G_DEFINE_TYPE(AlphaField, alpha_field, CLUTTER_TYPE_ACTOR)
 
@@ -56,6 +58,12 @@ static void alpha_field_dispose(GObject *object)
 
     g_clear_object(&self->text);
     
+    g_clear_object(&self->img_b);
+    g_clear_object(&self->img_bd);
+    g_clear_object(&self->img_bg);
+    g_clear_object(&self->img_d);
+    g_clear_object(&self->img_hd);
+    
     G_OBJECT_CLASS(alpha_field_parent_class)->dispose(object);
 }
 
@@ -70,9 +78,59 @@ static void alpha_field_init(AlphaField *self)
 {
     ClutterMargin margin = (ClutterMargin) { 5, 5, 5, 5 };
     ClutterLayoutManager *layout;
+    ClutterActor *part;
+    ClutterColor *bg = clutter_color_new(249, 249, 249, 255);
+    
+    self->img_b = create_clutter_image("data/bouton_clair_b.png");
+    self->img_bd = create_clutter_image("data/bouton_clair_bd.png");
+    self->img_bg = create_clutter_image("data/bouton_clair_bg.png");
+    self->img_d = create_clutter_image("data/bouton_clair_d.png");
+    self->img_hd = create_clutter_image("data/bouton_clair_hd.png");
 
-    layout = clutter_bin_layout_new(CLUTTER_BIN_ALIGNMENT_FILL,
-                                    CLUTTER_BIN_ALIGNMENT_CENTER);
+    layout = clutter_grid_layout_new();
+    clutter_actor_set_layout_manager(CLUTTER_ACTOR(self), layout);
+    
+    // Bas
+    part = clutter_actor_new();
+    clutter_actor_set_height(part, 3);
+    clutter_actor_set_x_expand(part, TRUE);
+    clutter_actor_set_content(part, CLUTTER_CONTENT(self->img_b));
+    clutter_actor_set_content_repeat(part, CLUTTER_REPEAT_X_AXIS);
+    clutter_grid_layout_attach(CLUTTER_GRID_LAYOUT(layout), part, 1, 2, 1, 1);
+    
+    // Bas Droite
+    part = clutter_actor_new();
+    clutter_actor_set_size(part, 4, 3);
+    clutter_actor_set_content(part, CLUTTER_CONTENT(self->img_bd));
+    clutter_grid_layout_attach(CLUTTER_GRID_LAYOUT(layout), part, 2, 2, 1, 1);
+    
+    // Bas Gauche
+    part = clutter_actor_new();
+    clutter_actor_set_size(part, 4, 3);
+    clutter_actor_set_content(part, CLUTTER_CONTENT(self->img_bg));
+    clutter_grid_layout_attach(CLUTTER_GRID_LAYOUT(layout), part, 0, 2, 1, 1);
+    
+    // Droite
+    part = clutter_actor_new();
+    clutter_actor_set_width(part, 4);
+    clutter_actor_set_y_expand(part, TRUE);
+    clutter_actor_set_content(part, CLUTTER_CONTENT(self->img_d));
+    clutter_actor_set_content_repeat(part, CLUTTER_REPEAT_Y_AXIS);
+    clutter_grid_layout_attach(CLUTTER_GRID_LAYOUT(layout), part, 2, 1, 1, 1);
+    
+    // Haut Droite
+    part = clutter_actor_new();
+    clutter_actor_set_size(part, 4, 3);
+    clutter_actor_set_content(part, CLUTTER_CONTENT(self->img_hd));
+    clutter_grid_layout_attach(CLUTTER_GRID_LAYOUT(layout), part, 2, 0, 1, 1);
+    
+    // Milieu
+    part = clutter_actor_new();
+    clutter_actor_set_layout_manager(part, clutter_bin_layout_new(CLUTTER_BIN_ALIGNMENT_CENTER, CLUTTER_BIN_ALIGNMENT_CENTER));
+    clutter_actor_set_x_expand(part, TRUE);
+    clutter_actor_set_y_expand(part, TRUE);
+    clutter_actor_set_background_color(part, bg);
+    clutter_grid_layout_attach(CLUTTER_GRID_LAYOUT(layout), part, 0, 0, 2, 2);
 
     self->text = clutter_text_new_with_text("Sans 12", "");
     g_object_set(
@@ -83,17 +141,12 @@ static void alpha_field_init(AlphaField *self)
         "cursor-visible", TRUE,
         "x-expand", TRUE,
         "color", CLUTTER_COLOR_Black,
+        "single-line-mode", TRUE,
         NULL
     );
     clutter_actor_set_margin(self->text, &margin);
 
-    g_object_set(
-        self,
-        "background-color", CLUTTER_COLOR_White,
-        NULL
-    );
-    clutter_actor_set_layout_manager(CLUTTER_ACTOR(self), layout);
-    clutter_actor_add_child(CLUTTER_ACTOR(self), self->text);
+    clutter_actor_add_child(part, self->text);
 }
 
 static void alpha_field_class_init(AlphaFieldClass *klass)
@@ -118,7 +171,7 @@ static void alpha_field_class_init(AlphaFieldClass *klass)
 gchar *alpha_field_get_text(AlphaField *self)
 {
     gchar *res;
-    g_object_get(self, "text", &res);
+    g_object_get(self, "text", &res, NULL);
 
     return res;
 }

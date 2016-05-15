@@ -1,29 +1,47 @@
 /**
- * @file         struc.h
+ * @file      struc.h
  * @author    alpha-snake
  * @version   1
- * @date       25/02/2016
- * @brief      Toutes les fonctions permetant d'utiliser la structure et de jouer
- * @details    --- 
+ * @date      25/02/2016
+ * @brief     Toutes les fonctions permettant d'utiliser la structure et de jouer
+ * @details   ---
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include "list.h"
+
 
 #ifndef _STRUCT_
 #define _STRUCT_
 
-
+#include <stdio.h>
+#include <stdlib.h>
+#include "list.h"
+#include "config.h"
 /**
  * @brief    liste de Snake
  */
 //typedef struct maillon_snake *ListeSnake;
 
-typedef struct snake Snake;
+
+
+typedef struct _snake Snake;
+typedef struct _tabsnakes TabSnakes;
+
 /**
- * 
+ * @brief      La structure de tabsnake
+ *
+ * @use Snake
+ * @param[in]  snakes 		    Le tableau de tout les snakes
+ * @param[in]  nb_snakes  	    Le nombre de snake
+ * @param[in]  taille_snakes	La taille en mémoire
  */
+struct _tabsnakes
+{
+	Snake **snakes; // pour acceder au tableau de snake ts->snakes
+	int nb_snakes;
+	int taille_snakes;
+};
+
+
 typedef struct
 {
 	int x;
@@ -41,35 +59,35 @@ typedef enum
 Coord coord_from_xy(int x,int y);
 void print_coord(Coord c);
 int coord_egales(Coord c1, Coord c2);
+double coord_distance(Coord c1, Coord c2);
 
-/*Fonctions de base de ListeSnake*/
+/*Fonctions de base de TabSnakes*/
 
-
-//ListeSnake cons_liste_snake_debut(Coord c, ListeSnake liste);
-//ListeSnake cons_liste_snake_fin(Coord c, ListeSnake liste);
-//void free_liste_snake(ListeSnake liste);
-//void print_liste_snake(ListeSnake liste);
-//
-//Coord liste_snake_coord(ListeSnake l);
-//ListeSnake liste_snake_suivant(ListeSnake liste);
-//ListeSnake liste_snake_precedent(ListeSnake liste);
-//
-//int coord_is_in_liste_snake( Coord c,ListeSnake liste);
-
+TabSnakes *create_tab_snakes();
+void free_tab_snakes(TabSnakes *ts);
+Snake *tab_snakes_add_object(TabSnakes *ts, Snake *obj);
+void tab_snakes_remove_object(TabSnakes *ts, Snake *obj);
+int tab_snakes_length(TabSnakes *ts);
+int tab_snakes_memory_length(TabSnakes *ts);
 
 /* Fonctions de base de Snake */
 
 Snake *create_snake(int longueur, Coord c, Direction dir);
+Snake *create_snake_bot(int longueur, Coord c, Direction dir,char * str);
 void free_snake(Snake *snake);
 void print_snake(Snake *snake);
 
 Coord snake_pos(Snake *snake);
 int snake_longueur(Snake *snake);
+void snake_set_longueur(Snake *snake,int nl);
+
 List *snake_liste_snake(Snake *snake);
 Node snake_dernier(Snake *snake);
 Node snake_premier(Snake *snake);
 Direction snake_direction(Snake *snake);
 int snake_set_direction(Snake *snake, Direction dir);
+
+int snake_set_pos(Snake *snake,Coord pos,Config * config );
 void snake_set_liste(Snake *snake, List *ls);
 char *snake_pseudo(Snake *snake);
 void snake_set_pseudo(Snake *snake, char *pseudo);
@@ -79,5 +97,7 @@ void snake_forward(Snake *snake);
 void snake_increase(Snake *snake);
 
 
+int snake_is_bot(Snake *snake);
+char * snake_script_name(Snake * snake);
 
 #endif
