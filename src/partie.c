@@ -414,9 +414,9 @@ static void collision_snake_vers_nourriture(Snake *snake, void *obj2, void *data
 {
     Bonus *nourriture = obj2;
     Partie *partie = data;
-
-    snake_increase(snake);
-    bonus_update(nourriture, partie->map->width, partie->map->height);
+    bonus_eat_callback(partie, snake, nourriture);
+    //snake_increase(snake);
+    //bonus_update(nourriture, partie->map->width, partie->map->height);
 }
 
 
