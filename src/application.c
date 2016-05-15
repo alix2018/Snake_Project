@@ -25,11 +25,11 @@ gboolean bouton_partie_simple_clicked_cb(ClutterClickAction *action,
 
     clutter_actor_remove_child(app->stage, app->menu_partie);
 
-    partie = create_partie();
-    partie_set_config(partie, app->config);    //app->partie = create_partie();
+    app->partie = create_partie();
+    partie_set_config(app->partie, app->config);    //app->partie = create_partie();
     //init_partie(app->partie, app->ui, 30, 30);
-    init_partie(partie, app->ui); // TODO récupérer depuis app
-    init_pseudo(partie, 0, NULL);
+    init_partie(app->partie, app->ui); // TODO récupérer depuis app
+    init_pseudo(app->partie, 0, NULL);
 
     return CLUTTER_EVENT_STOP;
 }
@@ -47,7 +47,7 @@ void stage_destroy_cb(ClutterActor *actor, gpointer data)
     clutter_main_quit();
 }
 
-void init_application(Application *app, int width, int height){
+void init_application(Application *app){
     GError *err = NULL;
 
     app->partie = NULL;
@@ -77,8 +77,8 @@ void init_application(Application *app, int width, int height){
     );
 
     clutter_actor_add_child(app->stage, app->menu_general);
-    clutter_actor_set_size(app->stage, width * app->config->grid_size,
-                           height * app->config->grid_size);
+    clutter_actor_set_size(app->stage, app->config->width * app->config->grid_size,
+                           app->config->height * app->config->grid_size);
 
     g_signal_connect(app->stage, "destroy", G_CALLBACK(stage_destroy_cb), NULL);
 

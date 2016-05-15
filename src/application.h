@@ -18,6 +18,6 @@ typedef struct _Application {
     Config *config;
 }Application;
 
-void init_application(Application *app, int width, int height);
+void init_application(Application *app);
 
 #endif //ALPHA_SNAKE_APPLICATION_H

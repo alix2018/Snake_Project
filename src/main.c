@@ -11,7 +11,7 @@ int main(int argc, char **argv)
 
     ClutterInitError err = clutter_init(&argc, &argv);
 
-    init_application(&application, 30, 30);
+    init_application(&application);
 
     return 0;
 	 
