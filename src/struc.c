@@ -339,53 +339,9 @@ int snake_longueur(Snake *snake)
     return snake->longueur;
 }
 
-/**
- * @brief      Récupère l'indicateur de duree, utile pour les ia
- *
- * @param      snake  Le snake
- *
- * @return     Renvoie l'indicateur de duree
- */
-int snake_indic_duree(Snake *snake)
+void snake_set_longueur(Snake *snake,int nl)
 {
-    return snake->indic_duree;
-}
-
-/**
- * @brief      Set l'indicateur de duree, utile pour les ia
- *
- * @param      snake  Le snake
- * @param      d   le nouvel indicateur de durée
- *
- */
-void snake_set_indic_duree(Snake *snake, int d)
-{
-    return snake->indic_duree = d;
-}
-
-
-/**
- * @brief      Récupère le numéro de l'ia associé au snake
- *
- * @param      snake  Le snake avec une taille
- *
- * @return     Renvoie un integer représentant la longueur du snake
- */
-int snake_num_ia(Snake *snake)
-{
-    return snake->num_ia;
-}
-
-/**
- * @brief      Set le numéro de l'ia associé au snake
- *
- * @param      snake  Le snake
- * @param      n 	  Le nouveau numéro d'ia utilisé
- *
- */
-void snake_set_num_ia(Snake *snake, int n)
-{
-    return snake->num_ia = n;
+    snake->longueur = nl;
 }
 
 /**
@@ -477,6 +433,55 @@ int snake_set_direction(Snake *snake, Direction dir)
     }
 }
 
+int snake_set_pos(Snake *snake,Coord pos,Config * config )
+{
+	Node ls = list_first_node(snake_liste_snake(snake));
+	Direction dir = HAUT;
+	Coord * c;
+	if(pos.x >= 0 && pos.x <= config->width && pos.y >= 0 && pos.y <= config->height )
+	{
+		int dx =0;
+		int dy =0;
+		if(pos.x == 0)
+        {
+            dx=-1;
+            snake_set_direction(snake,DROITE);
+        }
+        else if(pos.x ==config->width)
+        {
+            dx = 1;
+            snake_set_direction(snake,GAUCHE);
+
+        }
+        else if(pos.y == 0)
+        {
+            dy = -1;
+            snake_set_direction(snake,BAS);
+        }
+        else if(pos.y == config->height)
+        {
+            dy = 1;
+            snake_set_direction(snake,HAUT);
+        }
+		int i = 0;
+		while (ls != NULL)
+		{
+            c =  malloc(sizeof(Coord));
+			*c = coord_from_xy(pos.x+dx*i,pos.y+dy*i);
+			node_set_elt(ls,c);
+			i++;
+			ls = node_next(ls);
+		}
+
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
+
+
+}
 
 /**
  * @brief      Affecte la nouvelle liste au snake

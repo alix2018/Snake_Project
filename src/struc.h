@@ -15,7 +15,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "list.h"
-
+#include "config.h"
 /**
  * @brief    liste de Snake
  */
@@ -90,6 +90,8 @@ Node snake_dernier(Snake *snake);
 Node snake_premier(Snake *snake);
 Direction snake_direction(Snake *snake);
 int snake_set_direction(Snake *snake, Direction dir);
+
+int snake_set_pos(Snake *snake,Coord pos,Config * config );
 void snake_set_liste(Snake *snake, List *ls);
 char *snake_pseudo(Snake *snake);
 void snake_set_pseudo(Snake *snake, char *pseudo);

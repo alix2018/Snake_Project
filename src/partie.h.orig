@@ -36,11 +36,13 @@ void partie_set_config(Partie *p,Config * c);
 Config * partie_config(Partie *p);
 void free_partie(Partie *partie);
 Map *partie_map(Partie *partie);
-int partie_duree(Partie *partie);
-int partie_set_duree(Partie *partie, int duree);
+<<<<<<< HEAD
 void partie_add_bonus(Partie *partie,Bonus * bonus);
 
-
+=======
+int partie_duree(Partie *partie);
+int partie_set_duree(Partie *partie, int duree);
+>>>>>>> 3c99ba81f2257ee77ce814bf10345cd7081ac9b7
 
 void init_partie(Partie *partie, ClutterScript *ui);
 void init_pseudo(Partie *p, int argc, char **argv);

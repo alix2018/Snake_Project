@@ -74,6 +74,7 @@ void config_grid_from_screen_and_window(Config * config)
     int gs1 = config->screen_height/config->height;
     int gs2 = config->screen_width/config->width;
     int gs;
+    printf("%i, %i\n",gs1,gs2);
     if(gs1 != gs2) // résolution pas conforme ? modification personnelle ou ajuste avec le min
     {
 
