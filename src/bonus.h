@@ -10,16 +10,15 @@
 #ifndef ALPHA_SNAKE_BONUS_H
 #define ALPHA_SNAKE_BONUS_H
 
-#include <clutter/clutter.h>
-#include "config.h"
-#include "struc.h"
-
-
 typedef struct _bonus Bonus;
 typedef struct _bonus_actor BonusActor;
 
-
 typedef struct _tabbonus TabBonus;
+
+#include <clutter/clutter.h>
+#include "config.h"
+#include "struc.h"
+#include "partie.h"
 
 /**
  * @brief      La structure de tabsnake
@@ -64,5 +63,7 @@ Bonus *bonus_actor_bonus(BonusActor *bonus_actor);
 void bonus_actor_update(BonusActor *ba,Config *config);
 
 Bonus * bonus_near_from_snake(TabBonus *tb, Snake * s);
+
+void bonus_eat_callback(Partie *partie, Snake *snake, Bonus *nourriture);
 
 #endif //ALPHA_SNAKE_BONUS_H

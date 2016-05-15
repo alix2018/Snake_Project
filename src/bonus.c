@@ -7,8 +7,8 @@
  * @details   ---
  */
 
-#include "bonus.h"
 #include "partie.h"
+#include "bonus.h"
 #include "affichage.h"
 
 
@@ -21,6 +21,7 @@
 struct _bonus
 {
     Coord coord;
+    void *callback_eat;
 };
 
 
@@ -41,10 +42,34 @@ struct _bonus_actor
     ClutterColor *color;
 };
 
+
+
+void *bonus_eat_basic(Partie *p, Snake *s, Bonus *b)
+{
+    snake_increase(s);
+    bonus_update(b, map_width(partie_map(p)), map_height(partie_map(p)));
+}
+
+void *bonus_eat_maxi5(Partie *p, Snake *s, Bonus *b)
+{
+    snake_increase(s);
+    snake_increase(s);
+    snake_increase(s);
+    snake_increase(s);
+    snake_increase(s);
+    bonus_update(b, map_width(partie_map(p)), map_height(partie_map(p)));
+}
+void *bonus_eat_speed(Partie *p, Snake *s, Bonus *b)
+{
+    snake_set_vitesse(s, 2);
+    bonus_update(b, map_width(partie_map(p)), map_height(partie_map(p)));
+}
+
 Bonus *bonus_init(int x,int y)
 {
     Bonus *new = malloc(sizeof(Bonus));
     new->coord = coord_from_xy(x, y);
+    new->callback_eat = &bonus_eat_speed;
     return new;
 }
 
@@ -64,6 +89,7 @@ Bonus *bonus_new(int x, int y)
     gint32  ry = g_rand_int_range(randg,0,y-1);
     Bonus *new = malloc(sizeof(Bonus));
     new->coord = coord_from_xy(rx, ry);
+    new->callback_eat = &bonus_eat_speed;
     return new;
 }
 
@@ -352,4 +378,12 @@ Bonus * bonus_near_from_snake(TabBonus *tb, Snake * s)
         perror("Erreur no bonus");
     }
 
+}
+
+
+void bonus_eat_callback(Partie *partie, Snake *snake, Bonus *nourriture)
+{
+    void (*bonus_eat_cb)(Partie *partie, Snake *snake, Bonus *nourriture);
+    bonus_eat_cb = nourriture->callback_eat;
+    bonus_eat_cb(partie, snake, nourriture);
 }

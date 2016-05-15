@@ -391,7 +391,6 @@ void snake_verif_wall(Snake *snake_ia, Partie * p, Direction futurdir,Map *m)
         default:
             printf("Erreur snake_verif_ia dans le switch de ia.c\n");
     }
-    printf("(%i | %i)\n",futur_tete.x,futur_tete.y);
     if(futur_tete.y == -1 )
     {
         switch(futurdir)

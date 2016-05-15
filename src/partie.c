@@ -414,9 +414,9 @@ static void collision_snake_vers_nourriture(Snake *snake, void *obj2, void *data
 {
     Bonus *nourriture = obj2;
     Partie *partie = data;
-
-    snake_increase(snake);
-    bonus_update(nourriture, partie->map->width, partie->map->height);
+    bonus_eat_callback(partie, snake, nourriture);
+    //snake_increase(snake);
+    //bonus_update(nourriture, partie->map->width, partie->map->height);
 }
 
 
@@ -575,7 +575,7 @@ void init_partie(Partie *partie, ClutterScript *ui)
         affichage_add_bonus(partie->affichage, partie->btab->bonus[i],  color,partie->config);
     }
 
-    g_timeout_add(partie->config->interval, timeout_tick_cb, partie);
+    g_timeout_add(partie->config->interval_timeout, timeout_tick_cb, partie);
 
     free(co_snakes);
     free(co_bonus);
@@ -602,18 +602,23 @@ gboolean timeout_tick_cb(gpointer data)
 {
     Partie *partie = data;
 
-    int i;
+    int i, t, r;
     for (i = 0; i < partie->tab->nb_snakes; ++i)
     {
-        if(snake_is_bot(partie->tab->snakes[i]))
+        t = partie->duree;
+        r = partie->config->interval_scale/snake_vitesse(partie->tab->snakes[i]);
+        if(t % r == 0)
         {
-            snake_set_direction_ia(partie->tab->snakes[i],partie,snake_script_name(partie->tab->snakes[i]));
-            snake_forward(partie->tab->snakes[i]);
-        }
-        else
-        {
-            // TODO generaliser les forward ?  la direction se choisit comment ?
-            snake_forward(partie->player);
+            if(snake_is_bot(partie->tab->snakes[i]))
+            {
+                snake_set_direction_ia(partie->tab->snakes[i],partie,snake_script_name(partie->tab->snakes[i]));
+                snake_forward(partie->tab->snakes[i]);
+            }
+            else
+            {
+                // TODO generaliser les forward ?  la direction se choisit comment ?
+                snake_forward(partie->player);
+            }
         }
     }
 

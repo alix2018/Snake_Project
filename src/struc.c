@@ -28,6 +28,7 @@ struct _snake
 	List *liste_snake;
 	int longueur;
 	Direction direction;
+	int vitesse;
 	char *pseudo;
 	int is_bot;
 	char * script_name;
@@ -233,6 +234,7 @@ Snake *create_snake(int longueur, Coord c, Direction dir)
     res = malloc(sizeof(Snake));
     res->longueur = longueur;
     res->direction = dir;
+    res->vitesse = 1;
     res->liste_snake = ls;
 	res->is_bot = 0;
 	res->script_name = NULL;
@@ -340,6 +342,23 @@ int snake_longueur(Snake *snake)
 void snake_set_longueur(Snake *snake,int nl)
 {
     snake->longueur = nl;
+}
+
+/**
+ * @brief      Récupère la longueur d'un snake
+ *
+ * @param      snake  Le snake avec une taille
+ *
+ * @return     Renvoie un integer représentant la longueur du snake
+ */
+int snake_vitesse(Snake *snake)
+{
+    return snake->vitesse;
+}
+
+void snake_set_vitesse(Snake *snake, int v)
+{
+    snake->vitesse = v;
 }
 
 /**

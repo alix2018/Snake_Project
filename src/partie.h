@@ -6,15 +6,14 @@
 #ifndef ALPHA_SNAKE_PARTIE_H
 #define ALPHA_SNAKE_PARTIE_H
 
-#include <clutter/clutter.h>
-#include "struc.h"
-#include "bonus.h"
-#include "config.h"
-
 
 typedef struct _Map Map;
 typedef struct _Partie Partie;
 
+#include <clutter/clutter.h>
+#include "struc.h"
+#include "bonus.h"
+#include "config.h"
 
 TabSnakes * partie_tab(Partie *p);
 Snake * partie_player(Partie *p);

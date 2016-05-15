@@ -30,7 +30,8 @@ Config * init_default_config()
     res->grid_size = DEFAULT_GRID_SIZE;
     res->collision = DEFAULT_COLLISION;
     res->advanced_bonus = DEFAULT_ADVANCED_BONUS;
-    res->interval = DEFAULT_INTERVAL;
+    res->interval_timeout = DEFAULT_INTERVAL_TIMEOUT;
+    res->interval_scale = DEFAULT_INTERVAL_SCALE;
     res->screen_height = DEFAULT_SCREEN_HEIGHT;
     res->screen_width = DEFAULT_SCREEN_WIDTH;
     return res;
