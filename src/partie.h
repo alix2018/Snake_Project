@@ -39,6 +39,7 @@ Map *partie_map(Partie *partie);
 int partie_duree(Partie *partie);
 int partie_set_duree(Partie *partie, int duree);
 
+
 void init_partie(Partie *partie, ClutterScript *ui);
 void init_pseudo(Partie *p, int argc, char **argv);
 
