@@ -31,6 +31,8 @@ struct _snake
 	char *pseudo;
 	int is_bot;
 	char * script_name;
+	int num_ia;
+	int indic_duree;
 };
 
 
@@ -338,6 +340,40 @@ int snake_longueur(Snake *snake)
 void snake_set_longueur(Snake *snake,int nl)
 {
     snake->longueur = nl;
+}
+
+/**
+ * @brief      Récupère le num associé à l'ia
+ *
+ * @param      snake  Le snake
+ *
+ * @return     Renvoie le num associé à l'ia
+ */
+int snake_num_ia(Snake *snake)
+{
+    return snake->num_ia;
+}
+
+void snake_set_num_ia(Snake *snake,int num_ia)
+{
+    snake->num_ia = num_ia;
+}
+
+/**
+ * @brief      Récupère l'indic de durée, utile pour les ia
+ *
+ * @param      snake  Le snake avec une taille
+ *
+ * @return     Renvoie l'indic de durée
+ */
+int snake_indic_duree(Snake *snake)
+{
+    return snake->longueur;
+}
+
+void snake_set_indic_duree(Snake *snake,int d)
+{
+    snake->indic_duree = d;
 }
 
 /**

@@ -488,7 +488,7 @@ void init_partie(Partie *partie, ClutterScript *ui)
                 partie->config->taille_bot,
                 coord_from_xy((partie->config->width+i)/2, (2+5*i)%partie->config->height),
                 DROITE,
-                "ia6"
+                "ia10"
         );
         tab_snakes_add_object(partie->tab,snk);
 
