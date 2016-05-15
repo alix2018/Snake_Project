@@ -354,7 +354,7 @@ static void collision_snake_vers_snake(Snake *snake, void *obj2, void *data)
             }
             snake_set_longueur(snake,partie->config->taille_bot);
             snake_set_pos(snake,c,partie->config);
-            partie_add_bonus(partie,bonus_init(cp.x+1%(partie->config->width-1),cp.y+1%(partie->config->height-1)));
+            partie_add_bonus(partie,bonus_init((cp.x+1)%(partie->config->width-1),(cp.y+1)%(partie->config->height-1)));
             printf("dead\n");
         }
     }

@@ -13,7 +13,7 @@ add_executable(alpha-snake
         src/struc.c src/struc.h src/bonus.c src/bonus.h src/ia.c src/ia.h src/partie.c src/partie.h src/collisions.c src/collisions.h
         src/widgets/alpha-button.c src/widgets/alpha-button.h
         src/widgets/alpha-field.c src/widgets/alpha-field.h src/application.c src/application.h
-        src/score.c src/score.h
+        src/score.c src/score.h src/widgets/utils.c src/widgets/utils.h
         src/config.c src/config.h)
 
 add_executable(tests
