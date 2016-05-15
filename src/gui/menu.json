@@ -173,6 +173,10 @@
                   ]
                 }
               ]
+            },
+            {
+              "type": "AlphaCheckBox",
+              "color-string": "cyan"
             }
           ]
         }
