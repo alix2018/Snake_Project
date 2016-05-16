@@ -710,6 +710,17 @@ void bonus_reposition(Partie * partie)
                 }
             }
         }
+        for (j = 0; j < partie->btab->nb_bonus; ++j)
+        {
+            if(i!=j)
+            {
+                if(coord_egales(bonus_coord(partie->btab->bonus[j]),bonus_coord(partie->btab->bonus[i])))
+                {
+                    bonus_update(partie->btab->bonus[i],map_width(partie->map),map_height(partie->map));
+                }
+            
+            }
+        }
     }
 }
 /**
