@@ -422,6 +422,7 @@ static void collision_snake_vers_snake(Snake *snake, void *obj2, void *data)
             if(partie->config->advanced_bonus)
             {
                 Bonus * b = bonus_advanced_new(map_width(partie->map),map_height(partie->map));
+
                 partie_add_bonus(partie,b);
 
             }
@@ -585,25 +586,32 @@ void init_partie(Partie *partie, ClutterScript *ui)
 
     for (i = 1; i < nb_snakes; ++i)
     {
-        gint32  rh = g_rand_int_range(ra,1,partie->config->height-1);
-        gint32  rw = g_rand_int_range(ra,1,partie->config->width-1);
+        int cw = partie->config->width*2/10;
+        int ch = partie->config->width*2/10;
+        gint32  rh = g_rand_int_range(ra,1+ch,partie->config->height-ch-1);
+        gint32  rw = g_rand_int_range(ra,1+cw,partie->config->width-cw-1);
         Coord c;
+        GRand * r = g_rand_new();
+
+
         if(rh%4 == 0)
         {
-            c = coord_from_xy(0,rh);
+            c = coord_from_xy(1+cw,(rh-ch)%partie->config->height);
         }
         else if(rh%4 ==1)
         {
-            c = coord_from_xy(rw,partie->config->height);
+            c = coord_from_xy((rw-cw),partie->config->height-ch);
         }
         else if(rh%4 ==2)
         {
-            c = coord_from_xy(partie->config->width,rh);
+            c = coord_from_xy(partie->config->width-cw,(rh-ch)%partie->config->height);
         }
         else
         {
-            c = coord_from_xy(rw,0);
+            c = coord_from_xy((rw-cw)%partie->config->width,0+ch);
         }
+        printf("S:%i\n",i);
+        print_coord(c);
         snk  = create_snake_bot(
                 partie->config->taille_bot,
                 c,
