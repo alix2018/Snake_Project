@@ -254,6 +254,7 @@ void free_partie(Partie *partie)
     free_tab_snakes(partie->tab);
     free_tab_bonus(partie->btab);
     //TODO FREE_BONUSEFFECT
+    free_list(partie->bonuseffect);
     free(partie);
 }
 
