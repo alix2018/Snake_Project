@@ -34,7 +34,6 @@ struct _snake_actor
     ClutterColor *color;
     SnakeImage *images;
     int cur_size;
-
 };
 
 
@@ -74,6 +73,7 @@ struct _Affichage
     List *bonus;
     SnakeImage *images;
     ClutterScript *ui;
+    gulong keypress_handler;
 };
 
 
@@ -132,6 +132,10 @@ static void free_affichage_bonus_actor(void *elt)
  */
 void free_affichage(Affichage *affichage)
 {
+    GObject *zone_snake = clutter_script_get_object(affichage->ui, "zone_snake");
+    
+    if (g_signal_handler_is_connected(zone_snake, affichage->keypress_handler))
+        g_signal_handler_disconnect(zone_snake, affichage->keypress_handler);
     g_object_unref(affichage->images->tete);
     g_object_unref(affichage->images->corps);
     g_object_unref(affichage->images->queue);
@@ -803,7 +807,7 @@ void init_affichage(Affichage *affichage, ClutterScript *ui, Partie *p,
     clutter_stage_set_key_focus(CLUTTER_STAGE(stage), zone_snake);
     affichage->images = snake_generate_image();
 
-    g_signal_connect(zone_snake, "key-press-event", G_CALLBACK(zone_snake_key_press_cb), partie_player(p)); // TODO génraliser
+    affichage->keypress_handler = g_signal_connect(zone_snake, "key-press-event", G_CALLBACK(zone_snake_key_press_cb), partie_player(p)); // TODO génraliser
 
     // SET IMAGE BACKGROUND
     ClutterContent *image = generate_image(BACKGROUND_IMAGE_SRC);
