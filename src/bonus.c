@@ -29,7 +29,7 @@ struct _bonus
 
 struct _bonus_effect
 {
-    void *callback_end;
+    void (*callback_end)(Partie *, Snake *, Bonus *);
 };
 
 struct _bonus_effect_apply
@@ -49,7 +49,7 @@ BonusEffectApply * bonus_effect_apply_init(Snake *snake, Bonus *bs,int time)
     return new;
 }
 
-BonusEffect * bonus_effect_init(Bonus *b,void * callback)
+BonusEffect * bonus_effect_init(Bonus *b,void (*callback)(Partie *, Snake *, Bonus *))
 {
     BonusEffect *new = malloc(sizeof(BonusEffect));
 
@@ -135,17 +135,17 @@ void bonus_eat_slow_others(Partie *p, Snake *s, Bonus *b)
     bonus_advanced_update(b, map_width(partie_map(p)), map_height(partie_map(p)));
 }
 
-void *bonus_end_basic(Partie *p, Snake *s, Bonus *b)
+void bonus_end_basic(Partie *p, Snake *s, Bonus *b)
 {
 
     //nothing
 }
-void *bonus_end_speedslow(Partie *p,Snake *s,Bonus *b)
+void bonus_end_speedslow(Partie *p,Snake *s,Bonus *b)
 {
     snake_set_vitesse(s,2);
 }
 
-void *bonus_end_speedslowother(Partie *p,Snake *s,Bonus *b)
+void bonus_end_speedslowother(Partie *p,Snake *s,Bonus *b)
 {
     TabSnakes *ts = partie_tab(p);
     int i;
@@ -667,7 +667,5 @@ void bonus_eat_callback(Partie *partie, Snake *snake, Bonus *nourriture)
 
 void bonus_end_callback(Partie *partie, Snake *snake, Bonus *nourriture)
 {
-    void (*bonus_end_cb)(Partie *partie, Snake *snake, Bonus *nourriture);
-    bonus_end_cb = nourriture->be->callback_end;
-    bonus_end_cb(partie, snake, nourriture);
+    nourriture->be->callback_end(partie, snake, nourriture);
 }
