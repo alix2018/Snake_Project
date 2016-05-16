@@ -23,6 +23,11 @@ Autres cibles définies dans le Makefile :
                              autoconf.
  - `make tests` : compile les tests unitaires.
  - `make doc` : Génère la documentation.
+ 
+Lorsque la version de Clutter installée est récente, des avertissements
+indiquant que des fonctions de Clutter sont obsolètes peuvent apparaître.
+L'utilisation de ces fonctions est nécessaire pour permettre la compatibilité
+avec la version 1.16 de la bibliothèque.
 
 Exécution
 ---------
