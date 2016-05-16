@@ -1,3 +1,11 @@
+/**
+ * @file      alpha-field.h
+ * @author    alpha-snake
+ * @version   1
+ * @date      16/05/2016
+ * @brief     Classe AlphaField pour pouvoir rentrer du texte sur le menu.
+ * @details   ---
+ */
 #include <clutter/clutter.h>
 
 #ifndef ALPHA_SNAKE_ALPHA_FIELD_H

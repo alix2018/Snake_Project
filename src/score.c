@@ -1,3 +1,12 @@
+/**
+ * @file      score.c
+ * @author    alpha-snake
+ * @version   1
+ * @date      16/05/2016
+ * @brief     Toutes les fonctions permettant d'afficher la liste des scores.
+ * @details   ---
+ */
+
 #include "score.h"
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -10,6 +19,15 @@
 
 #define SCORE "score.txt"
 
+
+/**
+ * @brief      La structure d'un score.
+ *
+ * @use Score
+ * @param[in]  score        La liste des scores.
+ * @param[in]  pseudo     	Le pseudo du joueur.
+ * @param[in]  gagnant      Le gagnant de la partie.
+ */
 struct _score
 {
 	int score;
@@ -18,9 +36,9 @@ struct _score
 };
 
 /**
- * @brief   Ouvrir
+ * @brief   Ouvre le fichier
  *
- * @param[in]    nomDuFichier  Le nom du fichier à ouvier
+ * @param[in]    nomDuFichier  Le nom du fichier à ouvrir.
  *
  * @return  Le file descriptor du fichier
  */
@@ -36,9 +54,9 @@ FILE *ouvrir(char *nomDuFichier){
 }
 
 /**
- * @brief   fermer
+ * @brief   Ferme le fichier.
  *
- * @param[in]    fichier  Le file descriptor à fermer
+ * @param[in]    fichier  Le file descriptor à fermer.
  *
  */
 void fermer(FILE *fichier){
@@ -78,9 +96,9 @@ void ecrire(FILE *fd, char *pseudo, int nv_score, char gagnant)
 }
 
 /**
- * @brief   Enregisre le score du snake s
+ * @brief   Enregistre le score du snake s
  *
- * @param[in]    s  Le snake
+ * @param[in]    s 		 Le snake
  * @param[in]    gagnant 'P' perdant, 'G' gagnant
  *
  */

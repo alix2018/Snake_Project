@@ -1,6 +1,11 @@
-//
-// Created by thibaut on 27/02/16.
-//
+/**
+ * @file      list.h
+ * @author    alpha-snake
+ * @version   1
+ * @date      16/05/2016
+ * @brief     Structure de base des snakes.
+ * @details   ---
+ */
 
 #ifndef ALPHA_SNAKE_ACTOR_LIST_H
 #define ALPHA_SNAKE_ACTOR_LIST_H

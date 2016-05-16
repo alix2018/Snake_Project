@@ -1,4 +1,11 @@
-
+/**
+ * @file      alpha-field.c
+ * @author    alpha-snake
+ * @version   1
+ * @date      16/05/2016
+ * @brief     Classe AlphaField pour pouvoir rentrer du texte sur le menu.
+ * @details   ---
+ */
 #include "alpha-field.h"
 #include <gdk-pixbuf/gdk-pixbuf.h>
 #include "utils.h"

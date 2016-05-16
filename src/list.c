@@ -1,14 +1,25 @@
-//
-// Created by thibaut on 27/02/16.
-//
+/**
+ * @file      list.c
+ * @author    alpha-snake
+ * @version   1
+ * @date      16/05/2016
+ * @brief     Structure de base des snakes.
+ * @details   ---
+ */
+
 
 #include <clutter/clutter.h>
 #include <stdlib.h>
 #include "list.h"
 
 /**
- * @brief    noeud d'une liste
- */
+    * @brief      La structure d'un noeud d'une liste.
+    *
+    * @use Node
+    * @param[in]  elt        Elément du noeud.
+    * @param[in]  next       Elément suivant.
+    * @param[in]  prev       Elément précédent.
+*/
 struct _node
 {
     void *elt; /*la coordonnée dans la liste*/
@@ -17,8 +28,12 @@ struct _node
 };
 
 /**
- * @brief   liste d'éléments
- */
+    * @brief      La structure de la liste des éléments
+    *
+    * @use List
+    * @param[in]  first      Premier élément.
+    * @param[in]  last       Dernier élément.
+*/
 struct _list
 {
     Node first;
@@ -162,6 +177,12 @@ void list_add_last(List *list, void *elt)
     }
 }
 
+/**
+ * @brief   Supprime un élément à la fin d'une liste.
+ *
+ * @param[in]    list   La liste à laquelle l'élément sera supprimé.
+ * @param[in]    elt    L'élément à supprimer.
+ */
 void list_delete_node(List *list, Node n)
 {
     Node cur;

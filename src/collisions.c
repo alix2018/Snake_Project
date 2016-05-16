@@ -44,7 +44,7 @@ struct _CollisionObject
  * @param[in]  enabled             Si la collision est active.
  * @param[in]  obj1                Le snake.
  * @param[in]  obj2                La collision.
- * @param[in]  data
+ * @param[in]  data                Les données.
  */
 struct _Collision
 {
@@ -174,8 +174,7 @@ void gestion_collision_remove_object(GestionCollisions *gc, void *obj)
  *
  * @param[in]   collision  La collision à tester.
  *
- * @return    1 si le snake obj1 est en collision avec le snake obj2,
- *            0 sinon.
+ * @return    1 si le snake obj1 est en collision avec le snake obj2, 0 sinon.
  */
 int check_collision_for_snake(Collision *collision)
 {
@@ -400,6 +399,9 @@ void free_collision_object(CollisionObject *object)
 
 /**
  * @brief   Active ou désactive une collision.
+ *
+ * @param[in]    object     Le CollisionObject à activer.
+ * @param[in]    enabled    S'il peut être libéré.
  */
 void collision_object_set_enabled(CollisionObject *object, int enabled)
 {
@@ -429,6 +431,12 @@ void collision_object_add_collision(CollisionObject *obj, Collision *collision)
     obj->collisions[obj->nb_collisions - 1] = collision;
 }
 
+/**
+ * @brief   SUpprime une collision à un CollisionObject.
+ *
+ * @param[in]    obj        Le CollisionObject qui sera modifié.
+ * @param[in]    collision  La collision à supprimer.
+ */
 void collision_object_remove_object(CollisionObject *obj, void *obj1)
 {
     int i;
@@ -455,7 +463,7 @@ void collision_object_remove_object(CollisionObject *obj, void *obj1)
  * @param[in]    data   Un pointeur qui sera passé en paramètre à la fonction
  *                      callback.
  *
- * @return La collision crée.
+ * @return La collision créée.
  */
 Collision *create_collision(Snake *snake, CollisionCb cb, void *data)
 {

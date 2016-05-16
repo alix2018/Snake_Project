@@ -1,3 +1,11 @@
+/**
+ * @file      utils.c
+ * @author    alpha-snake
+ * @version   1
+ * @date      16/05/2016
+ * @brief     Permet de charger des images sur le menu.
+ * @details   ---
+ */
 
 #include "utils.h"
 #include <gdk-pixbuf/gdk-pixbuf.h>

@@ -1,6 +1,11 @@
-//
-// Created by thibaut on 14/03/16.
-//
+/**
+ * @file      ia.h
+ * @author    alpha-snake
+ * @version   1
+ * @date      16/05/2016
+ * @brief     Toutes les fonctions permettant de créer de nouvelles ia.
+ * @details   ---
+ */
 
 
 

@@ -18,10 +18,15 @@
  * @brief      La structure du snake 
  * 
  * @use Snake
- * @param[in]  tete    		   La tête de la liste
- * @param[in]  dernier  	   Le dernier élément de la liste
- * @param[in]  longueur  	   La longueur de la liste
- * @param[in]  direction  	   La direction du snake
+ * @param[in]  liste_snake    		La liste du snake.
+ * @param[in]  longueur 	   		La longueur du snake.
+ * @param[in]  direction  	   		La direction du snake.
+ * @param[in]  vitesse 	 			La vitesse du snake.
+ * @param[in]  pseudo    		    Le pseudo du joueur.
+ * @param[in]  is_bot  	   			Si c'est un Schlangà.
+ * @param[in]  script_name  	   	Le nom.
+ * @param[in]  num_ia		   	    Le numéro de l'ia.
+ * @param[in]  indic_duree  	    La durée.
  */
 struct _snake
 {
@@ -272,7 +277,16 @@ Snake *create_snake(int longueur, Coord c, Direction dir)
 	return res;
 }
 
-
+/**
+ * @brief       Créer un Schlangà.
+ *
+ * @param[in]  longueur  La taille initiale du Schlangà.
+ * @param[in]  c         La position initiale.
+ * @param[in]  dir       L'angle de direction.
+ * @param[in]  str       Chaîne de caractères.
+ *
+ * @return     Renvoie un snake
+ */
 Snake *create_snake_bot(int longueur, Coord c, Direction dir,char * str)
 {
 	Snake * res = create_snake(longueur,c,dir);
@@ -484,6 +498,16 @@ int snake_set_direction(Snake *snake, Direction dir)
     }
 }
 
+
+/**
+ * @brief      Change la direction du snake.
+ *
+ * @param      snake  Le snake à changer.
+ * @param[in]  pos    Nouvelles coordonnées.
+ * @param[in]  dir    Les configurations.
+ *
+ * @return  1 si le changement de direction a été possible, 0 sinon.
+ */
 int snake_set_pos(Snake *snake,Coord pos,Config * config )
 {
 	Node ls = list_first_node(snake_liste_snake(snake));
@@ -545,11 +569,24 @@ void snake_set_liste(Snake *snake, List *ls)
 	snake->liste_snake = ls;
 }
 
+/**
+ * @brief      Accéder au pseudo du Snake.
+ *
+ * @param      snake  	Le snake auquel on veut récupérer le pseudo.
+ *
+ * @return		Renvoie le pseudo du snake concerné.
+ */
 char *snake_pseudo(Snake *snake)
 {
 	return snake->pseudo;
 }
 
+/**
+ * @brief      Affecte le nouveau pseudo au snake
+ *
+ * @param      snake  	Le snake auquel on veut associer le pseudo.
+ * @param[in]  pseudo 	Le pseudo à affecter au snake.
+ */
 void snake_set_pseudo(Snake *snake, char *pseudo)
 {
 	snake->pseudo = pseudo;
@@ -608,10 +645,18 @@ void snake_increase(Snake *snake)
 
 
 
+/**
+ * @brief      Dit si c'est un bot ou pas
+ *
+ * @param      snake  Le snake sur lequel on veut se renseigner.
+ *
+ * @return  1 si le snake est un bot, 0 sinon.
+ */
 int snake_is_bot(Snake *snake)
 {
 	return snake->is_bot;
 }
+
 
 char * snake_script_name(Snake * snake)
 {

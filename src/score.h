@@ -1,3 +1,12 @@
+/**
+ * @file      score.h
+ * @author    alpha-snake
+ * @version   1
+ * @date      16/05/2016
+ * @brief     Toutes les fonctions permettant d'afficher la liste des scores.
+ * @details   ---
+ */
+
 #ifndef _SCORE_
 #define _SCORE_
 

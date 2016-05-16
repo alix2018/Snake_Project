@@ -1,3 +1,11 @@
+/**
+ * @file      alpha-check-box.h
+ * @author    alpha-snake
+ * @version   1
+ * @date      16/05/2016
+ * @brief     Classe AlphaCheckBox pour le sous-menu "partie avancée".
+ * @details   ---
+ */
 #include <clutter/clutter.h>
 
 #ifndef ALPHA_SNAKE_ALPHA_BUTTON_H

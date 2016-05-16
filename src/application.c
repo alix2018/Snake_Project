@@ -1,6 +1,11 @@
-//
-// Created by stef on 14/05/16.
-//
+/**
+ * @file      application.c
+ * @author    alpha-snake
+ * @version   1
+ * @date      16/05/2016
+ * @brief     Toutes les fonctions permettant d'afficher la fenpetre et le menu puis lancer le jeu
+ * @details   ---
+ */
 
 #include "application.h"
 #include "widgets/utils.h"
@@ -81,6 +86,13 @@ void stage_destroy_cb(ClutterActor *actor, gpointer data)
     clutter_main_quit();
 }
 
+/**
+ * @brief        Fonction qui génère la fenetre principale c'est-à-dire le menu.
+ *
+ * @param[in]    app       L'application à initialiser.
+ *
+ * @return       L'application initialisée.
+ */
 void init_application(Application *app)
 {
     GError *err = NULL;

@@ -2,7 +2,7 @@
  * @file      config.c
  * @author    alpha-snake
  * @version   1
- * @date      25/02/2016
+ * @date      16/05/2016
  * @brief     Configuration de tout le jeu (snake, schlangà, bonus, taille du plateau...)
  * @details   ---
  */
@@ -41,13 +41,22 @@ Config * init_default_config()
 /**
  * @brief   Libère la mémoire consommée par un les configurations
  *
- * @param[in]    les configurations à libérer.
+ * @param[in]   c      les configurations à libérer.
  */
 void free_config(Config * c)
 {
     free(c);
 }
 
+/**
+ * @brief   Vérifie si la taille du plateau de dépasse pas l'écran
+ *
+ * @param[in]    cur_screen_height      Hauteur de l'écran.
+ * @param[in]    cur_screen_width       Largeur de l'écran.
+ * @param[in]    cur_grid_size          Taille de la grille.
+ * @param[in]    cur_height             Hauteur du plateau.
+ * @param[in]    cur_width              Largeur du plateau.
+ */
 void check_screen_size(int cur_screen_height,int cur_screen_width,int cur_grid_size,int cur_height, int cur_width)
 {
     /**GdkScreen * gs =  gdk_screen_get_default();
@@ -70,6 +79,12 @@ void check_screen_size(int cur_screen_height,int cur_screen_width,int cur_grid_s
 
 }
 
+
+/**
+ * @brief   Configure le plateau par rapport à l'écran
+ *
+ * @param[in]    config     Les configurations de l'écran.
+ */
 void config_grid_from_screen_and_window(Config * config)
 {
     int gs1 = config->screen_height/config->height;
@@ -97,6 +112,14 @@ void config_grid_from_screen_and_window(Config * config)
     config->grid_size = gs;
 
 }
+
+/**
+ * @brief   Initialise toutes les configurations.
+ *
+ * @param[in]    config     Toutes les configurations à initialiser.
+ *
+ * @return      Renvoie les configurationsinitialisées.
+ */
 Config * init_config()
 {
     Config * res = init_default_config();

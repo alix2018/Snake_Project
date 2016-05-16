@@ -1,3 +1,12 @@
+/**
+ * @file      alpha-button.h
+ * @author    alpha-snake
+ * @version   1
+ * @date      16/05/2016
+ * @brief     Classe AlphaButton pour le menu.
+ * @details   ---
+ */
+
 #include <clutter/clutter.h>
 
 #ifndef ALPHA_SNAKE_ALPHA_BUTTON_H

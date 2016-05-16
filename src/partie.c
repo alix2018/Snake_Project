@@ -1,6 +1,11 @@
-//
-// Created by thibaut on 16/03/16.
-//
+/**
+ * @file      partie.c
+ * @author    alpha-snake
+ * @version   1
+ * @date      16/05/2016
+ * @brief     Toutes les fonctions permettant de créer et lancer une partie.
+ * @details   ---
+ */
 
 #include "partie.h"
 
@@ -13,18 +18,37 @@
 #include <glib.h>
 #include "config.h"
 
+/**
+ * @brief      La structure de la map.
+ *
+ * @use Map
+ * @param[in]  width       La largeur de la map.
+ * @param[in]  height      La hauteur de la map.
+ */
 struct _Map
 {
     int width;
     int height;
 };
 
+/**
+ * @brief      La structure d'une partie.
+ *
+ * @use Partie
+ * @param[in]  btab         Tableau de bonus.
+ * @param[in]  player       Le snake à jouer.
+ * @param[in]  collisions   Le gestionnaire de collisions.
+ * @param[in]  affichage    L'affichage de la partie.
+ * @param[in]  en_cours     1 si la partie est en cours, 0 sinon.
+ * @param[in]  config       Les configurations de la partie.
+ * @param[in]  duree        Le nombre de déplacement effectué depuis le debut de la partie.
+ */
 struct _Partie
 {
 
 
     //Bonus *nourriture;
-    TabBonus *btab; // pour faire cour b = bonus  mais pas correct visuellement
+    TabBonus *btab; // pour faire court b = bonus  mais pas correct visuellement
 
     Snake *player;
     TabSnakes *tab; // Il y a un probléme avec ce nom je voulais faire cour pour avoir à faire partie->tab−>snakes
@@ -61,20 +85,49 @@ void partie_set_schlanga(Partie *p,Snake *s)
 
  **/
 
+/**
+ * @brief   Permet d'accéder au tableau de snakes de la partie.
+ *
+ * @param[in]  p     La partie en cours.
+ *
+ * @return  Renvoie un tableau de snakes.
+ */
 TabSnakes * partie_tab(Partie *p)
 {
     return p->tab;
 }
 
+
+/**
+ * @brief   Permet d'accéder au joueur de la partie.
+ *
+ * @param[in]  p     La partie en cours.
+ *
+ * @return  Renvoie le snake du joueur.
+ */
 Snake * partie_player(Partie *p)
 {
     return p->player;
 }
+
+/**
+ * @brief   Permet de désigner un snake pour le joueur.
+ *
+ * @param[in]  p     La partie en cours.
+ * @param[in]  s     Le snake.
+ */
 void partie_set_player(Partie *p,Snake *s)
 {
     p->player = s;
 }
 
+/**
+ * @brief   Permet d'accéder au tableau de bonus de la partie.
+ *
+ * @param[in]  p     La partie en cours.
+ *
+ * @return  Renvoie un tableau de bonus.
+ */
 TabBonus * partie_tab_bonus(Partie *p)
 {
     return p->btab;
@@ -167,16 +220,29 @@ Partie *create_partie()
 }
 
 
-
+/**
+ * @brief   Permet de changer les configurations de la partie.
+ *
+ * @param[in]  p     La partie en cours.
+ * @param[in]  c     COnfigurations de la partie.
+*/
 void partie_set_config(Partie * p,Config * c)
 {
     p->config = c;
 }
 
+/**
+ * @brief   Permet d'accéder aux configurations de la partie.
+ *
+ * @param[in]  p     La partie en cours.
+ *
+ * @return Renvoie les configurations de la partie.
+*/
 Config * partie_config(Partie * p)
 {
     return p->config;
 }
+
 /**
  * @brief   Libère la mémoire consommée par une partie.
  *
@@ -231,9 +297,9 @@ int partie_set_duree(Partie *partie, int duree)
 }
 
 /**
- * @brief   Retourne le GStrind à afficher lorsqu'on demande les scores
+ * @brief   Le GStrind à afficher lorsqu'on demande les scores.
  *
- * @return  etourne le GStrind à afficher lorsqu'on demande les scores
+ * @return  Eetourne le GStrind à afficher lorsqu'on demande les scores.
  */
 GString *get_gstring_score()
 {
@@ -398,7 +464,12 @@ static void collision_snake_vers_snake(Snake *snake, void *obj2, void *data)
     }
 
 }
-
+/**
+ * @brief   Libère la mémoire consommée par un bonus avancé.
+ *
+ * @param[in]    p      La partie en cours.
+ * @param[in]    b      Le bonus à supprimer.
+ */
 void remove_advanced_bonus(Partie *p, Bonus *b)
 {
     tab_bonus_remove_object(p->btab, b);
@@ -424,7 +495,12 @@ static void collision_snake_vers_nourriture(Snake *snake, void *obj2, void *data
     bonus_eat_callback(partie, snake, nourriture);
 }
 
-
+/**
+ * @brief   Ajoute des bonus à la partie.
+ *
+ * @param[in]   partie  La partie en cours.
+ * @param[in]   bonus   Le bonus à ajouter.
+ */
 void partie_add_bonus(Partie *partie, Bonus * bonus)
 {
     tab_bonus_add_object(partie->btab,bonus);
@@ -454,8 +530,6 @@ void partie_add_bonus(Partie *partie, Bonus * bonus)
  *
  * @param[in]    partie Une partie.
  * @param[in]    ui     Le ClutterScript de la fenêtre.
- * @param[in]    width  La largeur du plateau.
- * @param[in]    height La hauteur du plateau.
  */
 void init_partie(Partie *partie, ClutterScript *ui)
 {
@@ -588,6 +662,15 @@ void init_partie(Partie *partie, ClutterScript *ui)
     free(co_bonus);
 }
 
+
+/**
+ * @brief   Initialise le pseudo.
+ *
+ * @param[in]    partie     Une partie.
+ * @param[in]    argc       Le nombre d'arguments rentré en paramètre.
+ * @param[in]    argv       Le pseudo rentré par l'utilisateur.
+
+ */
 void init_pseudo(Partie *p, int argc, char **argv)
 {
     if(argc == 2)

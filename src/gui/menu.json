@@ -157,19 +157,6 @@
                   ]
                 }
               ]
-            },
-            {
-              "id": "bouton_partie_reseau", "type": "AlphaButton",
-              "button-text": "Partie en réseau",
-              "width":400,
-              "actions": [
-                {
-                  "type": "ClutterClickAction",
-                  "signals": [
-                    { "name": "clicked", "handler": "bouton_partie_reseau_clicked_cb"}
-                  ]
-                }
-              ]
             }
           ]
         }
@@ -324,7 +311,7 @@
               },
               {
                 "type": "ClutterText",
-                "text": "Classique",
+                "text": "Classique (exterminez tout les schlangas jusqu'au dernier)",
                 "color": "black",
                 "font-name": "Sans 12 bold"
               }
@@ -344,7 +331,7 @@
               },
               {
                 "type": "ClutterText",
-                "text": "Invasion",
+                "text": "Invasion (survivez le plus longtemps possible)",
                 "color": "black",
                 "font-name": "Sans 12 bold"
               }

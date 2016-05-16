@@ -1,6 +1,11 @@
-//
-// Created by thibaut on 16/03/16.
-
+/**
+ * @file      partie.h
+ * @author    alpha-snake
+ * @version   1
+ * @date      16/05/2016
+ * @brief     Toutes les fonctions permettant de créer et lancer une partie.
+ * @details   ---
+ */
 
 
 #ifndef ALPHA_SNAKE_PARTIE_H

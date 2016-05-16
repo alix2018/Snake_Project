@@ -1,3 +1,11 @@
+/**
+ * @file      alpha-button.c
+ * @author    alpha-snake
+ * @version   1
+ * @date      16/05/2016
+ * @brief     Classe AlphaButton pour le menu.
+ * @details   ---
+ */
 #include "alpha-button.h"
 #include <gdk-pixbuf/gdk-pixbuf.h>
 #include "utils.h"

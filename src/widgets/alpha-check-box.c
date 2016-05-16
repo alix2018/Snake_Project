@@ -1,3 +1,11 @@
+/**
+ * @file      alpha-check-box.c
+ * @author    alpha-snake
+ * @version   1
+ * @date      16/05/2016
+ * @brief     Classe AlphaCheckBox pour le sous-menu "partie avancée".
+ * @details   ---
+ */
 #include "alpha-check-box.h"
 #include <gdk-pixbuf/gdk-pixbuf.h>
 #include "utils.h"

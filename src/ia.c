@@ -1,6 +1,11 @@
-//
-// Created by thibaut on 14/03/16.
-//
+/**
+ * @file      ia.c
+ * @author    alpha-snake
+ * @version   1
+ * @date      16/05/2016
+ * @brief     Toutes les fonctions permettant de créer de nouvelles ia.
+ * @details   ---
+ */
 
 #include <stdio.h>
 #include <time.h>
@@ -14,6 +19,7 @@
  * @param[in]   c       La coord
  * @param[in]   dir     La direction à appliquer
  *
+ * @return Renvoie les coordonnée de la future position du snake.
  */
 Coord future_pos(Coord c, Direction dir)
 {
@@ -40,16 +46,16 @@ Coord future_pos(Coord c, Direction dir)
 /**
  * @brief   verifie que la direction désignée par snake_forward_ia1 est pertinente et la corrige sinon
  *
- * @param[in]   snake_ia   Schlanglà
- * @param[in]   snake      Le joueur
- * @param[in]   futurdir   La direction qui va être appliquée à snake_ia
- *
+ * @param[in]   snake_ia   Schlanglà.
+ * @param[in]   futurdir   La direction qui va être appliquée à snake_ia.
+ * @param[in]   futurdir   La direction qui va être appliquée à snake_ia.
+ * @param[in]   nb_appel   Le nombre d'appels.
  */
 static void snake_verif_ia(Snake * snake_ia, Partie * p, Direction futurdir, int nb_appel) // TODO déplacement défensif
 {
     // TODO à réimplémenter avec le type list
     TabSnakes *t = partie_tab(p);
-    //On parcours le snake les coordonnés du snake du joueur
+    //On parcours le snake les coordonnées du snake du joueur
     Coord futur_tete = snake_pos(snake_ia), *cur_element_queue_ia, *cur_element_queue;
     Node ls_ia = list_first_node(snake_liste_snake(snake_ia));
 
@@ -369,6 +375,14 @@ static void snake_verif_ia(Snake * snake_ia, Partie * p, Direction futurdir, int
     }
 }
 
+/**
+ * @brief   Vérifie que les snake n'aille pas dans les murs.
+ *
+ * @param[in]   snake_ia   Schlanglà.
+ * @param[in]   p          La partie.
+ * @param[in]   futurdir   La direction qui va être appliquée à snake_ia.
+ * @param[in]   m          La map.
+ */
 void snake_verif_wall(Snake *snake_ia, Partie * p, Direction futurdir,Map *m)
 {
     Coord futur_tete = snake_pos(snake_ia), *cur_element_queue_ia, *cur_element_queue;
@@ -477,9 +491,8 @@ void snake_verif_wall(Snake *snake_ia, Partie * p, Direction futurdir,Map *m)
  * @brief   Fait avancer le Schlanglà : déetermine la direction logique à prendre 
             pour accéder à la bonus, l'applique et appelle snake_forward
  *
- * @param[in]   snake_ia Le Schlanglà
- * @param[in]   snake    Le joueur
- * @param[in]   bonus     La bonus
+ * @param[in]   snake_ia    Le Schlanglà.
+ * @param[in]   p           La partie.
  */
 void snake_forward_ia1(Snake *snake_ia, Partie *p)
 {
@@ -588,11 +601,10 @@ void snake_forward_ia1(Snake *snake_ia, Partie *p)
 }
 
 /**
- * @brief   Fait avancer le Schlanglà : ia qui tourne sur elle même dans le sens directe
+ * @brief   Fait avancer le Schlanglà : ia qui tourne sur elle même dans le sens direct.
  *
- * @param[in]   snake_ia Le Schlanglà
- * @param[in]   snake    Le joueur
- * @param[in]   bonus     La bonus
+ * @param[in]   snake_ia    Le Schlanglà.
+ * @param[in]   partie      Le partie.
  */
 void snake_forward_ia3(Snake *snake_ia, Partie *p)
 {
@@ -634,11 +646,10 @@ void snake_forward_ia3(Snake *snake_ia, Partie *p)
 }
 
 /**
- * @brief   Fait avancer le Schlanglà : ia qui tourne sur elle même dans le sens horraire
+ * @brief   Fait avancer le Schlanglà : ia qui tourne sur elle même dans le sens horaire
  *
- * @param[in]   snake_ia Le Schlanglà
- * @param[in]   snake    Le joueur
- * @param[in]   bonus     La bonus
+ * @param[in]   snake_ia    Le Schlanglà.
+ * @param[in]   partie      La partie.
  */
 void snake_forward_ia4(Snake *snake_ia, Partie *p)
 {
@@ -679,6 +690,12 @@ void snake_forward_ia4(Snake *snake_ia, Partie *p)
     }
 }
 
+/**
+ * @brief   Vérifie si l'ia est vers le bord de la map.
+ *
+ * @param[in]   snake_ia    Le Schlanglà.
+ * @param[in]   partie      La partie.
+ */
 void snake_ia_border(Snake *snake_ia, Partie *p)
 {
     Map *m = partie_map(p);
@@ -711,9 +728,8 @@ void snake_ia_border(Snake *snake_ia, Partie *p)
 /**
  * @brief   Fait avancer le Schlanglà : ia qui avance en accordéon
  *
- * @param[in]   snake_ia Le Schlanglà
- * @param[in]   snake    Le joueur
- * @param[in]   bonus     La bonus
+ * @param[in]   snake_ia    Le Schlanglà.
+ * @param[in]   partie      La partie.
  */
 void snake_forward_ia5(Snake *snake_ia, Partie *p)
 {
@@ -735,11 +751,11 @@ void snake_forward_ia5(Snake *snake_ia, Partie *p)
 }
 
 /**
- * @brief   Fait avancer le Schlanglà : ia qui fait des losanges de rayon R dans le sens horraire
+ * @brief   Fait avancer le Schlanglà : ia qui fait des losanges de rayon R dans le sens horaire.
  *
- * @param[in]   snake_ia Le Schlanglà
- * @param[in]   snake    Le joueur
- * @param[in]   bonus     La bonus
+ * @param[in]   snake_ia    Le Schlanglà.
+ * @param[in]   p           Le joueur.
+ * @param[in]   R           Le rayon.
  */
 void snake_forward_ia6(Snake *snake_ia, Partie *p, int R)
 {
@@ -790,9 +806,9 @@ void snake_forward_ia6(Snake *snake_ia, Partie *p, int R)
 /**
  * @brief   Fait avancer le Schlanglà : ia qui fait des losanges de rayon R dans le sens direct
  *
- * @param[in]   snake_ia Le Schlanglà
- * @param[in]   snake    Le joueur
- * @param[in]   bonus     La bonus
+ * @param[in]   snake_ia    Le Schlanglà.
+ * @param[in]   partie      La partie.
+ * @param[in]   R           Le rayon.
  */
 void snake_forward_ia6bis(Snake *snake_ia, Partie *p, int R)
 {
@@ -841,11 +857,12 @@ void snake_forward_ia6bis(Snake *snake_ia, Partie *p, int R)
 }
 
 /**
- * @brief   Fait avancer le Schlanglà : ia qui fait des rectangles lxL
+ * @brief   Fait avancer le Schlanglà : ia qui fait des rectangles lxL.
  *
- * @param[in]   snake_ia Le Schlanglà
- * @param[in]   snake    Le joueur
- * @param[in]   bonus     La bonus
+ * @param[in]   snake_ia    Le Schlanglà.
+ * @param[in]   partie      La partie.
+ * @param[in]   l           Longueur des rectangles.
+ * @param[in]   L           Largeur des rectangles.
  */
 void snake_forward_ia7(Snake *snake_ia, Partie *p, int l, int L)
 {
@@ -870,11 +887,11 @@ void snake_forward_ia7(Snake *snake_ia, Partie *p, int l, int L)
 }
 
 /**
- * @brief   Fait avancer le Schlanglà : ia qui dessine une croix de taille l
+ * @brief   Fait avancer le Schlanglà : ia qui dessine une croix de taille l.
  *
- * @param[in]   snake_ia Le Schlanglà
- * @param[in]   snake    Le joueur
- * @param[in]   bonus     La bonus
+ * @param[in]   snake_ia    Le Schlanglà.
+ * @param[in]   partie      La partie.
+ * @param[in]   l           Taille de la croix.
  */
 void snake_forward_ia8(Snake *snake_ia, Partie *p, int l)
 {
@@ -909,136 +926,12 @@ void snake_forward_ia8(Snake *snake_ia, Partie *p, int l)
     }
 }
 
-/**
- * @brief   Fait avancer le Schlanglà : ia qui dessine un petit penis ELLE EST CASSE...
- *
- * @param[in]   snake_ia Le Schlanglà
- * @param[in]   snake    Le joueur
- * @param[in]   bonus     La bonus
- */
-void snake_forward_ia9(Snake *snake_ia, Partie *p)
-{
-    int duree = partie_duree(p);
-    int l = snake_longueur(snake_ia);
-    unsigned dl = (unsigned)(l/2)+1;
-    int m = 4*l+7+4*dl;
-    if(duree%m < l)//On monte tout droit
-    {
-        printf("1 ) On monte tout droit\n");
-        snake_verif_wall(snake_ia, p, snake_direction(snake_ia), partie_map(p));
-        snake_ia_border(snake_ia, p);
-        snake_verif_ia(snake_ia, p, snake_direction(snake_ia), 0);
-    }
-    else if( duree%m ==  l || duree%m ==  l+1)//On tourne à droite deux fois
-    {
-        printf("2-3) On tourne à droite\n");
-        snake_forward_ia4(snake_ia, p);
-        snake_verif_wall(snake_ia, p, snake_direction(snake_ia), partie_map(p));
-        snake_ia_border(snake_ia, p);
-        snake_verif_ia(snake_ia, p, snake_direction(snake_ia), 0);
-    }
-    //On descend de l et on doit avancer en plus de dl pour ne pas se mordre la queue lors du demi tour
-    else if( duree%m > l+1 && duree%m < 2*l+1+dl)//On va tout droit
-    {
-        printf("4) On descend\n");
-        snake_verif_wall(snake_ia, p, snake_direction(snake_ia), partie_map(p));
-        snake_ia_border(snake_ia, p);
-        snake_verif_ia(snake_ia, p, snake_direction(snake_ia), 0);
-    }
-    else if( duree%m ==  2*l+1+dl || duree%m ==  2*l+2+dl)//On tourne à gauche 2 fois
-    {
-        printf("5-6) On tourne à gauche\n");
-        snake_forward_ia3(snake_ia, p);
-        snake_verif_wall(snake_ia, p, snake_direction(snake_ia), partie_map(p));
-        snake_ia_border(snake_ia, p);
-        snake_verif_ia(snake_ia, p, snake_direction(snake_ia), 0);
-    }
-    else if( duree%m > 2*l+2+dl && duree%m < 2*l+2+2*dl)//On remonte de dl
-    {
-        printf("7) On monte tout droit\n");
-        snake_verif_wall(snake_ia, p, snake_direction(snake_ia), partie_map(p));
-        snake_ia_border(snake_ia, p);
-        snake_verif_ia(snake_ia, p, snake_direction(snake_ia), 0);
-    }
-    else if( duree%m == 2*l+2+2*dl)//On tourne à gauche
-    {
-        printf("8) On tourne à gauche\n");
-        snake_forward_ia3(snake_ia, p);
-        snake_verif_wall(snake_ia, p, snake_direction(snake_ia), partie_map(p));
-        snake_ia_border(snake_ia, p);
-        snake_verif_ia(snake_ia, p, snake_direction(snake_ia), 0);
-    }
-    else if( duree%m == 2*l+3+2*dl)//On tourne à droite
-    {
-        printf("9) On tourne à droite\n");
-        snake_forward_ia4(snake_ia, p);
-        snake_verif_wall(snake_ia, p, snake_direction(snake_ia), partie_map(p));
-        snake_ia_border(snake_ia, p);
-        snake_verif_ia(snake_ia, p, snake_direction(snake_ia), 0);
-    }
-    else if( duree%m > 2*l+3+2*dl && duree%m < 3*l+3+2*dl)//On remonte de l
-    {
-        printf("10) On monte tout droit\n");
-        snake_forward_ia4(snake_ia, p);
-        snake_verif_wall(snake_ia, p, snake_direction(snake_ia), partie_map(p));
-        snake_ia_border(snake_ia, p);
-        snake_verif_ia(snake_ia, p, snake_direction(snake_ia), 0);
-    }
-    else if( duree%m == 3*l+3+2*dl || duree%m == 3*l+4+2*dl)//On tourne à gauche deux fois
-    {
-        printf("11-12) On tourne à gauche\n");
-        snake_forward_ia3(snake_ia, p);
-        snake_verif_wall(snake_ia, p, snake_direction(snake_ia), partie_map(p));
-        snake_ia_border(snake_ia, p);
-        snake_verif_ia(snake_ia, p, snake_direction(snake_ia), 0);
-    }
-    else if( duree%m > 3*l+4+2*dl && duree%m < 4*l+4+3*dl)//On descend de l
-    {
-        printf("13) On descend tout droit\n");
-        snake_forward_ia4(snake_ia, p);
-        snake_verif_wall(snake_ia, p, snake_direction(snake_ia), partie_map(p));
-        snake_ia_border(snake_ia, p);
-        snake_verif_ia(snake_ia, p, snake_direction(snake_ia), 0);
-    }
-    else if( duree%m == 4*l+4+3*dl || duree%m == 4*l+5+3*dl)//On tourne à droite deux fois
-    {
-        printf("14-15) On tourne à droite\n");
-        snake_forward_ia4(snake_ia, p);
-        snake_verif_wall(snake_ia, p, snake_direction(snake_ia), partie_map(p));
-        snake_ia_border(snake_ia, p);
-        snake_verif_ia(snake_ia, p, snake_direction(snake_ia), 0);
-    }
-    else if( duree%m > 4*l+5+3*dl && duree%m < 4*l+5+4*dl)//On remonte de dl
-    {
-        printf("16) On monte tout droit\n");
-        snake_forward_ia4(snake_ia, p);
-        snake_verif_wall(snake_ia, p, snake_direction(snake_ia), partie_map(p));
-        snake_ia_border(snake_ia, p);
-        snake_verif_ia(snake_ia, p, snake_direction(snake_ia), 0);
-    }
-    else if( duree%m == 4*l+5+4*dl)//On tourne à droite
-    {
-        printf("17) On tourne à droite\n");
-        snake_forward_ia4(snake_ia, p);
-        snake_verif_wall(snake_ia, p, snake_direction(snake_ia), partie_map(p));
-        snake_ia_border(snake_ia, p);
-        snake_verif_ia(snake_ia, p, snake_direction(snake_ia), 0);
-    }
-    else if( duree%m == 4*l+6+4*dl)//On tourne à gauche
-    {
-        printf("18) On tourne à gauche\n");
-        snake_forward_ia3(snake_ia, p);
-        snake_verif_wall(snake_ia, p, snake_direction(snake_ia), partie_map(p));
-        snake_ia_border(snake_ia, p);
-        snake_verif_ia(snake_ia, p, snake_direction(snake_ia), 0);
-    }
-}
 
 /**
- * @brief   Fait avancer le Schlanglà : fait faire des formes de manière aléatoire au schlangà
+ * @brief   Fait avancer le Schlanglà : fait faire des formes de manière aléatoire au schlangà.
  *
- * @param[in]   snake_ia Le Schlanglà
- * @param[in]   p        La partie
+ * @param[in]   snake_ia Le Schlanglà.
+ * @param[in]   p        La partie.
  */
 void snake_forward_ia10(Snake * snake_ia,Partie *p)
 {
@@ -1137,9 +1030,8 @@ void snake_forward_ia10(Snake * snake_ia,Partie *p)
  * @brief   Fait avancer le Schlanglà : déetermine la direction aleatoire
             pour accéder à la bonus, l'applique et appelle snake_forward
  *
- * @param[in]   snake_ia Le Schlanglà
- * @param[in]   snake    Le joueur
- * @param[in]   bonus     La bonus
+ * @param[in]   snake_ia    Le Schlanglà.
+ * @param[in]   parte       La partie.
  */
 void snake_forward_ia2(Snake * snake_ia,Partie *p)
 {
@@ -1176,10 +1068,9 @@ void snake_forward_ia2(Snake * snake_ia,Partie *p)
 /**
  * @brief   Change la direction de l'ia en fonction de l'IA demandé (ia_name)
  *
- * @param[in]   snake_ia Le Schlanglà
- * @param[in]   snake    Le joueur
- * @param[in]   bonus     La bonus
- * @param[in]   ia_name  Le nom de l'ia
+ * @param[in]   snake_ia     Le Schlanglà.
+ * @param[in]   partie       La partie.
+ * @param[in]   ia_name      Le nom de l'ia.
  */
 void snake_set_direction_ia(Snake * snake_ia, Partie *p, char * ia_name)
 {
@@ -1221,11 +1112,6 @@ void snake_set_direction_ia(Snake * snake_ia, Partie *p, char * ia_name)
     {
         // TODO ia2
         snake_forward_ia8(snake_ia, p, 4);
-    }
-    else if(strcmp(ia_name,"ia9") == 0)
-    {
-        // TODO ia2
-        snake_forward_ia9(snake_ia, p);
     }
     else
     {

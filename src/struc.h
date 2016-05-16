@@ -27,12 +27,12 @@ typedef struct _snake Snake;
 typedef struct _tabsnakes TabSnakes;
 
 /**
- * @brief      La structure de tabsnake
+ * @brief      La structure du tableau de Snake.
  *
- * @use Snake
- * @param[in]  snakes 		    Le tableau de tout les snakes
- * @param[in]  nb_snakes  	    Le nombre de snake
- * @param[in]  taille_snakes	La taille en mémoire
+ * @use TabSnakes
+ * @param[in]  snakes 		    Le tableau de tout les snakes.
+ * @param[in]  nb_snakes  	    Le nombre de snake.
+ * @param[in]  taille_snakes	La taille en mémoire.
  */
 struct _tabsnakes
 {
@@ -42,6 +42,13 @@ struct _tabsnakes
 };
 
 
+/**
+ * @brief      La structure des coordonnées.
+ *
+ * @use Coord
+ * @param[in]  x		Abscisses.
+ * @param[in]  y  	    Ordonnées.
+ */
 typedef struct
 {
 	int x;

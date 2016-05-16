@@ -60,7 +60,7 @@ struct _snake_image
 
 
 /**
- * @brief      La structure de l'acteur affichae
+ * @brief      La structure de l'acteur affichage
  *
  * @use Affichage
  * @param[in]  snake_actors     Liste des acteurs du snake.
@@ -94,11 +94,24 @@ Affichage *create_affichage()
     return res;
 }
 
+
+/**
+ * @brief   Fonction qui sert à récupérer les bonus d'un affichage
+ *
+ * @param[in]    affichage  L'affichage.
+ *
+ * @return le bonus de l'affichage.
+ */
 List *affichage_list_bonus_actor(Affichage *a)
 {
     return a->bonus;
 }
 
+/**
+ * @brief Libère la mémoire consommée par un BonusActor.
+ *
+ * @param[in]    sa     Le BonusActor à libérer.
+ */
 void affichage_remove_bonus_actor(Affichage *a, Bonus *b)
 {
     Node n=NULL;
