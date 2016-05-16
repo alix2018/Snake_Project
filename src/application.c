@@ -110,7 +110,11 @@ gboolean bouton_avance_jouer_clicked_cb(ClutterClickAction *action,
     if ( checked_invasion ) {
         app->config->type_partie=2;
     }
-    if ( !checked_bonus ) {
+    if ( checked_bonus ) {
+        app->config->advanced_bonus=0;
+    }
+    else
+    {
         app->config->advanced_bonus=1;
     }
     config_grid_from_screen_and_window(app->config);
