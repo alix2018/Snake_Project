@@ -61,23 +61,6 @@
                     ]
                   },
                   {
-                    "id": "Options",
-                    "type": "AlphaButton",
-                    "button-text": "Options",
-                    "x-expand": true,
-                    "actions": [
-                      {
-                        "type": "ClutterClickAction",
-                        "signals": [
-                          {
-                            "name": "clicked",
-                            "handler": "options_clicked_cb"
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
                     "id": "Quitter",
                     "type": "AlphaButton",
                     "button-text": "Quitter",
@@ -190,7 +173,7 @@
             "children": [
               {
                 "type": "ClutterText",
-                "text": "Taille du plateau (en cases) ->",
+                "text": "Taille du plateau (17*25 cases) ->",
                 "color": "black",
                 "font-name": "Sans 12 bold"
               },
@@ -248,7 +231,7 @@
             "children": [
               {
                 "type": "ClutterText",
-                "text": "Taille des Snakes (en cases) ->",
+                "text": "Taille des Snakes (5 cases) ->",
                 "color": "black",
                 "font-name": "Sans 12 bold"
               },
@@ -260,62 +243,10 @@
             ]
           },
           {
-            "type": "ClutterActor",
-            "layout-manager": {
-              "type": "ClutterBoxLayout",
-              "orientation": "horizontal",
-              "spacing": 6
-            },
-            "children": [
-              {
-                "type": "ClutterText",
-                "text": "Maps :",
-                "color": "black",
-                "font-name": "Sans 12 bold"
-              },
-              {
-                "id": "maps"
-              }
-            ]
-          },
-          {
-            "type": "ClutterActor",
-            "layout-manager": {
-              "type": "ClutterBoxLayout",
-              "orientation": "horizontal",
-              "spacing": 6
-            },
-            "children": [
-              {
-                "type": "ClutterText",
-                "text": "Couleur :",
-                "color": "black",
-                "font-name": "Sans 12 bold"
-              },
-              {
-                "id": "couleur_snake"
-              }
-            ]
-          },
-          {
-            "type": "ClutterActor",
-            "layout-manager": {
-              "type": "ClutterBoxLayout",
-              "orientation": "horizontal",
-              "spacing": 6
-            },
-            "children": [
-              {
-                "id": "mode_classique",
-                "type": "AlphaCheckBox"
-              },
-              {
-                "type": "ClutterText",
-                "text": "Classique (exterminez tout les schlangas jusqu'au dernier)",
-                "color": "black",
-                "font-name": "Sans 12 bold"
-              }
-            ]
+            "type": "ClutterText",
+            "text": "Mode Classique par défaut : exterminez tout les schlangas jusqu'au dernier",
+            "color": "black",
+            "font-name": "Sans 12 bold"
           },
           {
             "type": "ClutterActor",
@@ -331,7 +262,7 @@
               },
               {
                 "type": "ClutterText",
-                "text": "Invasion (survivez le plus longtemps possible)",
+                "text": "Mode Invasion : survivez le plus longtemps possible",
                 "color": "black",
                 "font-name": "Sans 12 bold"
               }
@@ -347,7 +278,7 @@
             "children": [
               {
                 "type": "ClutterText",
-                "text": "Nombre de schlanga :",
+                "text": "Nombre de snakes (2 par défaut) :",
                 "color": "black",
                 "font-name": "Sans 12 bold"
               },
@@ -368,7 +299,7 @@
             "children": [
               {
                 "type": "ClutterText",
-                "text": "Nombre de bonus :",
+                "text": "Nombre de bonus (1 par défaut) :",
                 "color": "black",
                 "font-name": "Sans 12 bold"
               },
@@ -411,7 +342,7 @@
                 "signals": [
                   {
                     "name": "clicked",
-                    "handler": "bouton_partie_avance_clicked_cb"
+                    "handler": "bouton_avance_jouer_clicked_cb"
                   }
                 ]
               }

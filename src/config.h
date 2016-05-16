@@ -38,7 +38,6 @@ typedef struct _config Config;
  * @param[in]  taille_snake     La taille du snake.
  * @param[in]  taille_bot       La taille des schlangà.
  * @param[in]  nb_snake         Le nombre de snakes.
- * @param[in]  nb_bonus         Le nombre de bonus.
  * @param[in]  height           La hauteur de la map.
  * @param[in]  weight           La largeur de la map.
  * @param[in]  type_partie      0 pour la partie par défaut, 1 pour classique,  2 pour la partie invasion.

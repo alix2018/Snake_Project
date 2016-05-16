@@ -7,9 +7,11 @@
  * @details   ---
  */
 
+#include <string.h>
 #include "application.h"
 #include "widgets/utils.h"
 #include "widgets/alpha-field.h"
+#include "widgets/alpha-check-box.h"
 
 
 gboolean quitter_clicked_cb(ClutterClickAction *action,
@@ -58,6 +60,63 @@ gboolean bouton_partie_avancee_clicked_cb(ClutterClickAction *action,
 
     clutter_actor_remove_child(app->stage, app->menu_partie);
     clutter_actor_add_child(app->stage, app->menu_avance);
+
+    return CLUTTER_EVENT_STOP;
+}
+
+gboolean bouton_avance_jouer_clicked_cb(ClutterClickAction *action,
+                                          ClutterActor *actor,
+                                          gpointer data)
+{
+    Application *app = data;
+
+    clutter_actor_remove_child(app->stage, app->menu_avance);
+    Partie * partie;
+    gboolean checked_invasion;
+    gboolean checked_bonus;
+
+    AlphaField *champPseudo = ALPHA_FIELD(clutter_script_get_object(app->ui, "pseudo"));
+    AlphaField *champHplateau = ALPHA_FIELD(clutter_script_get_object(app->ui, "hauteur"));
+    AlphaField *champLplateau = ALPHA_FIELD(clutter_script_get_object(app->ui, "largeur"));
+    AlphaField *champTailleSnake = ALPHA_FIELD(clutter_script_get_object(app->ui, "taille_snake"));
+    AlphaField *champNbSchlanga = ALPHA_FIELD(clutter_script_get_object(app->ui, "nb_schlanga"));
+    AlphaField *champNbBonus = ALPHA_FIELD(clutter_script_get_object(app->ui, "nb_bonus"));
+    AlphaCheckBox *boxInvasion = ALPHA_CHECK_BOX(clutter_script_get_object(app->ui, "mode_invasion"));
+    AlphaCheckBox *boxBonus = ALPHA_CHECK_BOX(clutter_script_get_object(app->ui, "bonus_simples"));
+
+    g_object_get(boxInvasion, "checked", &checked_invasion, NULL);
+    g_object_get(boxBonus, "checked", &checked_bonus, NULL);
+
+
+    app->partie = create_partie();
+    if ( !strcmp(alpha_field_get_text(champNbSchlanga),"") == 0) {
+        app->config->nb_snakes=atoi(alpha_field_get_text(champNbSchlanga));
+    }
+    if ( !strcmp(alpha_field_get_text(champNbBonus),"") == 0) {
+        app->config->nb_bonus=atoi(alpha_field_get_text(champNbBonus));
+    }
+    if ( !strcmp(alpha_field_get_text(champHplateau),"") == 0) {
+        app->config->height=atoi(alpha_field_get_text(champHplateau));
+    }
+    if ( !strcmp(alpha_field_get_text(champLplateau),"") == 0) {
+        app->config->width=atoi(alpha_field_get_text(champLplateau));
+    }
+    if ( !strcmp(alpha_field_get_text(champTailleSnake),"") == 0) {
+        app->config->taille_snake=atoi(alpha_field_get_text(champTailleSnake));
+    }
+    if ( !strcmp(alpha_field_get_text(champTailleSnake),"") == 0) {
+        app->config->taille_bot=atoi(alpha_field_get_text(champTailleSnake));
+    }
+    if ( !checked_invasion ) {
+        app->config->type_partie=2;
+    }
+    if ( !checked_bonus ) {
+        app->config->advanced_bonus=1;
+    }
+
+    partie_set_config(app->partie, app->config);
+    init_partie(app->partie, app->ui); // TODO récupérer depuis app
+    init_pseudo(app->partie, alpha_field_get_text(champPseudo));
 
     return CLUTTER_EVENT_STOP;
 }
