@@ -467,6 +467,47 @@ void partie_add_bonus(Partie *partie, Bonus * bonus)
 
 }
 
+void partie_add_snake(Partie * partie,Snake * snk)
+{
+    tab_snakes_add_object(partie->tab,snk);
+    CollisionObject * co_snake =  gestion_collision_add_object(partie->collisions, snk,
+                                                               COLLISION_SNAKE);
+    int j;
+    for (j = 0; j < partie->tab->nb_snakes ; ++j)
+    {
+        collision_object_add_collision(
+                co_snake,
+                create_collision(partie->tab->snakes[j], collision_snake_vers_snake, partie)// collisions.c
+        );
+
+    }
+    for(j=0; j < partie->btab->nb_bonus; ++j)
+    {
+
+        collision_object_add_collision(
+                get_collision_from_gestion_and_object(partie->collisions,partie->btab->bonus[j]),
+                create_collision(snk, collision_snake_vers_nourriture, partie)// collisions.c
+        );
+    }
+
+    collision_object_add_collision(
+            get_collision_from_gestion_and_object(partie->collisions,partie->map),
+            create_collision(snk, collision_snake_vers_snake, partie)
+    );
+    // On choisit une couleur
+    GRand * randg = g_rand_new();
+    gint32  r = g_rand_int_range(randg,0,360);
+    int pas = 360/(partie->tab->nb_snakes);
+    int i;
+    for (i = 0; i < partie->tab->nb_snakes ; ++i)
+    {
+        ClutterColor * color = clutter_color_alloc();
+        clutter_color_from_hls(color,(r+pas*i)%360,0.4,1); // Puis le couleurs sont complémentaires
+        affichage_add_snake(partie->affichage, partie->tab->snakes[i], color);// affichage.c
+    }
+
+}
+
 /**
  * @brief   Initialise une partie déjà allouée.
  *

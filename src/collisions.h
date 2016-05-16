@@ -26,6 +26,9 @@ typedef struct _GestionCollisions GestionCollisions;
 typedef struct _CollisionObject CollisionObject;
 typedef struct _Collision Collision;
 
+
+CollisionObject * get_collision_from_gestion_and_object(GestionCollisions *gs, void * obj);
+
 GestionCollisions *create_gestion_collisions();
 void free_gestion_collisions(GestionCollisions *collisions);
 CollisionObject * gestion_collision_add_object(GestionCollisions *gc, void *obj,
