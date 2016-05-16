@@ -222,7 +222,7 @@ int choose_advancer_bonus()
 {
     GRand * randg = g_rand_new();
     int res = 0;
-    int interval = BONUS_F_MAXI5 + BONUS_F_SPEED + BONUS_F_SPEED_OTHER + BONUS_F_SLOW + BONUS_F_SLOW_OTHER;
+    int interval = (BONUS_F_MAXI5 + BONUS_F_SPEED + BONUS_F_SPEED_OTHER + BONUS_F_SLOW + BONUS_F_SLOW_OTHER)*2;
     gint32  rint = g_rand_int_range(randg, 1, interval);
 
     if(1 <= rint && rint < BONUS_F_MAXI5)
@@ -241,9 +241,13 @@ int choose_advancer_bonus()
     {
         res = 4; 
     }
-    else if(BONUS_F_SLOW+BONUS_F_SPEED_OTHER+BONUS_F_SPEED+BONUS_F_MAXI5 <= rint && rint < interval)
+    else if(BONUS_F_SLOW+BONUS_F_SPEED_OTHER+BONUS_F_SPEED+BONUS_F_MAXI5 <= rint && rint < interval/2)
     {
         res = 5;
+    }
+    else
+    {
+        res = 6;
     }
 
     return res;
@@ -302,11 +306,12 @@ Bonus *bonus_advanced_new(int x, int y)
             new->be = bonus_effect_init(new,&bonus_end_speedslowother);
             new->img = BONUS_TURTLERED;
             break;
+        case 6 :
         default:
-            new->callback_eat = bonus_eat_maxi5;
+            new->callback_eat = bonus_eat_basic;
 
             new->be = bonus_effect_init(new,&bonus_end_basic);
-            new->img = BONUS_GOLDEN;
+            new->img = BONUS_BASE;
     }
 
     return new;

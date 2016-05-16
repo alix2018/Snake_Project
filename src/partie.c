@@ -591,13 +591,21 @@ void init_partie(Partie *partie, ClutterScript *ui)
     partie->btab = create_tab_bonus();
 
     // On crée pour l'instant qu'un bonus !
-    for (i = 0; i < nb_bonus; ++i) {
-           tab_bonus_add_object(partie->btab, bonus_new(width, height));
+
+    if(partie->config->advanced_bonus != 0)
+    {
+        for (i = 0; i < nb_bonus; ++i) {
+            tab_bonus_add_object(partie->btab, bonus_advanced_new(width, height));
+        }
+    }
+    else{
+        for (i = 0; i < nb_bonus; ++i) {
+            tab_bonus_add_object(partie->btab, bonus_new(width, height));
+        }
+
     }
 
-    for (i = 0; i < advanced_bonus; ++i) {
-           tab_bonus_add_object(partie->btab, bonus_advanced_new(width, height));
-    }
+
 
     partie->collisions = create_gestion_collisions();// collisions.c
 
@@ -718,7 +726,7 @@ void bonus_reposition(Partie * partie)
                 {
                     bonus_update(partie->btab->bonus[i],map_width(partie->map),map_height(partie->map));
                 }
-            
+
             }
         }
     }
