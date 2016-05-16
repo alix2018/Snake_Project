@@ -723,7 +723,8 @@ void affichage_add_bonus(Affichage *affichage, Bonus *bonus,
         CLUTTER_ACTOR(clutter_script_get_object(affichage->ui, "zone_snake")),
         bonus,
         clutter_color_new(0, 255, 0, 255),
-        config
+        config,
+        BONUS_BLIND
     );
     list_add_last(affichage->bonus, ba);
 }

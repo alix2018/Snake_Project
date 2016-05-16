@@ -1,13 +1,15 @@
-#include "alpha-button.h"
+#include "alpha-check-box.h"
 #include <gdk-pixbuf/gdk-pixbuf.h>
 #include "utils.h"
 
-G_DEFINE_TYPE(AlphaButton, alpha_button, CLUTTER_TYPE_ACTOR)
+G_DEFINE_TYPE(AlphaCheckBox, alpha_check_box, CLUTTER_TYPE_ACTOR)
 
 enum
 {
     PROP_0,
-    PROP_BUTTON_TEXT,
+    PROP_CHECK_BOX_COLOR_STRING,
+    PROP_CHECK_BOX_COLOR,
+    PROP_CHECK_BOX_CHECKED,
     PROP_N
 };
 
@@ -43,38 +45,58 @@ static gboolean leave_event_cb(ClutterActor *actor, ClutterEvent *event,
     return CLUTTER_EVENT_STOP;
 }
 
-static void alpha_button_set_property(GObject *object,
+static gboolean clicked_cb(ClutterClickAction *action, ClutterActor *actor, gpointer data)
+{
+    gboolean checked;
+    
+    g_object_get(actor, "checked", &checked, NULL);
+    g_object_set(actor, "checked", !checked, NULL);
+    
+    return CLUTTER_EVENT_STOP;
+}
+
+static void alpha_check_box_set_property(GObject *object,
                                       guint property_id,
                                       const GValue *value,
                                       GParamSpec *pspec)
 {
-    AlphaButton *self = ALPHA_BUTTON(object);
+    AlphaCheckBox *self = ALPHA_CHECK_BOX(object);
 
     switch (property_id)
     {
-        case PROP_BUTTON_TEXT:
-            // changer le texte
-            clutter_text_set_text(CLUTTER_TEXT(self->text), g_value_get_string(value));
+        case PROP_CHECK_BOX_CHECKED:
+            g_value_get_boolean(value) ? clutter_actor_show(self->coche) : clutter_actor_hide(self->coche);
             break;
-
+         
+        case PROP_CHECK_BOX_COLOR:
+            break;
+            
+        case PROP_CHECK_BOX_COLOR_STRING:
+            clutter_color_from_string(self->color, g_value_get_string(value));
+            ClutterEffect *effect = clutter_colorize_effect_new(self->color);
+            clutter_actor_add_effect(CLUTTER_ACTOR(self->fond), effect);
+            break;
         default:
             G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
             break;
     }
 }
 
-static void alpha_button_get_property(GObject *object,
+static void alpha_check_box_get_property(GObject *object,
                                       guint property_id,
                                       GValue *value,
                                       GParamSpec *pspec)
 {
-    AlphaButton *self = ALPHA_BUTTON(object);
+    AlphaCheckBox *self = ALPHA_CHECK_BOX(object);
 
     switch (property_id)
     {
-        case PROP_BUTTON_TEXT:
-            // Retourner le texte
-            g_value_set_string(value,clutter_text_get_text(CLUTTER_TEXT(self->text)));
+        case PROP_CHECK_BOX_COLOR:
+            clutter_value_set_color(value, self->color);
+            break;
+            
+        case PROP_CHECK_BOX_CHECKED:
+            g_value_set_boolean(value, clutter_actor_is_visible(self->coche));
             break;
 
         default:
@@ -83,11 +105,9 @@ static void alpha_button_get_property(GObject *object,
     }
 }
 
-static void alpha_button_dispose(GObject *object)
+static void alpha_check_box_dispose(GObject *object)
 {
-    AlphaButton *self = ALPHA_BUTTON(object);
-
-    g_clear_object(&self->text);
+    AlphaCheckBox *self = ALPHA_CHECK_BOX(object);
     
     g_clear_object(&self->img_b);
     g_clear_object(&self->img_bd);
@@ -95,38 +115,52 @@ static void alpha_button_dispose(GObject *object)
     g_clear_object(&self->img_d);
     g_clear_object(&self->img_hd);
     
-    G_OBJECT_CLASS(alpha_button_parent_class)->dispose(object);
+    g_clear_object(&self->coche);
+    g_clear_object(&self->fond);
+    
+    G_OBJECT_CLASS(alpha_check_box_parent_class)->dispose(object);
 }
 
-static void alpha_button_finalize(GObject *g_object)
+static void alpha_check_box_finalize(GObject *g_object)
 {
-
-    G_OBJECT_CLASS(alpha_button_parent_class)->finalize(g_object);
+    AlphaCheckBox *self = ALPHA_CHECK_BOX(g_object);
+    
+    clutter_color_free(self->color);
+    
+    G_OBJECT_CLASS(alpha_check_box_parent_class)->finalize(g_object);
 }
 
-static void alpha_button_init(AlphaButton *self)
+static void alpha_check_box_init(AlphaCheckBox *self)
 {
-    ClutterMargin margin = (ClutterMargin) { 5, 5, 5, 5 };
+    ClutterMargin margin = (ClutterMargin) { 5, 9, 5, 8 };
     ClutterColor *fg = clutter_color_alloc();
-    ClutterColor *bg = clutter_color_new(26, 26, 26, 255);
+    ClutterColor *bg = clutter_color_new(249, 249, 249, 255);
     ClutterLayoutManager *layout = clutter_grid_layout_new();
     ClutterActor *part;
+    ClutterAction *action = clutter_click_action_new();
     
-    self->img_b = create_clutter_image("data/bouton_fonce_b.png");
-    self->img_bd = create_clutter_image("data/bouton_fonce_bd.png");
-    self->img_bg = create_clutter_image("data/bouton_fonce_bg.png");
-    self->img_d = create_clutter_image("data/bouton_fonce_d.png");
-    self->img_hd = create_clutter_image("data/bouton_fonce_hd.png");
+    self->img_b = create_clutter_image("data/bouton_clair_b.png");
+    self->img_bd = create_clutter_image("data/bouton_clair_bd.png");
+    self->img_bg = create_clutter_image("data/bouton_clair_bg.png");
+    self->img_d = create_clutter_image("data/bouton_clair_d.png");
+    self->img_hd = create_clutter_image("data/bouton_clair_hd.png");
+    
+    self->color = clutter_color_alloc();
 
     clutter_color_from_string(fg, "white");
 
     g_object_set(
         self,
         "reactive", TRUE,
-        "layout-manager", layout,
+        "layout-manager", clutter_bin_layout_new(CLUTTER_BIN_ALIGNMENT_CENTER, CLUTTER_BIN_ALIGNMENT_CENTER),
         NULL
     );
     clutter_actor_set_pivot_point(CLUTTER_ACTOR(self), 0.5, 0.5);
+    
+    self->fond = clutter_actor_new();
+    clutter_actor_add_child(CLUTTER_ACTOR(self), self->fond);
+    clutter_actor_set_size(self->fond, 32, 32);
+    clutter_actor_set_layout_manager(self->fond, layout);
     
     // Bas
     part = clutter_actor_new();
@@ -170,16 +204,14 @@ static void alpha_button_init(AlphaButton *self)
     clutter_actor_set_background_color(part, bg);
     clutter_grid_layout_attach(CLUTTER_GRID_LAYOUT(layout), part, 0, 0, 2, 2);
     
-    self->text = clutter_text_new();
-    g_object_set(
-        self->text,
-        "color", fg,
-        "font-name", "Sans bold",
-        NULL
-    );
-    clutter_actor_set_margin(self->text, &margin);
+    self->coche = clutter_actor_new();
+    clutter_actor_set_size(self->coche, 18, 18);
+    clutter_actor_set_background_color(self->coche, fg);
+    clutter_actor_add_child(CLUTTER_ACTOR(self), self->coche);
+    clutter_actor_hide(self->coche);
     
-    clutter_actor_add_child(part, self->text);
+    clutter_actor_add_action(CLUTTER_ACTOR(self), action);
+    g_signal_connect(action, "clicked", G_CALLBACK(clicked_cb), self);
     
     clutter_color_free(bg);
     clutter_color_free(fg);
@@ -188,18 +220,34 @@ static void alpha_button_init(AlphaButton *self)
     g_signal_connect(self, "leave-event", G_CALLBACK(leave_event_cb), NULL);
 }
 
-static void alpha_button_class_init(AlphaButtonClass *klass)
+static void alpha_check_box_class_init(AlphaCheckBoxClass *klass)
 {
     GdkPixbuf *pixbuf;
     
-    G_OBJECT_CLASS(klass)->set_property = alpha_button_set_property;
-    G_OBJECT_CLASS(klass)->get_property = alpha_button_get_property;
+    G_OBJECT_CLASS(klass)->set_property = alpha_check_box_set_property;
+    G_OBJECT_CLASS(klass)->get_property = alpha_check_box_get_property;
+    
+    obj_properties[PROP_CHECK_BOX_COLOR_STRING] = g_param_spec_string(
+        "color-string",
+        "",
+        "",
+        "#00000000",
+        G_PARAM_CONSTRUCT_ONLY | G_PARAM_WRITABLE
+    );
 
-    obj_properties[PROP_BUTTON_TEXT] = g_param_spec_string(
-        "button-text",
-        "Texte du bouton",
-        "Modifie le texte du bouton",
-        "Bouton",
+    obj_properties[PROP_CHECK_BOX_COLOR] = clutter_param_spec_color(
+        "color",
+        "La couleur de la case à cocher",
+        "Modifie la couleur de la case à cocher",
+        CLUTTER_COLOR_Transparent,
+        G_PARAM_READABLE
+    );
+    
+    obj_properties[PROP_CHECK_BOX_CHECKED] = g_param_spec_boolean(
+        "checked",
+        "Case cochée",
+        "Case cochée",
+        FALSE,
         G_PARAM_READWRITE
     );
 
@@ -207,12 +255,6 @@ static void alpha_button_class_init(AlphaButtonClass *klass)
                                       PROP_N,
                                       obj_properties);
 
-    G_OBJECT_CLASS(klass)->dispose = alpha_button_dispose;
-    G_OBJECT_CLASS(klass)->finalize = alpha_button_finalize;
+    G_OBJECT_CLASS(klass)->dispose = alpha_check_box_dispose;
+    G_OBJECT_CLASS(klass)->finalize = alpha_check_box_finalize;
 }
-
-AlphaButton *alpha_button_new(gchar *text)
-{
-    return ALPHA_BUTTON(g_object_new(ALPHA_TYPE_BUTTON, "button-text", text, NULL));
-}
-    

@@ -34,12 +34,24 @@ gboolean bouton_partie_simple_clicked_cb(ClutterClickAction *action,
     Application *app = data;
     Partie * partie;
 
+
     clutter_actor_remove_child(app->stage, app->menu_partie);
 
     app->partie = create_partie();
     partie_set_config(app->partie, app->config);
     init_partie(app->partie, app->ui); // TODO récupérer depuis app
     init_pseudo(app->partie, 0, NULL);
+    return CLUTTER_EVENT_STOP;
+}
+
+gboolean bouton_rejouer_clicked_cb(ClutterClickAction *action,
+                                   ClutterActor *actor,
+                                   gpointer data)
+{
+    Application *app=data;
+    free_partie(app->partie);
+    clutter_actor_add_child(app->stage, app->menu_general);
+
 
     return CLUTTER_EVENT_STOP;
 }
@@ -87,7 +99,7 @@ void init_application(Application *app)
         "stage", &app->stage,
         NULL
     );
-    
+
     bg_menus = create_clutter_image("data/fond_menu.png");
     clutter_actor_set_content(app->menu_general, CLUTTER_CONTENT(bg_menus));
     clutter_actor_set_content(app->menu_partie, CLUTTER_CONTENT(bg_menus));

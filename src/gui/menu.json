@@ -8,8 +8,7 @@
     "content-repeat": "both",
     "layout-manager": {
       "type": "ClutterBoxLayout",
-      "orientation": "vertical",
-      "spacing": 20
+      "orientation": "vertical"
     },
     "children": [
       {
@@ -20,7 +19,7 @@
         "layout-manager": {
           "type": "ClutterBoxLayout",
           "orientation": "vertical",
-          "spacing": 200
+          "spacing": 70
         },
         "children": [
           {
@@ -30,19 +29,20 @@
             "background-color": "green"
           },
           {
+            "id": "image_alpha_snake",
             "type": "ClutterActor",
             "x-expand": true,
             "background-color": "blue",
+            "x-align": "center",
+            "y-align": "center",
             "children": [
               {
                 "type": "ClutterActor",
                 "layout-manager": {
                   "type": "ClutterBoxLayout",
                   "orientation": "vertical",
-                  "spacing": 5
+                  "spacing": 20
                 },
-                "y-expand": true,
-
                 "children": [
                   {
                     "id": "Jouer",
@@ -116,7 +116,7 @@
         "type": "ClutterBoxLayout", "orientation": "vertical", "spacing": 30
       },
       "children": [
-        { "type": "ClutterActor", "height": 50, "width": 100, "background-color": "red" },
+        { "id": "image_alpha_snake2", "type": "ClutterActor", "height": 170, "width": 600, "background-color": "red" },
         {
           "type": "ClutterActor",
           "layout-manager": {"type": "ClutterBoxLayout", "orientation": "horizontal", "spacing": 6},
@@ -132,11 +132,13 @@
         },
         {
           "type": "ClutterActor",
-          "layout-manager": {"type": "ClutterBoxLayout", "spacing": 10, "orientation": "vertical"},
+          "layout-manager": {"type": "ClutterBoxLayout", "spacing": 20, "orientation": "vertical",
+            "x-align": "center","y-align": "center"},
           "children": [
             {
               "id": "buton_partie_simple", "type": "AlphaButton",
               "button-text": "Partie Simple",
+              "width":400,
               "actions": [
                 {
                   "type": "ClutterClickAction",
@@ -149,6 +151,7 @@
             {
               "id": "bouton_partie_avancee", "type": "AlphaButton",
               "button-text": "Partie avancée",
+              "width":400,
               "actions": [
                 {
                   "type": "ClutterClickAction",
@@ -161,6 +164,7 @@
             {
               "id": "bouton_partie_reseau", "type": "AlphaButton",
               "button-text": "Partie en réseau",
+              "width":400,
               "actions": [
                 {
                   "type": "ClutterClickAction",
@@ -169,6 +173,10 @@
                   ]
                 }
               ]
+            },
+            {
+              "type": "AlphaCheckBox",
+              "color-string": "cyan"
             }
           ]
         }
