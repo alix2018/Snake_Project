@@ -24,6 +24,7 @@
  * @param[in]  menu_partie         Le ClutterActor qui contient le sous menu concernant le choix des parties.
  * @param[in]  image_alpha_snake   Le ClutterActor qui contient le logo sur le menu général
  * @param[in]  image_alpha_snake2  Le ClutterActor qui contient le logo sur le menu partie
+ * @param[in]  image_alpha_snake3  Le ClutterActor qui contient le logo sur le menu partie avancée
  * @param[in]  menu_avance         Le ClutterActor qui contient le menu avancé.
  * @param[in]  stage               Le ClutterActor qui contient la fenêtre principale.
  * @param[in]  config              Le ClutterActor qui contient les configurations de jeu.
@@ -36,6 +37,7 @@ typedef struct _Application {
     ClutterActor *menu_partie;
     ClutterActor *image_alpha_snake;
     ClutterActor *image_alpha_snake2;
+    ClutterActor *image_alpha_snake3;
     ClutterActor *menu_avance;
     ClutterActor *stage;
     Config *config;
