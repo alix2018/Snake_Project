@@ -14,7 +14,7 @@ add_executable(alpha-snake
         src/widgets/alpha-button.c src/widgets/alpha-button.h
         src/widgets/alpha-field.c src/widgets/alpha-field.h src/application.c src/application.h
         src/score.c src/score.h src/widgets/utils.c src/widgets/utils.h
-        src/config.c src/config.h)
+        src/config.c src/config.h src/widgets/alpha-check-box.c src/widgets/alpha-check-box.h)
 
 add_executable(tests
         tests/tests.c

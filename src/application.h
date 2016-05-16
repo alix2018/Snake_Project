@@ -14,6 +14,9 @@ typedef struct _Application {
     ClutterActor *zone_snake;
     ClutterActor *menu_general;
     ClutterActor *menu_partie;
+    ClutterActor *image_alpha_snake;
+    ClutterActor *image_alpha_snake2;
+    ClutterActor *menu_avance;
     ClutterActor *stage;
     Config *config;
 }Application;
