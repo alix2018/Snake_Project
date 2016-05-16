@@ -45,6 +45,8 @@ BonusEffectApply * bonus_effect_apply_init(Snake *snake, Bonus *bs,int time)
     new->bonus = bs;
     new->snake = snake;
     new->time_remaining = time;
+    
+    return new;
 }
 
 BonusEffect * bonus_effect_init(Bonus *b,void * callback)
