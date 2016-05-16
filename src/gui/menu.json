@@ -118,7 +118,7 @@
         },
         {
           "type": "ClutterActor",
-          "layout-manager": {"type": "ClutterBoxLayout", "spacing": 20, "orientation": "vertical"},
+          "layout-manager": {"type": "ClutterBoxLayout", "spacing": 60, "orientation": "vertical"},
           "margin-bottom": 20,
           "children": [
             {

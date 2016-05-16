@@ -12,7 +12,7 @@
 
 #define DEFAULT_NB_SNAKES 2
 #define DEFAULT_NB_BONUS 1
-#define DEFAULT_ADVANCED_BONUS 0
+#define DEFAULT_ADVANCED_BONUS 1
 #define DEFAULT_TAILLE_SNAKE 5
 #define DEFAULT_TAILLE_BOT 5
 #define DEFAULT_HEIGHT 17
@@ -28,7 +28,7 @@
 typedef struct _config Config;
 
 /**
- * @brief      Les configurations général et d'une partie
+ * @brief      Les configurations générales et d'une partie
  */
 /**
  * @brief      La structure d'une configuration générale
