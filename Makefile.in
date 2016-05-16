@@ -12,7 +12,10 @@ SOURCE_FILES = struc.c \
                widgets/alpha-button.c \
                application.c \
                widgets/utils.c \
-               widgets/alpha-check-box.c
+               widgets/alpha-check-box.c \
+               reseau/mutli.c \
+               reseau/client.c \
+               reseau/serveur.c
 
 SRC_DIR = src
 OBJ_DIR = build

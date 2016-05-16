@@ -140,7 +140,6 @@ int choose_advancer_bonus()
     int res = 0;
     int interval = BONUS_F_MAXI5 + BONUS_F_SPEED + BONUS_F_SPEED_OTHER + BONUS_F_SLOW + BONUS_F_SLOW_OTHER;
     gint32  rint = g_rand_int_range(randg, 1, interval);
-    printf("rint = %d\n", rint);
     if(1 <= rint && rint < BONUS_F_MAXI5)
     {
         res = 1;
@@ -161,7 +160,6 @@ int choose_advancer_bonus()
     {
         res = 5;
     }
-    printf("res : %d\n", res);
     return res;
 }
 

@@ -1,7 +1,7 @@
 #include "multi.h"
 #include "serveur.h"
-#include "collisions.h"
-#include "affichage.h"
+#include "../collisions.h"
+#include "../affichage.h"
 #include <pthread.h>
 #include <glib.h>
 

@@ -14,11 +14,11 @@
 #include <time.h>
 #include <pthread.h>
 
-#include "partie.h"
-#include "struc.h"
-#include "bonus.h"
-#include "list.h"
-#include "collisions.h"
+#include "../partie.h"
+#include "../struc.h"
+#include "../bonus.h"
+#include "../list.h"
+#include "../collisions.h"
 
 int socket_client, id;
 
@@ -26,7 +26,7 @@ void *send_mysnake(void *p)
 {
 	Partie *partie = (Partie *)p;
 	TabSnakes *ts = partie_tab(p);
-	Snake *mysnake = tab_snakes_get(ts, id);
+	Snake *mysnake = ts->snakes[id];
 	print_snake(mysnake);
 	Coord my_send[30];
 	Node n;
@@ -109,7 +109,8 @@ void update_partie(Partie *partie, Coord *recive)
 				list_add_node_last(l, node);
 				printf("cur_lg : %i, lg_snake : %i\n", cur_lg, lg_snake);
 			}
-			Coord *elt = coord_new(recive[n].x, recive[n].y);// !! Il faudra liberer l'espace à chaque espace !!
+			Coord *elt = malloc(sizeof(Coord));
+			*elt = coord_new(recive[n].x, recive[n].y);// !! Il faudra liberer l'espace à chaque espace !!
 			node_set_elt(node, elt);
 			node = node_next(node);
 			n += 1;

@@ -166,6 +166,24 @@ Partie *create_partie()
     return res;
 }
 
+Partie *create_partie_min(int width, int height)
+{
+    Partie *res;
+
+    res = malloc(sizeof(Partie));
+
+    res->btab = create_tab_bonus();
+    res->tab = create_tab_snakes();
+    res->map = create_map(width, height);
+    res->affichage = create_affichage();
+    res->collisions = create_gestion_collisions();
+    res->config = NULL;
+    res->en_cours = TRUE;
+    res->duree = 0;
+    res->player = NULL;
+
+    return res;
+}
 
 
 void partie_set_config(Partie * p,Config * c)

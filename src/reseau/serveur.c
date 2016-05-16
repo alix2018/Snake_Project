@@ -15,10 +15,10 @@
 #include <pthread.h>
 #include <string.h>
 
-#include "partie.h"
-#include "struc.h"
-#include "bonus.h"
-#include "list.h"
+#include "../partie.h"
+#include "../struc.h"
+#include "../bonus.h"
+#include "../list.h"
 
 #define MAX_NB_CLIENT 10
 #define MAX_NAME_LENGTH 64

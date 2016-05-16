@@ -31,6 +31,8 @@ int map_height(Map *map);
 
 
 Partie *create_partie();
+Partie *create_partie_min(int width, int height);
+
 void partie_set_config(Partie *p,Config * c);
 Config * partie_config(Partie *p);
 void free_partie(Partie *partie);

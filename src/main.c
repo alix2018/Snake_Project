@@ -1,6 +1,7 @@
 #include <clutter/clutter.h>
 #include "partie.h"
 #include "application.h"
+#include "reseau/multi.h"
 
 int main(int argc, char **argv)
 {
@@ -11,9 +12,15 @@ int main(int argc, char **argv)
 
     ClutterInitError err = clutter_init(&argc, &argv);
 
-    init_application(&application);
+    if(argc > 2)
+    {
+		init_multi(argc, argv, partie, ui, 30, 30);
+    }
+    else
+    {
+    	init_application(&application);
+    }
 
     return 0;
 	 
 }
-	
