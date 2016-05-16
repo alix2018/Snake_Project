@@ -94,6 +94,18 @@ Affichage *create_affichage()
     return res;
 }
 
+List *affichage_list_bonus_actor(Affichage *a)
+{
+    return a->bonus;
+}
+
+void affichage_remove_bonus_actor(Affichage *a, Bonus *b)
+{
+    Node n=NULL;
+    for(n=list_first_node(affichage_list_bonus_actor(a)); bonus_actor_bonus(node_elt(n))!=b; n=node_next(n)){}
+    list_delete_node(affichage_list_bonus_actor(a), n);
+}
+
 /**
  * @brief   Fonction auxiliaire de free_affichage.
  */
@@ -711,7 +723,8 @@ void affichage_add_bonus(Affichage *affichage, Bonus *bonus,
         CLUTTER_ACTOR(clutter_script_get_object(affichage->ui, "zone_snake")),
         bonus,
         clutter_color_new(0, 255, 0, 255),
-        config
+        config,
+        BONUS_BLIND
     );
     list_add_last(affichage->bonus, ba);
 }

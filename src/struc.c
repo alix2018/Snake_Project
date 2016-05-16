@@ -234,7 +234,7 @@ Snake *create_snake(int longueur, Coord c, Direction dir)
     res = malloc(sizeof(Snake));
     res->longueur = longueur;
     res->direction = dir;
-    res->vitesse = 1;
+    res->vitesse = 2;
     res->liste_snake = ls;
 	res->is_bot = 0;
 	res->script_name = NULL;

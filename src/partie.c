@@ -284,7 +284,6 @@ static void collision_snake_vers_snake(Snake *snake, void *obj2, void *data)
 
     if(partie->config->collision == 0) { // ON TERMINE LA FONCTION !! (A VOIR)
         return;
-
     }
     if(partie->config->type_partie == 1)
     {
@@ -400,7 +399,16 @@ static void collision_snake_vers_snake(Snake *snake, void *obj2, void *data)
 
 }
 
-
+void remove_bonus(Partie *p, Bonus *b)
+{
+    tab_bonus_remove_object(p->btab, b);
+    printf("tab b rm ok\n");
+    
+    gestion_collision_remove_object(p->collisions, b);
+    printf("col rm ok\n");
+    affichage_remove_bonus_actor(p->affichage, b);
+    printf("affichage rm ok\n");
+}
 
 /**
  * @brief   Fonction callback appelée quand un Snake entre en collision avec
@@ -415,12 +423,10 @@ static void collision_snake_vers_nourriture(Snake *snake, void *obj2, void *data
     Bonus *nourriture = obj2;
     Partie *partie = data;
     bonus_eat_callback(partie, snake, nourriture);
-    //snake_increase(snake);
-    //bonus_update(nourriture, partie->map->width, partie->map->height);
 }
 
 
-void partie_add_bonus(Partie *partie,Bonus * bonus)
+void partie_add_bonus(Partie *partie, Bonus * bonus)
 {
     tab_bonus_add_object(partie->btab,bonus);
     int j;
@@ -459,10 +465,11 @@ void init_partie(Partie *partie, ClutterScript *ui)
     int width = partie->config->width;
     int height = partie->config->height;
     int nb_bonus = partie->config->nb_bonus;
+    int advanced_bonus = partie->config->advanced_bonus;
 
     CollisionObject **co_snakes = malloc(nb_snakes*sizeof(CollisionObject *));
 
-    CollisionObject **co_bonus = malloc(nb_bonus*sizeof(CollisionObject *)); // ON DIT QU'Il Y A QU'UN BONUS  TODO à changer
+    CollisionObject **co_bonus = malloc((nb_bonus+advanced_bonus)*sizeof(CollisionObject *)); // ON DIT QU'Il Y A QU'UN BONUS  TODO à changer
 
     CollisionObject *co_map;
 
@@ -488,7 +495,7 @@ void init_partie(Partie *partie, ClutterScript *ui)
                 partie->config->taille_bot,
                 coord_from_xy((partie->config->width+i)/2, (2+5*i)%partie->config->height),
                 DROITE,
-                "ia10"
+                "ia1"
         );
         tab_snakes_add_object(partie->tab,snk);
 
@@ -503,16 +510,17 @@ void init_partie(Partie *partie, ClutterScript *ui)
 
     // On crée pour l'instant qu'un bonus !
     for (i = 0; i < nb_bonus; ++i) {
-           tab_bonus_add_object(partie->btab,bonus_new(width, height));
+           tab_bonus_add_object(partie->btab, bonus_new(width, height));
     }
 
-
+    for (i = 0; i < advanced_bonus; ++i) {
+           tab_bonus_add_object(partie->btab, bonus_advanced_new(width, height));
+    }
 
     partie->collisions = create_gestion_collisions();// collisions.c
 
     for (i = 0; i < partie->tab->nb_snakes ; ++i)
     {
-
         co_snakes[i] = gestion_collision_add_object(partie->collisions, partie->tab->snakes[i],
                                                     COLLISION_SNAKE);
     }
@@ -611,7 +619,7 @@ gboolean timeout_tick_cb(gpointer data)
         {
             if(snake_is_bot(partie->tab->snakes[i]))
             {
-                snake_set_direction_ia(partie->tab->snakes[i],partie,snake_script_name(partie->tab->snakes[i]));
+                snake_set_direction_ia(partie->tab->snakes[i],partie, snake_script_name(partie->tab->snakes[i]));
                 snake_forward(partie->tab->snakes[i]);
             }
             else
@@ -621,7 +629,6 @@ gboolean timeout_tick_cb(gpointer data)
             }
         }
     }
-
 
     gestion_collisions_check(partie->collisions);
 

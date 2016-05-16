@@ -47,15 +47,17 @@ int tab_bonus_memory_length(TabBonus *ts);
 
 //Créé un nouvelle emplacement mémoir pour la bonus
 Bonus *bonus_new(int x, int y);
+Bonus *bonus_advanced_new(int x, int y);
 
 Bonus *bonus_init(int x,int y);
 
 //Créé les coordonnés de la bonus sur la map
 void bonus_update(Bonus *bonus, int x, int y);
+void bonus_advanced_update(Bonus *bonus, int x, int y);
 Coord bonus_coord(Bonus *bonus);
 
 //Créé le BonusActor
-BonusActor *create_bonus_actor(ClutterActor *parent, Bonus *b, ClutterColor *color, Config *config);
+BonusActor *create_bonus_actor(ClutterActor *parent, Bonus *b, ClutterColor *color,Config * config,char * image);
 void free_bonus_actor(BonusActor *b);
 Bonus *bonus_actor_bonus(BonusActor *bonus_actor);
 

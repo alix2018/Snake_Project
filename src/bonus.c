@@ -21,6 +21,7 @@
 struct _bonus
 {
     Coord coord;
+    int rare;
     void *callback_eat;
 };
 
@@ -57,19 +58,56 @@ void *bonus_eat_maxi5(Partie *p, Snake *s, Bonus *b)
     snake_increase(s);
     snake_increase(s);
     snake_increase(s);
-    bonus_update(b, map_width(partie_map(p)), map_height(partie_map(p)));
-}
-void *bonus_eat_speed(Partie *p, Snake *s, Bonus *b)
-{
-    snake_set_vitesse(s, 2);
-    bonus_update(b, map_width(partie_map(p)), map_height(partie_map(p)));
+    bonus_advanced_update(b, map_width(partie_map(p)), map_height(partie_map(p)));
 }
 
-Bonus *bonus_init(int x,int y)
+void *bonus_eat_speed(Partie *p, Snake *s, Bonus *b)
+{
+    snake_set_vitesse(s, 3);
+    bonus_advanced_update(b, map_width(partie_map(p)), map_height(partie_map(p)));
+}
+
+void *bonus_eat_speed_others(Partie *p, Snake *s, Bonus *b)
+{
+    TabSnakes *ts = partie_tab(p);
+    int i;
+    for (i = 0; i < ts->nb_snakes ; ++i)
+    {
+        if(ts->snakes[i] != s)
+        {
+            snake_set_vitesse(ts->snakes[i], 3);
+        }
+    }
+    
+    bonus_advanced_update(b, map_width(partie_map(p)), map_height(partie_map(p)));
+}
+
+void *bonus_eat_slow(Partie *p, Snake *s, Bonus *b)
+{
+    snake_set_vitesse(s, 1);
+    bonus_advanced_update(b, map_width(partie_map(p)), map_height(partie_map(p)));
+}
+
+void *bonus_eat_slow_others(Partie *p, Snake *s, Bonus *b)
+{
+    TabSnakes *ts = partie_tab(p);
+    int i;
+    for (i = 0; i < ts->nb_snakes ; ++i)
+    {
+        if(ts->snakes[i] != s)
+        {
+            snake_set_vitesse(ts->snakes[i], 1);
+        }
+    }
+    
+    bonus_advanced_update(b, map_width(partie_map(p)), map_height(partie_map(p)));
+}
+
+Bonus *bonus_init(int x, int y)
 {
     Bonus *new = malloc(sizeof(Bonus));
     new->coord = coord_from_xy(x, y);
-    new->callback_eat = &bonus_eat_speed;
+    new->callback_eat = &bonus_eat_basic;
     return new;
 }
 
@@ -89,7 +127,45 @@ Bonus *bonus_new(int x, int y)
     gint32  ry = g_rand_int_range(randg,0,y-1);
     Bonus *new = malloc(sizeof(Bonus));
     new->coord = coord_from_xy(rx, ry);
-    new->callback_eat = &bonus_eat_speed;
+    new->callback_eat = &bonus_eat_basic;
+    return new;
+}
+
+/**
+ * @brief   Génère un bonus rare
+ *
+ * @param[in]    x  largeur de la map
+ * @param[in]    y  hauteur de la map
+ *
+ * @return La bonus initialisé
+ */
+Bonus *bonus_advanced_new(int x, int y)
+{
+    srand(time(NULL));
+    GRand * randg = g_rand_new();
+    gint32  rx = g_rand_int_range(randg,0,x-1);
+    gint32  ry = g_rand_int_range(randg,0,y-1);
+    Bonus *new = malloc(sizeof(Bonus));
+    new->coord = coord_from_xy(rx, ry);
+
+    gint32  rint = g_rand_int_range(randg, 1, 5);
+    switch(rint)
+    {
+        case 1:
+            new->callback_eat = &bonus_eat_speed;
+            break;
+        case 2:
+            new->callback_eat = &bonus_eat_speed_others;
+            break;
+        case 3:
+            new->callback_eat = &bonus_eat_slow;
+            break;
+        case 4:
+            new->callback_eat = &bonus_eat_slow_others;
+            break;
+        default:
+            new->callback_eat = &bonus_eat_maxi5;
+    }
     return new;
 }
 
@@ -111,6 +187,42 @@ void bonus_update(Bonus *bonus, int x, int y)
 }
 
 /**
+ * @brief   Change les coordonnées de le bonus
+ *
+ * @param[in]   bonus  Le bonus à rafraichir
+ * @param[in]   x      Largeur de la map
+ * @param[in]   y      Hauteur de la map
+ *
+ * @return Le bonus avec de nouvelles coordonnées
+ */
+void bonus_advanced_update(Bonus *bonus, int x, int y)
+{
+    GRand * randg = g_rand_new();
+    gint32  rx = g_rand_int_range(randg,0,x-1);
+    gint32  ry = g_rand_int_range(randg,0,y-1);
+    bonus->coord = coord_from_xy(rx, ry);
+
+    gint32  rint = g_rand_int_range(randg, 1, 4);
+    switch(rint)
+    {
+        case 1:
+            bonus->callback_eat = &bonus_eat_speed;
+            break;
+        case 2:
+            bonus->callback_eat = &bonus_eat_speed_others;
+            break;
+        case 3:
+            bonus->callback_eat = &bonus_eat_slow;
+            break;
+        case 4:
+            bonus->callback_eat = &bonus_eat_slow_others;
+            break;
+        default:
+            bonus->callback_eat = &bonus_eat_basic;
+    }
+}
+
+/**
  * @brief   Permet d'accéder aux coordonnées du bonus
  *
  * @param[in]   bonus  Le bonus dont on veut les coordonnées
@@ -119,7 +231,12 @@ void bonus_update(Bonus *bonus, int x, int y)
  */
 Coord bonus_coord(Bonus *bonus)
 {
-    return bonus->coord;
+    Coord res;
+    if(bonus != NULL)
+    {
+        res = bonus->coord;
+    }
+    return res;
 }
 
 /**
@@ -132,7 +249,7 @@ Coord bonus_coord(Bonus *bonus)
  *
  * @return Le nouveau BonusActor initialisé
  */
-BonusActor *create_bonus_actor(ClutterActor *parent, Bonus *b, ClutterColor *color,Config * config)
+BonusActor *create_bonus_actor(ClutterActor *parent, Bonus *b, ClutterColor *color,Config * config,char * image)
 {
     BonusActor *res;
     ClutterActor *bonus_c_actor;
@@ -148,7 +265,7 @@ BonusActor *create_bonus_actor(ClutterActor *parent, Bonus *b, ClutterColor *col
 
     // SET IMAGE POMME/BOUF/bonus
 
-    ClutterContent *imgpomme = generate_image(POMME_IMAGE );
+    ClutterContent *imgpomme = generate_image(image );
     clutter_actor_set_content(bonus_c_actor,imgpomme);
     g_object_unref(imgpomme);
 
