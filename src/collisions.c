@@ -56,6 +56,7 @@ struct _Collision
 };
 
 
+
 /**
  * @brief      La structure d'un gestionnaire de collisions.
  *
@@ -71,6 +72,19 @@ struct _GestionCollisions
     int taille_objs;
 };
 
+
+CollisionObject * get_collision_from_gestion_and_object(GestionCollisions *gs, void * obj)
+{
+    int i;
+    for (i = 0; i < gs->nb_objs; i++)
+    {
+        if(gs->objs[i]->obj2 == obj)
+        {
+            return gs->objs[i];
+        }
+    }
+    return NULL;
+}
 
 /**
  * @brief   Crée un gestionnaire de collisions.
