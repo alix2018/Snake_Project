@@ -109,7 +109,6 @@
     "layout-manager": { "type": "ClutterBinLayout" },
     "children": [{
       "type": "ClutterActor",
-      "x-align": "center", "y-align": "center",
       "layout-manager": {
         "type": "ClutterBoxLayout", "orientation": "vertical", "spacing": 20
       },
@@ -171,10 +170,6 @@
                   ]
                 }
               ]
-            },
-            {
-              "type": "AlphaCheckBox",
-              "color-string": "cyan"
             }
           ]
         }
@@ -182,32 +177,35 @@
     }]
   },
   {
-    "id": "menu_options", "type": "ClutterActor",
+    "id": "menu_avance", "type": "ClutterActor",
     "x-align": "fill", "y-align": "fill", "x-expand": true,  "y-expand": true,
     "background-color": "grey",
     "layout-manager": { "type": "ClutterBinLayout" },
     "children": [
       {
         "type": "ClutterActor",
-        "x-align": "center", "y-align": "center",
         "layout-manager": {
           "type": "ClutterBoxLayout", "orientation": "vertical", "spacing": 30
         },
         "children": [
           {
             "type": "ClutterText",
-            "text": "OPTIONS",
+            "text": "MENU AVANCÉ",
             "font-name": "Sans 30 bold"
           },
           {
             "type": "ClutterActor",
             "layout-manager": {
-              "type": "ClutterBoxLayout", "orientation": "vertical", "spacing": 15
+              "type": "ClutterBoxLayout",
+              "orientation": "horizontal",
+              "spacing": 10
             },
             "children": [
               {
                 "type": "ClutterText",
-                "text": "Taille du plateau", "color": "black", "font-name": "Sans 12 bold"
+                "text": "Taille du plateau (en cases) ->",
+                "color": "black",
+                "font-name": "Sans 12 bold"
               },
               {
                 "type": "ClutterActor",
@@ -219,14 +217,14 @@
                 "children": [
                   {
                     "type": "ClutterText",
-                    "text": "hauteur",
+                    "text": "Hauteur :",
                     "color": "black",
                     "font-name": "Sans 12 bold"
                   },
                   {
                     "id": "hauteur",
                     "type": "AlphaField",
-                    "width": 100
+                    "width": 50
                   }
                 ]
               },
@@ -240,53 +238,193 @@
                 "children": [
                   {
                     "type": "ClutterText",
-                    "text": "largeur",
+                    "text": "Largeur :",
                     "color": "black",
                     "font-name": "Sans 12 bold"
                   },
                   {
                     "id": "largeur",
                     "type": "AlphaField",
-                    "width": 100
-                  }
-                ]
-              },
-              {
-                "type": "ClutterActor",
-                "layout-manager": {
-                  "type": "ClutterBoxLayout",
-                  "orientation": "horizontal",
-                  "spacing": 6
-                },
-                "children": [
-                  {
-                    "type": "ClutterText",
-                    "text": "Taille des Snakes",
-                    "color": "black",
-                    "font-name": "Sans 12 bold"
-                  },
-                  {
-                    "id": "taille_snake",
-                    "type": "AlphaField",
-                    "width": 100
+                    "width": 50
                   }
                 ]
               }
             ]
           },
           {
-            "id": "retour_menu_principal",
+            "type": "ClutterActor",
+            "layout-manager": {
+              "type": "ClutterBoxLayout",
+              "orientation": "horizontal",
+              "spacing": 6
+            },
+            "children": [
+              {
+                "type": "ClutterText",
+                "text": "Taille des Snakes (en cases) ->",
+                "color": "black",
+                "font-name": "Sans 12 bold"
+              },
+              {
+                "id": "taille_snake",
+                "type": "AlphaField",
+                "width": 70
+              }
+            ]
+          },
+          {
+            "type": "ClutterActor",
+            "layout-manager": {
+              "type": "ClutterBoxLayout",
+              "orientation": "horizontal",
+              "spacing": 6
+            },
+            "children": [
+              {
+                "type": "ClutterText",
+                "text": "Maps :",
+                "color": "black",
+                "font-name": "Sans 12 bold"
+              },
+              {
+                "id": "maps"
+              }
+            ]
+          },
+          {
+            "type": "ClutterActor",
+            "layout-manager": {
+              "type": "ClutterBoxLayout",
+              "orientation": "horizontal",
+              "spacing": 6
+            },
+            "children": [
+              {
+                "type": "ClutterText",
+                "text": "Couleur :",
+                "color": "black",
+                "font-name": "Sans 12 bold"
+              },
+              {
+                "id": "couleur_snake"
+              }
+            ]
+          },
+          {
+            "type": "ClutterActor",
+            "layout-manager": {
+              "type": "ClutterBoxLayout",
+              "orientation": "horizontal",
+              "spacing": 6
+            },
+            "children": [
+              {
+                "id": "mode_classique",
+                "type": "AlphaCheckBox"
+              },
+              {
+                "type": "ClutterText",
+                "text": "Classique",
+                "color": "black",
+                "font-name": "Sans 12 bold"
+              }
+            ]
+          },
+          {
+            "type": "ClutterActor",
+            "layout-manager": {
+              "type": "ClutterBoxLayout",
+              "orientation": "horizontal",
+              "spacing": 6
+            },
+            "children": [
+              {
+                "id": "mode_invasion",
+                "type": "AlphaCheckBox"
+              },
+              {
+                "type": "ClutterText",
+                "text": "Invasion",
+                "color": "black",
+                "font-name": "Sans 12 bold"
+              }
+            ]
+          },
+          {
+            "type": "ClutterActor",
+            "layout-manager": {
+              "type": "ClutterBoxLayout",
+              "orientation": "horizontal",
+              "spacing": 6
+            },
+            "children": [
+              {
+                "type": "ClutterText",
+                "text": "Nombre de schlanga :",
+                "color": "black",
+                "font-name": "Sans 12 bold"
+              },
+              {
+                "id": "nb_schlanga",
+                "type": "AlphaField",
+                "width": 50
+              }
+            ]
+          },
+          {
+            "type": "ClutterActor",
+            "layout-manager": {
+              "type": "ClutterBoxLayout",
+              "orientation": "horizontal",
+              "spacing": 6
+            },
+            "children": [
+              {
+                "type": "ClutterText",
+                "text": "Nombre de bonus :",
+                "color": "black",
+                "font-name": "Sans 12 bold"
+              },
+              {
+                "id": "nb_bonus",
+                "type": "AlphaField",
+                "width": 50
+              }
+            ]
+          },
+          {
+            "type": "ClutterActor",
+            "layout-manager": {
+              "type": "ClutterBoxLayout",
+              "orientation": "horizontal",
+              "spacing": 6
+            },
+            "children": [
+              {
+                "id": "bonus_simples",
+                "type": "AlphaCheckBox"
+              },
+              {
+                "type": "ClutterText",
+                "text": "Bonus simples",
+                "color": "black",
+                "font-name": "Sans 12 bold"
+              }
+            ]
+          },
+          {
+            "id": "jouer_avance",
             "type": "AlphaButton",
-            "button-text": "Retour",
+            "button-text": "Jouer",
+            "width":400,
             "x-expand": true,
-            "actions":
-            [
+            "actions": [
               {
                 "type": "ClutterClickAction",
                 "signals": [
                   {
                     "name": "clicked",
-                    "handler": "retour_clicked_cb"
+                    "handler": "bouton_partie_avance_clicked_cb"
                   }
                 ]
               }

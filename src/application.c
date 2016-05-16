@@ -44,6 +44,18 @@ gboolean bouton_partie_simple_clicked_cb(ClutterClickAction *action,
     return CLUTTER_EVENT_STOP;
 }
 
+gboolean bouton_partie_avancee_clicked_cb(ClutterClickAction *action,
+                                          ClutterActor *actor,
+                                          gpointer data)
+{
+    Application *app = data;
+
+    clutter_actor_remove_child(app->stage, app->menu_partie);
+    clutter_actor_add_child(app->stage, app->menu_avance);
+
+    return CLUTTER_EVENT_STOP;
+}
+
 gboolean bouton_rejouer_clicked_cb(ClutterClickAction *action,
                                    ClutterActor *actor,
                                    gpointer data)
@@ -100,6 +112,7 @@ void init_application(Application *app)
         "menu_general", &app->menu_general,
         "image_alpha_snake", &app->image_alpha_snake,
         "image_alpha_snake2", &app->image_alpha_snake2,
+        "menu_avance", &app->menu_avance,
         "stage", &app->stage,
         NULL
     );
@@ -108,6 +121,8 @@ void init_application(Application *app)
     bg_menus = create_clutter_image("data/fond_menu.png");
     clutter_actor_set_content(app->menu_general, CLUTTER_CONTENT(bg_menus));
     clutter_actor_set_content(app->menu_partie, CLUTTER_CONTENT(bg_menus));
+    clutter_actor_set_content(app->menu_avance, CLUTTER_CONTENT(bg_menus));
+
     logo_menus = create_clutter_image("logo.png");
     clutter_actor_set_content(app->image_alpha_snake, CLUTTER_CONTENT(logo_menus));
     clutter_actor_set_content(app->image_alpha_snake2, CLUTTER_CONTENT(logo_menus));
