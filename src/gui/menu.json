@@ -118,8 +118,7 @@
         },
         {
           "type": "ClutterActor",
-          "layout-manager": {"type": "ClutterBoxLayout", "spacing": 20, "orientation": "vertical",
-            "x-align": "center","y-align": "center"},
+          "layout-manager": {"type": "ClutterBoxLayout", "spacing": 20, "orientation": "vertical"},
           "margin-bottom": 20,
           "children": [
             {
@@ -155,7 +154,7 @@
   },
   {
     "id": "menu_avance", "type": "ClutterActor",
-    "x-align": "fill", "y-align": "fill", "x-expand": true,  "y-expand": true,
+    "x-expand": true,  "y-expand": true,
     "background-color": "grey",
     "layout-manager": { "type": "ClutterBinLayout" },
     "children": [
