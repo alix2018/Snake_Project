@@ -15,6 +15,11 @@
         "type": "ClutterActor",
         "x-align": "center",
         "y-align": "center",
+        "background-color": "rgba(0, 0, 0, 0.6)",
+        "layout-manager": { "type": "ClutterBinLayout" },
+        "children": [{
+        "type": "ClutterActor",
+        "margin": [20, 20, 20, 20],
         "layout-manager": {
           "type": "ClutterBoxLayout",
           "orientation": "vertical",
@@ -30,7 +35,6 @@
           {
             "type": "ClutterActor",
             "x-expand": true,
-            "background-color": "blue",
             "x-align": "center",
             "y-align": "center",
             "children": [
@@ -61,6 +65,23 @@
                     ]
                   },
                   {
+                    "id": "Options",
+                    "type": "AlphaButton",
+                    "button-text": "Options",
+                    "x-expand": true,
+                    "actions": [
+                      {
+                        "type": "ClutterClickAction",
+                        "signals": [
+                          {
+                            "name": "clicked",
+                            "handler": "options_clicked_cb"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
                     "id": "Quitter",
                     "type": "AlphaButton",
                     "button-text": "Quitter",
@@ -82,6 +103,7 @@
             ]
           }
         ]
+        }]
       }
     ]
   },
@@ -92,11 +114,12 @@
     "layout-manager": { "type": "ClutterBinLayout" },
     "children": [{
       "type": "ClutterActor",
+      "background-color": "rgba(0, 0, 0, 0.6)",
       "layout-manager": {
         "type": "ClutterBoxLayout", "orientation": "vertical", "spacing": 20
       },
       "children": [
-        { "id": "image_alpha_snake2", "type": "ClutterActor", "height": 170, "width": 600 },
+        { "id": "image_alpha_snake2", "type": "ClutterActor", "height": 170, "width": 600, "margin": [20, 20, 0, 20] },
         {
           "type": "ClutterActor",
           "layout-manager": {"type": "ClutterBoxLayout", "orientation": "horizontal", "spacing": 6},
@@ -114,6 +137,7 @@
           "type": "ClutterActor",
           "layout-manager": {"type": "ClutterBoxLayout", "spacing": 20, "orientation": "vertical",
             "x-align": "center","y-align": "center"},
+          "margin-bottom": 20,
           "children": [
             {
               "id": "buton_partie_simple", "type": "AlphaButton",
