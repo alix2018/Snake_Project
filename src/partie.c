@@ -691,6 +691,27 @@ void init_pseudo(Partie *p, char *pseudo)
     }
 }
 
+void bonus_reposition(Partie * partie)
+{
+    int i,j;
+    Node n;
+    Coord * cn;
+    for (i = 0; i < partie->btab->nb_bonus; ++i)
+    {
+
+        for (j = 0; j < partie->tab->nb_snakes; ++j)
+        {
+            for(n = list_first_node(snake_liste_snake(partie->tab->snakes[j])); n != NULL; n = node_next(n))
+            {
+                cn = node_elt(n);
+                if(coord_egales(*cn,bonus_coord(partie->btab->bonus[i])))
+                {
+                    bonus_update(partie->btab->bonus[i],map_width(partie->map),map_height(partie->map));
+                }
+            }
+        }
+    }
+}
 /**
  * @brief Fonction callback appelée à intervalles réguliers.
  *
@@ -757,7 +778,7 @@ gboolean timeout_tick_cb(gpointer data)
     }
 
     gestion_collisions_check(partie->collisions);
-
+    bonus_reposition(partie);
     if (partie->en_cours)
     {
         affichage_update(partie,partie->affichage);
