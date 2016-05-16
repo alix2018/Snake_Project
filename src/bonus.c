@@ -148,7 +148,7 @@ Bonus *bonus_advanced_new(int x, int y)
     Bonus *new = malloc(sizeof(Bonus));
     new->coord = coord_from_xy(rx, ry);
 
-    gint32  rint = g_rand_int_range(randg, 1, 4);
+    gint32  rint = g_rand_int_range(randg, 1, 5);
     switch(rint)
     {
         case 1:
@@ -164,7 +164,7 @@ Bonus *bonus_advanced_new(int x, int y)
             new->callback_eat = &bonus_eat_slow_others;
             break;
         default:
-            new->callback_eat = &bonus_eat_basic;
+            new->callback_eat = &bonus_eat_maxi5;
     }
     return new;
 }

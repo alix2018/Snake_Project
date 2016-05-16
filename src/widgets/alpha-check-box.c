@@ -96,7 +96,7 @@ static void alpha_check_box_get_property(GObject *object,
             break;
             
         case PROP_CHECK_BOX_CHECKED:
-            g_value_set_boolean(value, clutter_actor_is_visible(self->coche));
+            g_value_set_boolean(value, CLUTTER_ACTOR_IS_VISIBLE(self->coche));
             break;
 
         default:
