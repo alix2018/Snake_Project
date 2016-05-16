@@ -24,9 +24,36 @@ struct _bonus
     int rare;
     char * img;
     void *callback_eat;
+    BonusEffect * be;
 };
 
+struct _bonus_effect
+{
+    void *callback_end;
+};
 
+struct _bonus_effect_apply
+{
+    int time_remaining;
+    Bonus * bonus;
+    Snake *snake;
+};
+
+BonusEffectApply * bonus_effect_apply_init(Snake *snake, Bonus *bs,int time)
+{
+    BonusEffectApply * new = malloc(sizeof(BonusEffectApply));
+    new->bonus = bs;
+    new->snake = snake;
+    new->time_remaining = time;
+}
+
+BonusEffect * bonus_effect_init(Bonus *b,void * callback)
+{
+    BonusEffect *new = malloc(sizeof(BonusEffect));
+
+    new->callback_end = callback;
+    return new;
+}
 /**
  * @brief      La structure de l'acteur bonus
  *
@@ -50,6 +77,8 @@ void *bonus_eat_basic(Partie *p, Snake *s, Bonus *b)
 {
     snake_increase(s);
     bonus_update(b, map_width(partie_map(p)), map_height(partie_map(p)));
+
+    //remove_advanced_bonus(p,b);
 }
 
 void *bonus_eat_maxi5(Partie *p, Snake *s, Bonus *b)
@@ -104,11 +133,34 @@ void *bonus_eat_slow_others(Partie *p, Snake *s, Bonus *b)
     bonus_advanced_update(b, map_width(partie_map(p)), map_height(partie_map(p)));
 }
 
+void *bonus_end_basic(Partie *p, Snake *s, Bonus *b)
+{
+
+    //nothing
+}
+void *bonus_end_speedslow(Partie *p,Snake *s,Bonus *b)
+{
+    snake_set_vitesse(s,2);
+}
+
+void *bonus_end_speedslowother(Partie *p,Snake *s,Bonus *b)
+{
+    TabSnakes *ts = partie_tab(p);
+    int i;
+    for (i = 0; i < ts->nb_snakes ; ++i)
+    {
+        if(ts->snakes[i] != s)
+        {
+            snake_set_vitesse(ts->snakes[i], 2);
+        }
+    }
+}
 Bonus *bonus_init(int x, int y)
 {
     Bonus *new = malloc(sizeof(Bonus));
     new->coord = coord_from_xy(x, y);
     new->callback_eat = &bonus_eat_basic;
+    new->be = bonus_effect_init(new,&bonus_end_basic);
     new->img = BONUS_BASE;
     return new;
 }
@@ -130,9 +182,39 @@ Bonus *bonus_new(int x, int y)
     Bonus *new = malloc(sizeof(Bonus));
     new->coord = coord_from_xy(rx, ry);
     new->callback_eat = &bonus_eat_basic;
+    new->be = bonus_effect_init(new,&bonus_end_basic);
     new->img = BONUS_BASE;
     return new;
 }
+int bonus_time_remaining(BonusEffectApply *b)
+{
+    return b->time_remaining;
+}
+void bonus_decrease_time_remaining(BonusEffectApply *b)
+{
+    if(b->time_remaining >0 )
+    {
+        b->time_remaining--;
+    }
+}
+BonusEffect * bonus_effect(Bonus *b)
+{
+    return b->be;
+}
+
+BonusEffect * bonus_effect_apply_bonus_effect(BonusEffectApply * bea)
+{
+    return bonus_effect(bea->bonus);
+}
+Bonus * bonus_effect_apply_bonus(BonusEffectApply *bea)
+{
+    return bea->bonus;
+}
+Snake * bonus_effect_apply_snake(BonusEffectApply *bea)
+{
+    return bea->snake;
+}
+
 
 int choose_advancer_bonus()
 {
@@ -140,7 +222,7 @@ int choose_advancer_bonus()
     int res = 0;
     int interval = BONUS_F_MAXI5 + BONUS_F_SPEED + BONUS_F_SPEED_OTHER + BONUS_F_SLOW + BONUS_F_SLOW_OTHER;
     gint32  rint = g_rand_int_range(randg, 1, interval);
-    printf("rint = %d\n", rint);
+
     if(1 <= rint && rint < BONUS_F_MAXI5)
     {
         res = 1;
@@ -161,7 +243,7 @@ int choose_advancer_bonus()
     {
         res = 5;
     }
-    printf("res : %d\n", res);
+
     return res;
 }
 
@@ -181,6 +263,7 @@ Bonus *bonus_advanced_new(int x, int y)
     gint32  ry = g_rand_int_range(randg,0,y-1);
     Bonus *new = malloc(sizeof(Bonus));
     new->coord = coord_from_xy(rx, ry);
+
 	new->img = BONUS_BASE;
 
     int cab = choose_advancer_bonus();
@@ -189,25 +272,38 @@ Bonus *bonus_advanced_new(int x, int y)
     {
         case 1:
             new->callback_eat = &bonus_eat_maxi5;
+
+            new->be = bonus_effect_init(new,&bonus_end_basic);
+
     		new->img = BONUS_GOLDEN;
             break;
 	    case 2:
             new->callback_eat = &bonus_eat_speed;
+
+            new->be = bonus_effect_init(new,&bonus_end_speedslow);
     		new->img = BONUS_SPEED;
             break;
         case 3:
             new->callback_eat = &bonus_eat_speed_others;
+
+            new->be = bonus_effect_init(new,&bonus_end_speedslowother);
     		new->img = BONUS_SPEEDRED;
         case 4:
             new->callback_eat = &bonus_eat_slow;
+
+            new->be = bonus_effect_init(new,&bonus_end_speedslow);
     		new->img = BONUS_TURTLE;
             break;
         case 5:
             new->callback_eat = &bonus_eat_slow_others;
+
+            new->be = bonus_effect_init(new,&bonus_end_speedslowother);
             new->img = BONUS_TURTLERED;
             break;
         default:
             new->callback_eat = &bonus_eat_maxi5;
+
+            new->be = bonus_effect_init(new,&bonus_end_basic);
             new->img = BONUS_GOLDEN;
     }
 
@@ -246,7 +342,9 @@ void bonus_advanced_update(Bonus *bonus, int x, int y)
     gint32  rx = g_rand_int_range(randg,0,x-1);
     gint32  ry = g_rand_int_range(randg,0,y-1);
     bonus->coord = coord_from_xy(rx, ry);
-
+/**
+ *  TODO FIX LE BUG DES IMAGES SINON CODE COMMENTER
+ *  Ceci permet de changer le type de bonus uen fois mangé
     int cab = choose_advancer_bonus();
 
     switch(cab)
@@ -274,6 +372,7 @@ void bonus_advanced_update(Bonus *bonus, int x, int y)
             bonus->callback_eat = &bonus_eat_maxi5;
             bonus->img = BONUS_GOLDEN;
     }
+    **/
 }
 
 /**
@@ -370,6 +469,7 @@ BonusActor *create_bonus_actor(ClutterActor *parent, Bonus *b, ClutterColor *col
 **/
 void free_bonus_actor(BonusActor *b)
 {
+    clutter_actor_destroy(b->bonus_c_actor);
     clutter_color_free(b->color);
     free(b);
 }
@@ -557,4 +657,11 @@ void bonus_eat_callback(Partie *partie, Snake *snake, Bonus *nourriture)
     void (*bonus_eat_cb)(Partie *partie, Snake *snake, Bonus *nourriture);
     bonus_eat_cb = nourriture->callback_eat;
     bonus_eat_cb(partie, snake, nourriture);
+}
+
+void bonus_end_callback(Partie *partie, Snake *snake, Bonus *nourriture)
+{
+    void (*bonus_end_cb)(Partie *partie, Snake *snake, Bonus *nourriture);
+    bonus_end_cb = nourriture->be->callback_end;
+    bonus_end_cb(partie, snake, nourriture);
 }
