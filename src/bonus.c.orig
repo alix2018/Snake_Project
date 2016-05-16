@@ -134,37 +134,6 @@ Bonus *bonus_new(int x, int y)
     return new;
 }
 
-int choose_advancer_bonus()
-{
-    GRand * randg = g_rand_new();
-    int res = 0;
-    int interval = BONUS_F_MAXI5 + BONUS_F_SPEED + BONUS_F_SPEED_OTHER + BONUS_F_SLOW + BONUS_F_SLOW_OTHER;
-    gint32  rint = g_rand_int_range(randg, 1, interval);
-    printf("rint = %d\n", rint);
-    if(1 <= rint && rint < BONUS_F_MAXI5)
-    {
-        res = 1;
-    }
-    else if(BONUS_F_MAXI5 <= rint && rint < BONUS_F_SPEED+BONUS_F_MAXI5)
-    {
-        res = 2; 
-    }
-    else if(BONUS_F_SPEED+BONUS_F_MAXI5 <= rint && rint < BONUS_F_SPEED_OTHER+BONUS_F_SPEED+BONUS_F_MAXI5)
-    {
-        res = 3; 
-    }
-    else if(BONUS_F_SPEED_OTHER+BONUS_F_SPEED+BONUS_F_MAXI5 <= rint && rint < BONUS_F_SLOW+BONUS_F_SPEED_OTHER+BONUS_F_SPEED+BONUS_F_MAXI5)
-    {
-        res = 4; 
-    }
-    else if(BONUS_F_SLOW+BONUS_F_SPEED_OTHER+BONUS_F_SPEED+BONUS_F_MAXI5 <= rint && rint < interval)
-    {
-        res = 5;
-    }
-    printf("res : %d\n", res);
-    return res;
-}
-
 /**
  * @brief   Génère un bonus rare
  *
@@ -181,34 +150,59 @@ Bonus *bonus_advanced_new(int x, int y)
     gint32  ry = g_rand_int_range(randg,0,y-1);
     Bonus *new = malloc(sizeof(Bonus));
     new->coord = coord_from_xy(rx, ry);
-	new->img = BONUS_BASE;
+<<<<<<< HEAD
 
-    int cab = choose_advancer_bonus();
+    int interval = BONUS_F_MAXI5 + BONUS_F_SPEED + BONUS_F_SPEED_OTHER + BONUS_F_SLOW + BONUS_F_SLOW_OTHER;
 
-    switch(cab)
+    gint32  rint = g_rand_int_range(randg, 1, interval);
+    if(1 <= rint <=BONUS_F_MAXI5)
+    {
+        new->callback_eat = &bonus_eat_maxi5;
+    }
+    else if(BONUS_F_MAXI5 <= rint <= BONUS_F_SPEED)
+    {
+        new->callback_eat = &bonus_eat_speed;
+    }
+    else if(BONUS_F_SPEED <= rint <= BONUS_F_SPEED_OTHER)
+    {
+        new->callback_eat = &bonus_eat_speed_others;
+    }
+    else if(BONUS_F_SPEED_OTHER<= rint <= BONUS_F_SLOW)
+    {
+        new->callback_eat = &bonus_eat_slow;
+=======
+    new->img = BONUS_BASE;
+    gint32  rint = g_rand_int_range(randg, 1, 5);
+    switch(rint)
     {
         case 1:
-            new->callback_eat = &bonus_eat_maxi5;
-    		new->img = BONUS_GOLDEN;
-            break;
-	    case 2:
             new->callback_eat = &bonus_eat_speed;
-    		new->img = BONUS_SPEED;
+            new->img = BONUS_SPEED;
+            break;
+        case 2:
+            new->callback_eat = &bonus_eat_speed_others;
+            new->img = BONUS_SPEEDRED;
             break;
         case 3:
-            new->callback_eat = &bonus_eat_speed_others;
-    		new->img = BONUS_SPEEDRED;
-        case 4:
             new->callback_eat = &bonus_eat_slow;
-    		new->img = BONUS_TURTLE;
+            new->img = BONUS_TURTLE;
             break;
-        case 5:
+        case 4:
             new->callback_eat = &bonus_eat_slow_others;
             new->img = BONUS_TURTLERED;
             break;
         default:
             new->callback_eat = &bonus_eat_maxi5;
             new->img = BONUS_GOLDEN;
+>>>>>>> 694cec1dc3f5cf1558f9d208018dd1d1f4ac2c9d
+    }
+    else if(BONUS_F_SLOW<= rint <= BONUS_F_SLOW_OTHER)
+    {
+        new->callback_eat = &bonus_eat_slow_others;
+    }
+    else
+    {
+        new->callback_eat = &bonus_eat_maxi5;
     }
 
     return new;
@@ -247,32 +241,53 @@ void bonus_advanced_update(Bonus *bonus, int x, int y)
     gint32  ry = g_rand_int_range(randg,0,y-1);
     bonus->coord = coord_from_xy(rx, ry);
 
-    int cab = choose_advancer_bonus();
+<<<<<<< HEAD
+    int interval = BONUS_F_MAXI5 + BONUS_F_SPEED + BONUS_F_SPEED_OTHER + BONUS_F_SLOW + BONUS_F_SLOW_OTHER;
 
-    switch(cab)
+    gint32  rint = g_rand_int_range(randg, 1, interval);
+    if(1 <= rint <=BONUS_F_MAXI5)
+    {
+        bonus->callback_eat = &bonus_eat_maxi5;
+    }
+    else if(BONUS_F_MAXI5 <= rint <= BONUS_F_SPEED)
+    {
+        bonus->callback_eat = &bonus_eat_speed;
+    }
+    else if(BONUS_F_SPEED <= rint <= BONUS_F_SPEED_OTHER)
+    {
+        bonus->callback_eat = &bonus_eat_speed_others;
+    }
+    else if(BONUS_F_SPEED_OTHER<= rint <= BONUS_F_SLOW)
+    {
+        bonus->callback_eat = &bonus_eat_slow;
+    }
+    else if(BONUS_F_SLOW<= rint <= BONUS_F_SLOW_OTHER)
+    {
+        bonus->callback_eat = &bonus_eat_slow_others;
+    }
+    else
+    {
+        bonus->callback_eat = &bonus_eat_maxi5;
+=======
+    gint32  rint = g_rand_int_range(randg, 1, 5);
+    switch(rint)
     {
         case 1:
-            bonus->callback_eat = &bonus_eat_maxi5;
-            bonus->img = BONUS_GOLDEN;
+            bonus->callback_eat = &bonus_eat_speed;
+
             break;
         case 2:
-            bonus->callback_eat = &bonus_eat_speed;
-            bonus->img = BONUS_SPEED;
+            bonus->callback_eat = &bonus_eat_speed_others;
             break;
         case 3:
-            bonus->callback_eat = &bonus_eat_speed_others;
-            bonus->img = BONUS_SPEEDRED;
-        case 4:
             bonus->callback_eat = &bonus_eat_slow;
-            bonus->img = BONUS_TURTLE;
             break;
-        case 5:
+        case 4:
             bonus->callback_eat = &bonus_eat_slow_others;
-            bonus->img = BONUS_TURTLERED;
             break;
         default:
-            bonus->callback_eat = &bonus_eat_maxi5;
-            bonus->img = BONUS_GOLDEN;
+            bonus->callback_eat = &bonus_eat_basic;
+>>>>>>> 694cec1dc3f5cf1558f9d208018dd1d1f4ac2c9d
     }
 }
 

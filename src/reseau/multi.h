@@ -2,10 +2,10 @@
 #define _MULTI_
 
 #include <clutter/clutter.h>
-#include "../struc.h"
-#include "../bonus.h"
-#include "../affichage.h"
-#include "../partie.h"
+#include "struc.h"
+#include "bonus.h"
+#include "affichage.h"
+#include "partie.h"
 #include "client.h"
 
 typedef struct _Partie Partie;
