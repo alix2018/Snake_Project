@@ -107,13 +107,13 @@ gboolean bouton_avance_jouer_clicked_cb(ClutterClickAction *action,
     if ( !strcmp(alpha_field_get_text(champTailleSnake),"") == 0) {
         app->config->taille_bot=atoi(alpha_field_get_text(champTailleSnake));
     }
-    if ( !checked_invasion ) {
+    if ( checked_invasion ) {
         app->config->type_partie=2;
     }
     if ( !checked_bonus ) {
         app->config->advanced_bonus=1;
     }
-
+    config_grid_from_screen_and_window(app->config);
     partie_set_config(app->partie, app->config);
     init_partie(app->partie, app->ui); // TODO récupérer depuis app
     init_pseudo(app->partie, alpha_field_get_text(champPseudo));

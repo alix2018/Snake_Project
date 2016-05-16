@@ -74,5 +74,7 @@ void free_config(Config *c);
 
 Config * init_config();
 
+void config_grid_from_screen_and_window(Config * config);
+
 
 #endif //ALPHA_SNAKE_CONFIG_H

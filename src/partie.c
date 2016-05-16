@@ -351,7 +351,7 @@ static void collision_snake_vers_snake(Snake *snake, void *obj2, void *data)
     if(partie->config->collision == 0) { // ON TERMINE LA FONCTION !! (A VOIR)
         return;
     }
-    if(partie->config->type_partie == 1)
+    if(partie->config->type_partie == 2)
     {
         if(snake == partie->player) // on a perdu
         {
@@ -566,16 +566,37 @@ void init_partie(Partie *partie, ClutterScript *ui)
     // on ajoute le 1er snake comme player
     Snake * snk  = create_snake(
             partie->config->taille_snake,
-            coord_from_xy(partie->config->width/2, 2),
+            coord_from_xy(partie->config->width/2, partie->config->height/2),
             DROITE
     );
     tab_snakes_add_object(partie->tab,snk);
     int i;
+    GRand * ra = g_rand_new();
+
     for (i = 1; i < nb_snakes; ++i)
     {
+        gint32  rh = g_rand_int_range(ra,1,partie->config->height-1);
+        gint32  rw = g_rand_int_range(ra,1,partie->config->width-1);
+        Coord c;
+        if(rh%4 == 0)
+        {
+            c = coord_from_xy(0,rh);
+        }
+        else if(rh%4 ==1)
+        {
+            c = coord_from_xy(rw,partie->config->height);
+        }
+        else if(rh%4 ==2)
+        {
+            c = coord_from_xy(partie->config->width,rh);
+        }
+        else
+        {
+            c = coord_from_xy(rw,0);
+        }
         snk  = create_snake_bot(
                 partie->config->taille_bot,
-                coord_from_xy((partie->config->width+i)/2, (2+5*i)%partie->config->height),
+                c,
                 DROITE,
                 "ia1"
         );
