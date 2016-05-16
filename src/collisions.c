@@ -151,7 +151,7 @@ CollisionObject *gestion_collision_add_object(GestionCollisions *gc, void *obj,
 void gestion_collision_remove_object(GestionCollisions *gc, void *obj)
 {
     int i;
-
+    printf(" REMOVE ! \n");
     for (i = 0; i < gc->nb_objs; i++)
     {
         if (gc->objs[i]->obj2 == obj)
@@ -258,9 +258,16 @@ static void check_all_collisions_for_snake(CollisionObject *obj) {
  */
 int check_collision_for_bonus(Collision *collision)
 {
-    Bonus *bonus = collision->obj2;
 
-    return collision->enabled && coord_egales(bonus_coord(bonus), snake_pos(collision->obj1));
+    if(collision->obj2 == NULL)
+    {
+        return 0;
+    }
+    else
+    {
+        Bonus *bonus = collision->obj2;
+        return collision->enabled && coord_egales(bonus_coord(bonus), snake_pos(collision->obj1));
+    }
 }
 
 /**

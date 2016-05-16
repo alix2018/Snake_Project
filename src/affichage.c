@@ -99,12 +99,7 @@ List *affichage_list_bonus_actor(Affichage *a)
     return a->bonus;
 }
 
-void affichage_remove_bonus_actor(Affichage *a, Bonus *b)
-{
-    Node n=NULL;
-    for(n=list_first_node(affichage_list_bonus_actor(a)); bonus_actor_bonus(node_elt(n))!=b; n=node_next(n)){}
-    list_delete_node(affichage_list_bonus_actor(a), n);
-}
+
 
 /**
  * @brief   Fonction auxiliaire de free_affichage.
@@ -429,6 +424,15 @@ void free_snake_actor(SnakeActor *sa)
     free(sa);
 }
 
+void affichage_remove_bonus_actor(Affichage *a, Bonus *b)
+{
+    Node n=NULL;
+    for(n=list_first_node(affichage_list_bonus_actor(a)); bonus_actor_bonus(node_elt(n))!=b; n=node_next(n)){}
+    //clutter_actor_destroy(node_elt(n));
+    free_bonus_actor(node_elt(n));
+    list_delete_node(affichage_list_bonus_actor(a), n);
+
+}
 
 /**
  * @brief   Met à jour la longueur et la position d'un SnakeActor.

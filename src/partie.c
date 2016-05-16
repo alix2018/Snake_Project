@@ -25,7 +25,7 @@ struct _Partie
 
     //Bonus *nourriture;
     TabBonus *btab; // pour faire cour b = bonus  mais pas correct visuellement
-
+    List *bonuseffect;
     Snake *player;
     TabSnakes *tab; // Il y a un probléme avec ce nom je voulais faire cour pour avoir à faire partie->tab−>snakes
 
@@ -156,6 +156,7 @@ Partie *create_partie()
     //res->snake = NULL;
     //res->schlanga = NULL;
     //res->nourriture = NULL;
+    res->bonuseffect = NULL;
     res->btab = NULL;
     res->tab = NULL;
     res->map = NULL;
@@ -189,6 +190,7 @@ void free_partie(Partie *partie)
     free_gestion_collisions(partie->collisions);
     free_tab_snakes(partie->tab);
     free_tab_bonus(partie->btab);
+    //TODO FREE_BONUSEFFECT
     free(partie);
 }
 
@@ -354,7 +356,7 @@ static void collision_snake_vers_snake(Snake *snake, void *obj2, void *data)
             snake_set_longueur(snake,partie->config->taille_bot);
             snake_set_pos(snake,c,partie->config);
             partie_add_bonus(partie,bonus_init((cp.x+1)%(partie->config->width-1),(cp.y+1)%(partie->config->height-1)));
-            printf("dead\n");
+            printf("[SCHLANGA] Dead  - auto respawn\n");
         }
     }
     else
@@ -401,11 +403,14 @@ static void collision_snake_vers_snake(Snake *snake, void *obj2, void *data)
 
 void remove_advanced_bonus(Partie *p, Bonus *b)
 {
+
+    gestion_collision_remove_object(p->collisions, b);
+
     tab_bonus_remove_object(p->btab, b);
     printf("tab b rm ok\n");
-    gestion_collision_remove_object(p->collisions, b);
     printf("col rm ok\n");
     affichage_remove_bonus_actor(p->affichage, b);
+
     printf("affichage rm ok\n");
 }
 
@@ -422,6 +427,8 @@ static void collision_snake_vers_nourriture(Snake *snake, void *obj2, void *data
     Bonus *nourriture = obj2;
     Partie *partie = data;
     bonus_eat_callback(partie, snake, nourriture);
+    BonusEffectApply * bea =bonus_effect_apply_init(snake,nourriture,BONUS_TIME);
+    list_add_last(partie->bonuseffect,bea);
 }
 
 
@@ -472,6 +479,7 @@ void init_partie(Partie *partie, ClutterScript *ui)
 
     CollisionObject *co_map;
 
+    partie->bonuseffect = create_list();
 
     partie->map = create_map(width, height);
     partie->en_cours = TRUE;
@@ -627,6 +635,42 @@ gboolean timeout_tick_cb(gpointer data)
                 snake_forward(partie->player);
             }
         }
+    }
+
+    /**for(i=0; i< partie->btab->nb_bonus;++i)
+    {
+        if(bonus_time_remaining(partie->btab->bonus[i]) == 0)
+        {
+            bonus_eat_callback()
+        }
+        else
+        {
+            bonus_decrease_time_remaining(partie->btab->bonus[i]);
+        }
+    }**/
+
+    Node ls = list_first_node(partie->bonuseffect);
+    BonusEffectApply * bea = NULL;
+    int nombre_de_bonus_actif = 0;
+    while( ls != NULL )
+    {
+
+         bea = node_elt(ls);
+        // Regarde si le temps est écoulé et appel la fct callback sinon décroit le temps
+        if(bonus_time_remaining(bea) == 0)
+        {
+
+            //   callback
+            bonus_end_callback(partie,bonus_effect_apply_snake(bea),bonus_effect_apply_bonus(bea));
+            //  Delete node
+            list_delete_node(partie->bonuseffect,ls);
+        }
+        else
+        {
+            nombre_de_bonus_actif++;
+            bonus_decrease_time_remaining(bea);
+        }
+        ls = node_next(ls);
     }
 
     gestion_collisions_check(partie->collisions);

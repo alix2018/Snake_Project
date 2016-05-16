@@ -30,7 +30,7 @@ FILE *ouvrir(char *nomDuFichier){
 		printf("erreur à l'ouverture du fichier\n");
 	}
 	else{
-		printf("fichier %s ouvert\n", nomDuFichier);
+		//printf("fichier %s ouvert\n", nomDuFichier);
 	}
 	return(fichier);
 }
@@ -48,7 +48,7 @@ void fermer(FILE *fichier){
 	}
 	else
 	{
-		printf("Fichier fermé\n");
+		//printf("Fichier fermé\n");
 	}
 }
 

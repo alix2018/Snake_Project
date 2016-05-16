@@ -13,6 +13,8 @@
 typedef struct _bonus Bonus;
 typedef struct _bonus_actor BonusActor;
 
+typedef struct _bonus_effect BonusEffect;
+typedef struct _bonus_effect_apply BonusEffectApply;
 typedef struct _tabbonus TabBonus;
 
 #include <clutter/clutter.h>
@@ -20,12 +22,12 @@ typedef struct _tabbonus TabBonus;
 #include "struc.h"
 #include "partie.h"
 
-#define BONUS_F_MAXI5 1
+#define BONUS_F_MAXI5 5
 #define BONUS_F_SPEED 5
 #define BONUS_F_SPEED_OTHER 1
 #define BONUS_F_SLOW 2
 #define BONUS_F_SLOW_OTHER 2
-
+#define BONUS_TIME 100
 
 /**
  * @brief      La structure de tabsnake
@@ -57,7 +59,15 @@ Bonus *bonus_new(int x, int y);
 Bonus *bonus_advanced_new(int x, int y);
 
 Bonus *bonus_init(int x,int y);
+int bonus_time_remaining(BonusEffectApply *b);
+void bonus_decrease_time_remaining(BonusEffectApply *b);
 
+void bonus_end_callback(Partie *partie, Snake *snake, Bonus *nourriture);
+BonusEffect * bonus_effect(Bonus *b);
+BonusEffect * bonus_effect_apply_bonus_effect(BonusEffectApply * bea);
+Bonus * bonus_effect_apply_bonus(BonusEffectApply *bea);
+Snake * bonus_effect_apply_snake(BonusEffectApply *bea);
+BonusEffectApply * bonus_effect_apply_init(Snake *snake, Bonus *bs,int time);
 //Créé les coordonnés de la bonus sur la map
 void bonus_update(Bonus *bonus, int x, int y);
 void bonus_advanced_update(Bonus *bonus, int x, int y);
