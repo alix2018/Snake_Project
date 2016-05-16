@@ -22,6 +22,7 @@ struct _bonus
 {
     Coord coord;
     int rare;
+    char * img;
     void *callback_eat;
 };
 
@@ -108,6 +109,7 @@ Bonus *bonus_init(int x, int y)
     Bonus *new = malloc(sizeof(Bonus));
     new->coord = coord_from_xy(x, y);
     new->callback_eat = &bonus_eat_basic;
+    new->img = BONUS_BASE;
     return new;
 }
 
@@ -128,6 +130,7 @@ Bonus *bonus_new(int x, int y)
     Bonus *new = malloc(sizeof(Bonus));
     new->coord = coord_from_xy(rx, ry);
     new->callback_eat = &bonus_eat_basic;
+    new->img = BONUS_BASE;
     return new;
 }
 
@@ -147,6 +150,7 @@ Bonus *bonus_advanced_new(int x, int y)
     gint32  ry = g_rand_int_range(randg,0,y-1);
     Bonus *new = malloc(sizeof(Bonus));
     new->coord = coord_from_xy(rx, ry);
+	new->img = BONUS_BASE;
 
     int interval = BONUS_F_MAXI5 + BONUS_F_SPEED + BONUS_F_SPEED_OTHER + BONUS_F_SLOW + BONUS_F_SLOW_OTHER;
 
@@ -154,26 +158,32 @@ Bonus *bonus_advanced_new(int x, int y)
     if(1 <= rint <=BONUS_F_MAXI5)
     {
         new->callback_eat = &bonus_eat_maxi5;
-    }
+		new->img = BONUS_GOLDEN;    
+	}
     else if(BONUS_F_MAXI5 <= rint <= BONUS_F_SPEED)
     {
         new->callback_eat = &bonus_eat_speed;
+		new->img = BONUS_SPEED; 
     }
     else if(BONUS_F_SPEED <= rint <= BONUS_F_SPEED_OTHER)
     {
         new->callback_eat = &bonus_eat_speed_others;
+		new->img = BONUS_SPEEDRED; 
     }
     else if(BONUS_F_SPEED_OTHER<= rint <= BONUS_F_SLOW)
     {
         new->callback_eat = &bonus_eat_slow;
+		new->img = BONUS_TURTLE; 
     }
     else if(BONUS_F_SLOW<= rint <= BONUS_F_SLOW_OTHER)
     {
         new->callback_eat = &bonus_eat_slow_others;
+		new->img = BONUS_TURTLERED; 
     }
     else
     {
         new->callback_eat = &bonus_eat_maxi5;
+		new->img = BONUS_GOLDEN; 
     }
 
     return new;
@@ -215,7 +225,7 @@ void bonus_advanced_update(Bonus *bonus, int x, int y)
     int interval = BONUS_F_MAXI5 + BONUS_F_SPEED + BONUS_F_SPEED_OTHER + BONUS_F_SLOW + BONUS_F_SLOW_OTHER;
 
     gint32  rint = g_rand_int_range(randg, 1, interval);
-    if(1 <= rint <=BONUS_F_MAXI5)
+    if(1 <= rint <= BONUS_F_MAXI5)
     {
         bonus->callback_eat = &bonus_eat_maxi5;
     }
@@ -284,7 +294,7 @@ BonusActor *create_bonus_actor(ClutterActor *parent, Bonus *b, ClutterColor *col
 
     // SET IMAGE POMME/BOUF/bonus
 
-    ClutterContent *imgpomme = generate_image(image );
+    ClutterContent *imgpomme = generate_image(b->img );
     clutter_actor_set_content(bonus_c_actor,imgpomme);
     g_object_unref(imgpomme);
 
