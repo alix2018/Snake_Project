@@ -111,7 +111,7 @@ gboolean bouton_avance_jouer_clicked_cb(ClutterClickAction *action,
         app->config->type_partie=2;
     }
     if ( !checked_bonus ) {
-        app->config->advanced_bonus=1;
+        app->config->advanced_bonus=0;
     }
     config_grid_from_screen_and_window(app->config);
     partie_set_config(app->partie, app->config);
@@ -187,6 +187,7 @@ void init_application(Application *app)
         "menu_general", &app->menu_general,
         "image_alpha_snake", &app->image_alpha_snake,
         "image_alpha_snake2", &app->image_alpha_snake2,
+        "image_alpha_snake3", &app->image_alpha_snake3,
         "menu_avance", &app->menu_avance,
         "stage", &app->stage,
         NULL
@@ -201,6 +202,7 @@ void init_application(Application *app)
     logo_menus = create_clutter_image("logo.png");
     clutter_actor_set_content(app->image_alpha_snake, CLUTTER_CONTENT(logo_menus));
     clutter_actor_set_content(app->image_alpha_snake2, CLUTTER_CONTENT(logo_menus));
+    clutter_actor_set_content(app->image_alpha_snake3, CLUTTER_CONTENT(logo_menus));
 
 
     clutter_actor_add_child(app->stage, app->menu_general);

@@ -179,13 +179,14 @@
       {
         "type": "ClutterActor",
         "layout-manager": {
-          "type": "ClutterBoxLayout", "orientation": "vertical", "spacing": 30
+          "type": "ClutterBoxLayout", "orientation": "vertical", "spacing": 20
         },
         "children": [
           {
-            "type": "ClutterText",
-            "text": "MENU AVANCÉ",
-            "font-name": "Sans 30 bold"
+            "id": "image_alpha_snake3",
+            "type":"ClutterActor",
+            "width":380,
+            "height": 100
           },
           {
             "type": "ClutterActor",
@@ -359,7 +360,6 @@
             "type": "AlphaButton",
             "button-text": "Jouer",
             "width":400,
-            "x-expand": true,
             "actions": [
               {
                 "type": "ClutterClickAction",
