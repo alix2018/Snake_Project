@@ -22,6 +22,7 @@ struct _bonus
 {
     Coord coord;
     int rare;
+    char * img;
     void *callback_eat;
 };
 
@@ -108,6 +109,7 @@ Bonus *bonus_init(int x, int y)
     Bonus *new = malloc(sizeof(Bonus));
     new->coord = coord_from_xy(x, y);
     new->callback_eat = &bonus_eat_basic;
+    new->img = BONUS_BASE;
     return new;
 }
 
@@ -128,6 +130,7 @@ Bonus *bonus_new(int x, int y)
     Bonus *new = malloc(sizeof(Bonus));
     new->coord = coord_from_xy(rx, ry);
     new->callback_eat = &bonus_eat_basic;
+    new->img = BONUS_BASE;
     return new;
 }
 
@@ -147,24 +150,29 @@ Bonus *bonus_advanced_new(int x, int y)
     gint32  ry = g_rand_int_range(randg,0,y-1);
     Bonus *new = malloc(sizeof(Bonus));
     new->coord = coord_from_xy(rx, ry);
-
+    new->img = BONUS_BASE;
     gint32  rint = g_rand_int_range(randg, 1, 5);
     switch(rint)
     {
         case 1:
             new->callback_eat = &bonus_eat_speed;
+            new->img = BONUS_SPEED;
             break;
         case 2:
             new->callback_eat = &bonus_eat_speed_others;
+            new->img = BONUS_SPEEDRED;
             break;
         case 3:
             new->callback_eat = &bonus_eat_slow;
+            new->img = BONUS_TURTLE;
             break;
         case 4:
             new->callback_eat = &bonus_eat_slow_others;
+            new->img = BONUS_TURTLERED;
             break;
         default:
             new->callback_eat = &bonus_eat_maxi5;
+            new->img = BONUS_GOLDEN;
     }
     return new;
 }
@@ -202,11 +210,12 @@ void bonus_advanced_update(Bonus *bonus, int x, int y)
     gint32  ry = g_rand_int_range(randg,0,y-1);
     bonus->coord = coord_from_xy(rx, ry);
 
-    gint32  rint = g_rand_int_range(randg, 1, 4);
+    gint32  rint = g_rand_int_range(randg, 1, 5);
     switch(rint)
     {
         case 1:
             bonus->callback_eat = &bonus_eat_speed;
+
             break;
         case 2:
             bonus->callback_eat = &bonus_eat_speed_others;
@@ -265,7 +274,7 @@ BonusActor *create_bonus_actor(ClutterActor *parent, Bonus *b, ClutterColor *col
 
     // SET IMAGE POMME/BOUF/bonus
 
-    ClutterContent *imgpomme = generate_image(image );
+    ClutterContent *imgpomme = generate_image(b->img );
     clutter_actor_set_content(bonus_c_actor,imgpomme);
     g_object_unref(imgpomme);
 
