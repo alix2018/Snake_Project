@@ -36,6 +36,16 @@
         "y-expand": true
       },
       {
+        "type": "ClutterActor",
+        "x-align": "center",
+        "y-align": "center",
+        "layout-manager": {
+            "type": "ClutterBoxLayout",
+            "spacing": 10,
+            "orientation": "vertical"
+        },
+        "children": [
+          {
         "id": "fin_partie_texte",
         "type": "ClutterText",
         "text": "Fin de la partie.",
@@ -60,6 +70,9 @@
           }
         ]
       }
+        ]
+      }
+      
     ]
   }
 ]
