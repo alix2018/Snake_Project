@@ -334,6 +334,7 @@ void bonus_update(Bonus *bonus, int x, int y)
     bonus->coord = coord_from_xy(rx, ry);
 }
 
+
 /**
  * @brief   Change les coordonnées de le bonus
  *
