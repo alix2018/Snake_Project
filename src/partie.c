@@ -399,11 +399,10 @@ static void collision_snake_vers_snake(Snake *snake, void *obj2, void *data)
 
 }
 
-void remove_bonus(Partie *p, Bonus *b)
+void remove_advanced_bonus(Partie *p, Bonus *b)
 {
     tab_bonus_remove_object(p->btab, b);
     printf("tab b rm ok\n");
-    
     gestion_collision_remove_object(p->collisions, b);
     printf("col rm ok\n");
     affichage_remove_bonus_actor(p->affichage, b);

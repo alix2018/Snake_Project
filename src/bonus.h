@@ -20,6 +20,13 @@ typedef struct _tabbonus TabBonus;
 #include "struc.h"
 #include "partie.h"
 
+#define BONUS_F_MAXI5 2
+#define BONUS_F_SPEED 5
+#define BONUS_F_SPEED_OTHER 1
+#define BONUS_F_SLOW 2
+#define BONUS_F_SLOW_OTHER 2
+
+
 /**
  * @brief      La structure de tabsnake
  *

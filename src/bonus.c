@@ -148,24 +148,34 @@ Bonus *bonus_advanced_new(int x, int y)
     Bonus *new = malloc(sizeof(Bonus));
     new->coord = coord_from_xy(rx, ry);
 
-    gint32  rint = g_rand_int_range(randg, 1, 5);
-    switch(rint)
+    int interval = BONUS_F_MAXI5 + BONUS_F_SPEED + BONUS_F_SPEED_OTHER + BONUS_F_SLOW + BONUS_F_SLOW_OTHER;
+
+    gint32  rint = g_rand_int_range(randg, 1, interval);
+    if(1 <= rint <=BONUS_F_MAXI5)
     {
-        case 1:
-            new->callback_eat = &bonus_eat_speed;
-            break;
-        case 2:
-            new->callback_eat = &bonus_eat_speed_others;
-            break;
-        case 3:
-            new->callback_eat = &bonus_eat_slow;
-            break;
-        case 4:
-            new->callback_eat = &bonus_eat_slow_others;
-            break;
-        default:
-            new->callback_eat = &bonus_eat_maxi5;
+        new->callback_eat = &bonus_eat_maxi5;
     }
+    else if(BONUS_F_MAXI5 <= rint <= BONUS_F_SPEED)
+    {
+        new->callback_eat = &bonus_eat_speed;
+    }
+    else if(BONUS_F_SPEED <= rint <= BONUS_F_SPEED_OTHER)
+    {
+        new->callback_eat = &bonus_eat_speed_others;
+    }
+    else if(BONUS_F_SPEED_OTHER<= rint <= BONUS_F_SLOW)
+    {
+        new->callback_eat = &bonus_eat_slow;
+    }
+    else if(BONUS_F_SLOW<= rint <= BONUS_F_SLOW_OTHER)
+    {
+        new->callback_eat = &bonus_eat_slow_others;
+    }
+    else
+    {
+        new->callback_eat = &bonus_eat_maxi5;
+    }
+
     return new;
 }
 
@@ -202,23 +212,32 @@ void bonus_advanced_update(Bonus *bonus, int x, int y)
     gint32  ry = g_rand_int_range(randg,0,y-1);
     bonus->coord = coord_from_xy(rx, ry);
 
-    gint32  rint = g_rand_int_range(randg, 1, 4);
-    switch(rint)
+    int interval = BONUS_F_MAXI5 + BONUS_F_SPEED + BONUS_F_SPEED_OTHER + BONUS_F_SLOW + BONUS_F_SLOW_OTHER;
+
+    gint32  rint = g_rand_int_range(randg, 1, interval);
+    if(1 <= rint <=BONUS_F_MAXI5)
     {
-        case 1:
-            bonus->callback_eat = &bonus_eat_speed;
-            break;
-        case 2:
-            bonus->callback_eat = &bonus_eat_speed_others;
-            break;
-        case 3:
-            bonus->callback_eat = &bonus_eat_slow;
-            break;
-        case 4:
-            bonus->callback_eat = &bonus_eat_slow_others;
-            break;
-        default:
-            bonus->callback_eat = &bonus_eat_basic;
+        bonus->callback_eat = &bonus_eat_maxi5;
+    }
+    else if(BONUS_F_MAXI5 <= rint <= BONUS_F_SPEED)
+    {
+        bonus->callback_eat = &bonus_eat_speed;
+    }
+    else if(BONUS_F_SPEED <= rint <= BONUS_F_SPEED_OTHER)
+    {
+        bonus->callback_eat = &bonus_eat_speed_others;
+    }
+    else if(BONUS_F_SPEED_OTHER<= rint <= BONUS_F_SLOW)
+    {
+        bonus->callback_eat = &bonus_eat_slow;
+    }
+    else if(BONUS_F_SLOW<= rint <= BONUS_F_SLOW_OTHER)
+    {
+        bonus->callback_eat = &bonus_eat_slow_others;
+    }
+    else
+    {
+        bonus->callback_eat = &bonus_eat_maxi5;
     }
 }
 
