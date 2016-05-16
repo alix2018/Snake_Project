@@ -5,7 +5,6 @@
     "background-color": "grey",
     "x-expand": true,
     "y-expand": true,
-    "content-repeat": "both",
     "layout-manager": {
       "type": "ClutterBoxLayout",
       "orientation": "vertical"
@@ -93,7 +92,7 @@
   {
     "id": "menu_partie", "type": "ClutterActor",
     "x-expand": true,  "y-expand": true,
-    "background-color": "black", "content-repeat": "both",
+    "background-color": "black",
     "layout-manager": { "type": "ClutterBinLayout" },
     "children": [{
       "type": "ClutterActor",

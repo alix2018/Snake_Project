@@ -119,7 +119,7 @@ gboolean bouton_avance_jouer_clicked_cb(ClutterClickAction *action,
     }
     config_grid_from_screen_and_window(app->config);
     partie_set_config(app->partie, app->config);
-    init_partie(app->partie, app->ui); // TODO récupérer depuis app
+    init_partie(app->partie, app->ui);
     init_pseudo(app->partie, alpha_field_get_text(champPseudo));
 
     return CLUTTER_EVENT_STOP;
@@ -198,7 +198,7 @@ void init_application(Application *app)
     );
 
 
-    bg_menus = create_clutter_image("data/fond_menu.png");
+    bg_menus = create_clutter_image("data/fond.jpg");
     clutter_actor_set_content(app->menu_general, CLUTTER_CONTENT(bg_menus));
     clutter_actor_set_content(app->menu_partie, CLUTTER_CONTENT(bg_menus));
     clutter_actor_set_content(app->menu_avance, CLUTTER_CONTENT(bg_menus));
