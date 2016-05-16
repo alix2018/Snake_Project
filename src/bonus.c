@@ -23,7 +23,7 @@ struct _bonus
     Coord coord;
     int rare;
     char * img;
-    void *callback_eat;
+    void (*callback_eat)(Partie *, Snake *, Bonus *);
     BonusEffect * be;
 };
 
@@ -73,7 +73,7 @@ struct _bonus_actor
 
 
 
-void *bonus_eat_basic(Partie *p, Snake *s, Bonus *b)
+void bonus_eat_basic(Partie *p, Snake *s, Bonus *b)
 {
     snake_increase(s);
     bonus_update(b, map_width(partie_map(p)), map_height(partie_map(p)));
@@ -81,7 +81,7 @@ void *bonus_eat_basic(Partie *p, Snake *s, Bonus *b)
     //remove_advanced_bonus(p,b);
 }
 
-void *bonus_eat_maxi5(Partie *p, Snake *s, Bonus *b)
+void bonus_eat_maxi5(Partie *p, Snake *s, Bonus *b)
 {
     snake_increase(s);
     snake_increase(s);
@@ -91,13 +91,13 @@ void *bonus_eat_maxi5(Partie *p, Snake *s, Bonus *b)
     bonus_advanced_update(b, map_width(partie_map(p)), map_height(partie_map(p)));
 }
 
-void *bonus_eat_speed(Partie *p, Snake *s, Bonus *b)
+void bonus_eat_speed(Partie *p, Snake *s, Bonus *b)
 {
     snake_set_vitesse(s, 3);
     bonus_advanced_update(b, map_width(partie_map(p)), map_height(partie_map(p)));
 }
 
-void *bonus_eat_speed_others(Partie *p, Snake *s, Bonus *b)
+void bonus_eat_speed_others(Partie *p, Snake *s, Bonus *b)
 {
     TabSnakes *ts = partie_tab(p);
     int i;
@@ -112,13 +112,13 @@ void *bonus_eat_speed_others(Partie *p, Snake *s, Bonus *b)
     bonus_advanced_update(b, map_width(partie_map(p)), map_height(partie_map(p)));
 }
 
-void *bonus_eat_slow(Partie *p, Snake *s, Bonus *b)
+void bonus_eat_slow(Partie *p, Snake *s, Bonus *b)
 {
     snake_set_vitesse(s, 1);
     bonus_advanced_update(b, map_width(partie_map(p)), map_height(partie_map(p)));
 }
 
-void *bonus_eat_slow_others(Partie *p, Snake *s, Bonus *b)
+void bonus_eat_slow_others(Partie *p, Snake *s, Bonus *b)
 {
     TabSnakes *ts = partie_tab(p);
     int i;
@@ -159,7 +159,7 @@ Bonus *bonus_init(int x, int y)
 {
     Bonus *new = malloc(sizeof(Bonus));
     new->coord = coord_from_xy(x, y);
-    new->callback_eat = &bonus_eat_basic;
+    new->callback_eat = bonus_eat_basic;
     new->be = bonus_effect_init(new,&bonus_end_basic);
     new->img = BONUS_BASE;
     return new;
@@ -271,37 +271,37 @@ Bonus *bonus_advanced_new(int x, int y)
     switch(cab)
     {
         case 1:
-            new->callback_eat = &bonus_eat_maxi5;
+            new->callback_eat = bonus_eat_maxi5;
 
             new->be = bonus_effect_init(new,&bonus_end_basic);
 
     		new->img = BONUS_GOLDEN;
             break;
 	    case 2:
-            new->callback_eat = &bonus_eat_speed;
+            new->callback_eat = bonus_eat_speed;
 
             new->be = bonus_effect_init(new,&bonus_end_speedslow);
     		new->img = BONUS_SPEED;
             break;
         case 3:
-            new->callback_eat = &bonus_eat_speed_others;
+            new->callback_eat = bonus_eat_speed_others;
 
             new->be = bonus_effect_init(new,&bonus_end_speedslowother);
     		new->img = BONUS_SPEEDRED;
         case 4:
-            new->callback_eat = &bonus_eat_slow;
+            new->callback_eat = bonus_eat_slow;
 
             new->be = bonus_effect_init(new,&bonus_end_speedslow);
     		new->img = BONUS_TURTLE;
             break;
         case 5:
-            new->callback_eat = &bonus_eat_slow_others;
+            new->callback_eat = bonus_eat_slow_others;
 
             new->be = bonus_effect_init(new,&bonus_end_speedslowother);
             new->img = BONUS_TURTLERED;
             break;
         default:
-            new->callback_eat = &bonus_eat_maxi5;
+            new->callback_eat = bonus_eat_maxi5;
 
             new->be = bonus_effect_init(new,&bonus_end_basic);
             new->img = BONUS_GOLDEN;
@@ -654,9 +654,7 @@ Bonus * bonus_near_from_snake(TabBonus *tb, Snake * s)
 
 void bonus_eat_callback(Partie *partie, Snake *snake, Bonus *nourriture)
 {
-    void (*bonus_eat_cb)(Partie *partie, Snake *snake, Bonus *nourriture);
-    bonus_eat_cb = nourriture->callback_eat;
-    bonus_eat_cb(partie, snake, nourriture);
+    nourriture->callback_eat(partie, snake, nourriture);
 }
 
 void bonus_end_callback(Partie *partie, Snake *snake, Bonus *nourriture)

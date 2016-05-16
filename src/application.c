@@ -9,6 +9,7 @@
 
 #include "application.h"
 #include "widgets/utils.h"
+#include "widgets/alpha-field.h"
 
 
 gboolean quitter_clicked_cb(ClutterClickAction *action,
@@ -38,14 +39,14 @@ gboolean bouton_partie_simple_clicked_cb(ClutterClickAction *action,
 {
     Application *app = data;
     Partie * partie;
-
+    AlphaField *champPseudo = ALPHA_FIELD(clutter_script_get_object(app->ui, "pseudo"));
 
     clutter_actor_remove_child(app->stage, app->menu_partie);
 
     app->partie = create_partie();
     partie_set_config(app->partie, app->config);
     init_partie(app->partie, app->ui); // TODO récupérer depuis app
-    init_pseudo(app->partie, 0, NULL);
+    init_pseudo(app->partie, alpha_field_get_text(champPseudo));
     return CLUTTER_EVENT_STOP;
 }
 
@@ -66,10 +67,13 @@ gboolean bouton_rejouer_clicked_cb(ClutterClickAction *action,
                                    gpointer data)
 {
     Application *app=data;
+    ClutterActor *fin_partie = CLUTTER_ACTOR(clutter_script_get_object(app->ui, "fin_partie"));
+    
     free_partie(app->partie);
+    app->partie = NULL;
+    clutter_actor_remove_child(app->stage, fin_partie);
     clutter_actor_add_child(app->stage, app->menu_general);
-
-
+    
     return CLUTTER_EVENT_STOP;
 }
 

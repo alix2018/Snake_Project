@@ -206,9 +206,6 @@ Partie *create_partie()
     Partie *res;
 
     res = malloc(sizeof(Partie));
-    //res->snake = NULL;
-    //res->schlanga = NULL;
-    //res->nourriture = NULL;
     res->bonuseffect = NULL;
     res->btab = NULL;
     res->tab = NULL;
@@ -239,7 +236,7 @@ void partie_set_config(Partie * p,Config * c)
  *
  * @return Renvoie les configurations de la partie.
 */
-Config * partie_config(Partie * p)
+Config *partie_config(Partie * p)
 {
     return p->config;
 }
@@ -299,9 +296,9 @@ int partie_set_duree(Partie *partie, int duree)
 }
 
 /**
- * @brief   Le GStrind à afficher lorsqu'on demande les scores.
+ * @brief   Retourne le GStrind à afficher lorsqu'on demande les scores
  *
- * @return  Eetourne le GStrind à afficher lorsqu'on demande les scores.
+ * @return  etourne le GStrind à afficher lorsqu'on demande les scores
  */
 GString *get_gstring_score()
 {
@@ -479,6 +476,7 @@ void remove_advanced_bonus(Partie *p, Bonus *b)
 
     tab_bonus_remove_object(p->btab, b);
     printf("tab b rm ok\n");
+    gestion_collision_remove_object(p->collisions, b);
     printf("col rm ok\n");
     affichage_remove_bonus_actor(p->affichage, b);
 
@@ -528,7 +526,7 @@ void partie_add_bonus(Partie *partie, Bonus * bonus)
 
     ClutterColor * color = clutter_color_alloc();
     clutter_color_from_hls(color,(r)%360,0.4,1);
-    affichage_add_bonus(partie->affichage, bonus,  color,partie->config);
+    affichage_add_bonus(partie->affichage, bonus, color,partie->config);
 
 }
 
@@ -537,10 +535,12 @@ void partie_add_bonus(Partie *partie, Bonus * bonus)
  *
  * @param[in]    partie Une partie.
  * @param[in]    ui     Le ClutterScript de la fenêtre.
+ * @param[in]    width  La largeur du plateau.
+ * @param[in]    height La hauteur du plateau.
  */
 void init_partie(Partie *partie, ClutterScript *ui)
 {
-    // Initillisation des configs
+
     int nb_snakes = partie->config->nb_snakes;
     int width = partie->config->width;
     int height = partie->config->height;
@@ -675,15 +675,14 @@ void init_partie(Partie *partie, ClutterScript *ui)
  * @brief   Initialise le pseudo.
  *
  * @param[in]    partie     Une partie.
- * @param[in]    argc       Le nombre d'arguments rentré en paramètre.
- * @param[in]    argv       Le pseudo rentré par l'utilisateur.
+ * @param[in]    pseudo     Le pseudo.
 
  */
-void init_pseudo(Partie *p, int argc, char **argv)
+void init_pseudo(Partie *p, char *pseudo)
 {
-    if(argc == 2)
+    if(strlen(pseudo) > 0)
     {
-        snake_set_pseudo(p->player, argv[1]);
+        snake_set_pseudo(p->player, pseudo);
     }
     else
     {

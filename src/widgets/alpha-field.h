@@ -39,7 +39,7 @@ struct _AlphaFieldClass
     ClutterActorClass parent_class;
 };
 
-GType alpha_button_get_type();
+GType alpha_field_get_type();
 gchar *alpha_field_get_text(AlphaField *self);
 
 #endif //ALPHA_SNAKE_ALPHA_FIELD_H

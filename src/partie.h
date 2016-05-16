@@ -46,7 +46,7 @@ void partie_add_bonus(Partie *partie,Bonus * bonus);
 void remove_advanced_bonus(Partie *p, Bonus *b);
 
 void init_partie(Partie *partie, ClutterScript *ui);
-void init_pseudo(Partie *p, int argc, char **argv);
+void init_pseudo(Partie *p, char *pseudo);
 
 gboolean timeout_tick_cb(gpointer data);
 
