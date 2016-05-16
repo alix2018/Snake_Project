@@ -94,6 +94,18 @@ Affichage *create_affichage()
     return res;
 }
 
+List *affichage_list_bonus_actor(Affichage *a)
+{
+    return a->bonus;
+}
+
+void affichage_remove_bonus_actor(Affichage *a, Bonus *b)
+{
+    Node n=NULL;
+    for(n=list_first_node(affichage_list_bonus_actor(a)); bonus_actor_bonus(node_elt(n))!=b; n=node_next(n)){}
+    list_delete_node(affichage_list_bonus_actor(a), n);
+}
+
 /**
  * @brief   Fonction auxiliaire de free_affichage.
  */

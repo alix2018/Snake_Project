@@ -37,6 +37,9 @@ typedef struct _snake_image SnakeImage;
 Affichage *create_affichage();
 void free_affichage(Affichage * affichage);
 ClutterScript *affichage_ui(Affichage *affichage);
+List *affichage_list_bonus_actor(Affichage *a);
+void affichage_remove_bonus_actor(Affichage *a, Bonus *b);
+
 
 //???
 gboolean zone_snake_key_press_cb(ClutterActor *actor, ClutterEvent *event, gpointer data);

@@ -3,6 +3,7 @@
 
 #define DEFAULT_NB_SNAKES 2
 #define DEFAULT_NB_BONUS 1
+#define DEFAULT_ADVANCED_BONUS 1
 #define DEFAULT_TAILLE_SNAKE 5
 #define DEFAULT_TAILLE_BOT 5
 #define DEFAULT_HEIGHT 25
@@ -10,9 +11,8 @@
 #define DEFAULT_TYPE_PARTIE 1
 #define DEFAULT_GRID_SIZE 25
 #define DEFAULT_COLLISION 1
-#define DEFAULT_ADVANCED_BONUS 0
-#define DEFAULT_INTERVAL_TIMEOUT 50
-#define DEFAULT_INTERVAL_SCALE 2
+#define DEFAULT_INTERVAL_TIMEOUT 40
+#define DEFAULT_INTERVAL_SCALE 4
 #define DEFAULT_SCREEN_WIDTH 1366
 #define DEFAULT_SCREEN_HEIGHT 600
 
@@ -32,7 +32,7 @@ struct _config
     int type_partie; // 0 pour partie par défaut 1 pour classique  2 pour invasion et 3 pour reseau
     int grid_size;
     int collision; // 0 pas de collision 1 des collision
-    int advanced_bonus; //TODO
+    int advanced_bonus;
     int interval_timeout;
     int interval_scale;
     int screen_width;
