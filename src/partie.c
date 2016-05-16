@@ -610,8 +610,7 @@ void init_partie(Partie *partie, ClutterScript *ui)
         {
             c = coord_from_xy((rw-cw)%partie->config->width,0+ch);
         }
-        printf("S:%i\n",i);
-        print_coord(c);
+
         snk  = create_snake_bot(
                 partie->config->taille_bot,
                 c,
