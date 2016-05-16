@@ -65,23 +65,6 @@
                     ]
                   },
                   {
-                    "id": "Options",
-                    "type": "AlphaButton",
-                    "button-text": "Options",
-                    "x-expand": true,
-                    "actions": [
-                      {
-                        "type": "ClutterClickAction",
-                        "signals": [
-                          {
-                            "name": "clicked",
-                            "handler": "options_clicked_cb"
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
                     "id": "Quitter",
                     "type": "AlphaButton",
                     "button-text": "Quitter",
